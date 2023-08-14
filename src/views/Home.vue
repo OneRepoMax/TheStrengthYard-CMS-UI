@@ -1,8 +1,9 @@
 <template>
-  <HelloWorld />
-  <svg-icon type="mdi" path="M...z"></svg-icon>
+    <HelloWorld />
 </template>
 
 <script setup>
-  import HelloWorld from '@/components/HelloWorld.vue'
+
+import HelloWorld from '@/components/HelloWorld.vue'
+
 </script>
