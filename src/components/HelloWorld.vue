@@ -43,9 +43,12 @@
               size="large"
               start
             />
-
             Get Started
           </v-btn>
+        </v-col>
+
+        <v-col cols="auto">
+            <DarkMode />
         </v-col>
 
         <v-col cols="auto">
@@ -61,7 +64,6 @@
               size="large"
               start
             />
-
             Community
           </v-btn>
         </v-col>
@@ -71,5 +73,5 @@
 </template>
 
 <script setup>
-  //
+    import DarkMode from '@/components/DarkMode.vue'
 </script>
