@@ -13,7 +13,7 @@
         <dark-mode />
         <v-btn variant="flat" v-for="item in menuItems" :key="item.title" :to="item.path" class="text-capitalize mx-2"
           :color="item.color">
-          <v-icon left dark class="me-2">{{ item.icon }}</v-icon>
+          <v-icon v-if="item.icon" left dark class="me-2">{{ item.icon }}</v-icon>
           {{ item.title }}
         </v-btn>
       </div>
@@ -49,6 +49,7 @@ export default {
       isLoggedIn: false,
       sidebar: false,
       menuItems: [
+        { title: 'Home', path: '/', icon: '', color: 'transparent' },
         { title: 'Login / Register', path: '/account/login', icon: 'mdi-login-variant', color: 'teal' },
       ],
       loggedInMenuItems: [
