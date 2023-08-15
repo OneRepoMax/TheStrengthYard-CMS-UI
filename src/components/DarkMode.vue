@@ -1,10 +1,11 @@
 <template>
-        <v-switch
-            hide-details
-            inset
-            :label="`Switch to ${theme.global.name.value.toString()}`"
-            @click="toggleTheme">
-        </v-switch>
+    <v-btn
+        hide-details
+        inset
+        :label="`Switch to ${theme.global.name.value.toString()}`"
+        @click="toggleTheme"
+        icon="mdi-theme-light-dark">
+    </v-btn>
 </template>
 
 <script>
