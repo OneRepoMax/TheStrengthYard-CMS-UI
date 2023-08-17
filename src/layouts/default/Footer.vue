@@ -4,13 +4,13 @@
         <div class="bg-teal d-flex w-100 align-center">
             <v-container>
                 <v-row class="d-flex d-columns align-center">
-                    <v-col-auto>
+                    <v-col>
                         <p class="text-body text-start">The Strength Yard - Strength and Conditioning Gym Singapore,
                             Copyright All
                             Rights
                             Reserved © 2014 -
                             {{ new Date().getFullYear() }}</p>
-                    </v-col-auto>
+                    </v-col>
                     <v-col class="text-end">
                         <a class="text-white me-5"
                             href="https://www.thestrengthyard.com/terms-conditions-strength-conditioning-gym-singapore/">Terms
