@@ -5,7 +5,7 @@
       <template class="d-flex d-md-none">
         <v-app-bar-nav-icon></v-app-bar-nav-icon>
       </template>
-      <v-img class="mx-5 pa-3" src="src/assets/the-strength-yard-logo-main.svg" max-height="50" max-width="50"
+      <v-img class="mx-5 pa-3" src="@/assets/the-strength-yard-logo-main.svg" max-height="50" max-width="50"
         contain></v-img>
       <v-app-bar-title class="font-weight-medium align-center text-capitalize my-auto">{{ appTitle }}</v-app-bar-title>
 
@@ -49,7 +49,6 @@ export default {
       isLoggedIn: false,
       sidebar: false,
       menuItems: [
-        { title: 'Home', path: '/', icon: '', color: 'transparent' },
         { title: 'Login / Register', path: '/account/login', icon: 'mdi-login-variant', color: 'teal' },
       ],
       loggedInMenuItems: [
