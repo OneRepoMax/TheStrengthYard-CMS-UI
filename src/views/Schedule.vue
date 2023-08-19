@@ -1,14 +1,10 @@
 <template>
     <div>
-        Registration page
+        Scheduling Page
     </div>
-    <RegisterForm/>
-
 </template>
 
 <script setup>
-
-import RegisterForm from '@/components/RegisterForm.vue'
 
 </script>
 
