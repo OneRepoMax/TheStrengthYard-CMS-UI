@@ -1,10 +1,10 @@
 <template>
     <v-btn
-        inset
-        :label="`Switch to ${theme.global.name.value.toString()}`"
+        variant="outlined"
         @click="toggleTheme"
-        x-large
-        icon="mdi-theme-light-dark">
+        block
+        prepend-icon="mdi-theme-light-dark">
+        Switch theme 
     </v-btn>
 </template>
 
