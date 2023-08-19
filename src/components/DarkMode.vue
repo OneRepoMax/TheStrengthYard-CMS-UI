@@ -1,9 +1,9 @@
 <template>
     <v-btn
+        hide-details
         inset
         :label="`Switch to ${theme.global.name.value.toString()}`"
         @click="toggleTheme"
-        x-large
         icon="mdi-theme-light-dark">
     </v-btn>
 </template>
