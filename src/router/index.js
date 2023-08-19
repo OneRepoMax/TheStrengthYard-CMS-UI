@@ -4,7 +4,7 @@ import { createRouter, createWebHistory } from "vue-router";
 const routes = [
   {
     path: "/",
-    component: () => import("@/layouts/default/Default.vue"),
+    component: () => import("@/layouts/default/LoginDefault.vue"),
     children: [
       {
         path: "",
@@ -39,14 +39,44 @@ const routes = [
         component: () =>
           import(/* webpackChunkName: "home" */ "@/views/ResetPassword.vue"),
       },
+    ],
+  },
+  {
+    path: "/profile/",
+    component: () => import("@/layouts/default/LoginDefault.vue"),
+    children: [
       {
-        path: "edit-profile",
-        name: "Edit Profile",
+        path: "",
+        name: "Profile",
         component: () =>
           import(/* webpackChunkName: "home" */ "@/views/EditProfile.vue"),
       },
     ],
-  }
+  },
+  {
+    path: "/book/",
+    component: () => import("@/layouts/default/LoginDefault.vue"),
+    children: [
+      {
+        path: "",
+        name: "Book",
+        component: () =>
+          import(/* webpackChunkName: "home" */ "@/views/Book.vue"),
+      },
+    ],
+  },
+  {
+    path: "/schedule/",
+    component: () => import("@/layouts/default/LoginDefault.vue"),
+    children: [
+      {
+        path: "",
+        name: "Schedule",
+        component: () =>
+          import(/* webpackChunkName: "home" */ "@/views/Schedule.vue"),
+      },
+    ],
+  },
 ];
 
 const router = createRouter({
