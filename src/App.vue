@@ -1,7 +1,17 @@
 <template>
-  <router-view />
+    <router-view />
 </template>
 
-<script setup>
-  //
+<script>
+
+export default {
+    created() {
+        if (localStorage.getItem("tsyUserInfo") === null) {
+            this.$router.push({ path: '/account/login' })
+        }
+    }
+
+}
+
+
 </script>
