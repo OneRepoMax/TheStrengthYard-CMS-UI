@@ -10,10 +10,29 @@
                             <v-card-title>Member Login</v-card-title>
                         </v-card-title>
                         <v-card-text>
-                            <v-form @submit.prevent="login">
-                                <v-text-field v-model="emailAddress" label="Email Address" required></v-text-field>
-                                <v-text-field v-model="password" label="Password" type="password" required></v-text-field>
-                                <v-btn color="teal" block type="submit" size="large">Login</v-btn>
+                            <v-form @submit.prevent="login" validate-on="submit" >
+                                <v-text-field 
+                                    v-model="emailAddress" 
+                                    label="Email Address" 
+                                    :rules="rules"
+                                    class="mt-3"
+                                    required></v-text-field>
+                                <v-text-field 
+                                    v-model="password" 
+                                    label="Password" 
+                                    type="password" 
+                                    :rules="rules"
+                                    class="mt-3"
+                                    required></v-text-field>
+                                <v-btn 
+                                    color="teal" 
+                                    block 
+                                    type="submit" 
+                                    size="large"
+                                    :disabled="loading"
+                                    :loading="loading"
+                                    class="mt-3"
+                                >Login</v-btn>
                                 <p class="text-center mt-5">Don't have an account? <router-link
                                         to="/account/registration">Register here</router-link></p>
                             </v-form>
@@ -50,11 +69,21 @@ export default {
         return {
             emailAddress: "",
             password: "",
+            loading: false,
+            rules: [
+                value => {
+                if (value) return true
+
+                return 'This field cannot be empty.'
+                },
+            ],
         }
     },
     methods: {
         async login(){
+            this.loading = true;
             const response = await this.userStore.login(this.emailAddress, this.password);
+            this.loading = false;
 
             console.log(response);
 
