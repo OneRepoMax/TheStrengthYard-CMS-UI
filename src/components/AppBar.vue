@@ -1,11 +1,11 @@
 <template>
     <v-navigation-drawer v-model="drawer" location="bottom" temporary theme="dark" style="height: 500px;">
         <v-list>
-            <v-list-item prepend-avatar="https://randomuser.me/api/portraits/women/85.jpg" title="Sandra Adams"
-                subtitle="sandra_a88@gmailcom"></v-list-item>
+            <v-list-item prepend-avatar="https://randomuser.me/api/portraits/women/85.jpg" :title="userStore.firstName + userStore.lastName"
+                :subtitle="userStore.emailAddress"></v-list-item>
         </v-list>
         <v-list-item>
-            <v-btn block variant="flat" color="red-lighten-1">
+            <v-btn block variant="flat" color="red-lighten-1" @click="logout()">
                 <v-icon left dark class="me-2">mdi-logout-variant</v-icon>
                 Logout
             </v-btn>
@@ -47,7 +47,7 @@
                     :color="item.color">
                     {{ item.title }}
                 </v-btn>
-                <v-btn variant="flat" class="mx-2" color="red-lighten-1">
+                <v-btn variant="flat" class="mx-2" color="red-lighten-1" @click="logout">
                     <v-icon left dark class="me-2">mdi-logout-variant</v-icon>
                     Logout
                 </v-btn>
@@ -60,9 +60,15 @@
 
 import DarkMode from '@/components/DarkMode.vue';
 import DarkModeButton from '@/components/DarkModeButton.vue'
+import { useUserStore } from '@/store/user'
 
 export default {
     name: "App",
+    setup(){
+        const userStore = useUserStore()
+
+        return { userStore }
+    },
     data() {
         return {
             appTitle: "TSY CMS Home",
@@ -80,6 +86,19 @@ export default {
         group() {
             this.drawer = false
         },
+    },
+    methods: {
+        logout(){
+
+            // clear global store
+            this.userStore.$reset()
+
+            // clear user storage
+            localStorage.removeItem("tsyUserInfo")
+
+            //redirect user to login page
+            this.$router.push({ path: '/account/login' })
+        }
     },
     components: { DarkMode, DarkModeButton }
 }

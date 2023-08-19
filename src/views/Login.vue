@@ -10,7 +10,7 @@
                             <v-card-title>Member Login</v-card-title>
                         </v-card-title>
                         <v-card-text>
-                            <v-form @submit.prevent="loginUser">
+                            <v-form @submit.prevent="login">
                                 <v-text-field v-model="emailAddress" label="Email Address" required></v-text-field>
                                 <v-text-field v-model="password" label="Password" type="password" required></v-text-field>
                                 <v-btn color="teal" block type="submit" size="large">Login</v-btn>
@@ -35,26 +35,35 @@
 </style>
   
 <script>
-import { ref } from 'vue'
 import { useUserStore } from '@/store/user'
 
 export default {
     name: 'LoginForm',
     setup() {
-        const store = useUserStore()
-
-        const emailAddress = ref('')
-        const password = ref('')
-
-        const loginUser = async () => {
-            await store.login(emailAddress.value, password.value)
-            // You can perform any navigation or additional actions after a successful login
-        }
+        const userStore = useUserStore()
 
         return {
-            emailAddress,
-            password,
-            loginUser
+            userStore
+        }
+    },
+    data(){
+        return {
+            emailAddress: "",
+            password: "",
+        }
+    },
+    methods: {
+        async login(){
+            const response = await this.userStore.login(this.emailAddress, this.password);
+
+            console.log(response);
+
+            if (response == null || response.status != 200) {
+                console.log("invalid login details")
+            } else {
+                console.log("Login Successful")
+                this.$router.push({ path: '/' })
+            }
         }
     }
 }

@@ -6,12 +6,17 @@ export const useUserStore = defineStore("user", {
     emailAddress: null,
     firstName: null,
     lastName: null,
-    password: null,
+    contactNo: null,
+    gender: null,
+    homeAddress: null,
+    postalCode: null,
+    userType: null,
+    userName: null,
     verified: false,
   }),
   actions: {
     loadUserFromLocalStorage() {
-      const storedUser = localStorage.getItem("userInfo");
+      const storedUser = window.localStorage.getItem("tsyUserInfo");
       if (storedUser) {
         const parsedUser = JSON.parse(storedUser);
         Object.assign(this, parsedUser);
@@ -19,34 +24,51 @@ export const useUserStore = defineStore("user", {
     },
 
     saveUserToLocalStorage() {
-      const userToStore = {
+      const userStore = {
         emailAddress: this.emailAddress,
         firstName: this.firstName,
         lastName: this.lastName,
+        contactNo: this.contactNo,
+        gender: this.gender,
+        homeAddress: this.homeAddress,
+        postalCode: this.postalCode,
+        userType: this.userType,
+        userName: this.Username,
         verified: this.verified,
       };
-      localStorage.setItem("userInfo", JSON.stringify(userToStore));
+      localStorage.setItem("tsyUserInfo", JSON.stringify(userStore));
     },
 
-    async login() {
+    async login(emailAddress, password) {
       try {
-        const response = await axios.post("http://example-api/login/", {
-          emailAddress: this.emailAddress,
-          password: this.password,
+        let response = await axios.post("http://localhost:5000/login", {
+          EmailAddress: emailAddress,
+          Password: password,
         });
 
         // Handle the response data here
         if (response.status === 200) {
-          // Update the state or do something else with the response data
-          // For example, you might want to update the user's information or authentication status
-          this.firstName = response.data.firstName;
-          this.lastName = response.data.lastName;
-          this.verified = response.data.verified;
-          this.saveUserToLocalStorage()
+          this.emailAddress = response.data.EmailAddress;
+          this.firstName = response.data.FirstName;
+          this.lastName = response.data.LastName;
+          this.emailAddress = response.data.EmailAddress;
+          this.firstName = response.data.FirstName;
+          this.lastName = response.data.LastName;
+          this.contactNo = response.data.ContactNo;
+          this.gender = response.data.Gender;
+          this.homeAddress = response.data.HomeAddress;
+          this.postalCode = response.data.PostalCode;
+          this.userType = response.data.UserType;
+          this.userName = response.data.Username;
+          this.saveUserToLocalStorage();
         }
+
+        return response;
+
       } catch (error) {
         // Handle errors here
         console.error("Login error:", error);
+        return;
       }
     },
 
