@@ -1,10 +1,9 @@
 <template>
-  <!-- <v-container> -->
-    <v-row justify="center" class="h-100" align="center">
-      <v-col cols="12" sm="8" md="6">
+    <v-row justify="center" class="h-screen" align="center">
+      <v-col cols="12" lg="4" md="5">
         <v-card class="elevation-12">
           <v-toolbar color="white" dark flat>
-            <v-toolbar-title class="text-center">Register</v-toolbar-title>
+            <v-toolbar-title class="text-center font-weight-bold">Member Registration</v-toolbar-title>
           </v-toolbar>
           <v-card-text>
             <v-form @submit.prevent="register">
@@ -22,10 +21,10 @@
                     />
                 </div>
                 <p class="d-flex justify-center mb-5">Profile Picture</p>
-                <v-text-field v-model="firstName" label="First Name" required :rules="nameRules"></v-text-field>
-                <v-text-field v-model="lastName" label="Last Name" required :rules="nameRules"></v-text-field>
-                <v-text-field v-model="email" label="Email" required :rules="emailRules"></v-text-field>
-                <v-text-field v-model="address" label="Address" :rules="addressRules" required></v-text-field>
+                <v-text-field v-model="firstName" label="First Name" required :rules="nameRules" class="mt-3"></v-text-field>
+                <v-text-field v-model="lastName" label="Last Name" required :rules="nameRules" class="mt-3"></v-text-field>
+                <v-text-field v-model="email" label="Email" required :rules="emailRules" class="mt-3"></v-text-field>
+                <v-text-field v-model="address" label="Address" :rules="addressRules" class="mt-3" required></v-text-field>
                 <v-text-field
                     v-model="password"
                     label="Password"
@@ -33,6 +32,7 @@
                     :rules="passwordRules"
                     :type="show1 ? 'text' : 'password'"
                     @click:append="show1 = !show1"
+                    class="mt-3"
                     required
                     counter
                 ></v-text-field>
@@ -43,10 +43,11 @@
                     :rules="confirmPasswordRules"
                     :type="show1 ? 'text' : 'password'"
                     @click:append="show2 = !show2"
+                    class="mt-3"
                     required
                     counter
                 ></v-text-field>
-                <v-btn block color="teal" size="large" type="submit">Register</v-btn>
+                <v-btn block color="teal" size="large" type="submit" class="mt-3">Register</v-btn>
             </v-form>
 
             <p class="text-center mt-5">Already have an account? 
@@ -57,7 +58,6 @@
         </v-card>
       </v-col>
     </v-row>
-  <!-- </v-container> -->
 </template>
 
 <script>
