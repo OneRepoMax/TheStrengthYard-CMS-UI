@@ -11,7 +11,6 @@ export const useUserStore = defineStore("user", {
     homeAddress: null,
     postalCode: null,
     userType: null,
-    userName: null,
     verified: false,
   }),
   actions: {
@@ -33,7 +32,6 @@ export const useUserStore = defineStore("user", {
         homeAddress: this.homeAddress,
         postalCode: this.postalCode,
         userType: this.userType,
-        userName: this.Username,
         verified: this.verified,
       };
       localStorage.setItem("tsyUserInfo", JSON.stringify(userStore));
@@ -51,20 +49,15 @@ export const useUserStore = defineStore("user", {
           this.emailAddress = response.data.EmailAddress;
           this.firstName = response.data.FirstName;
           this.lastName = response.data.LastName;
-          this.emailAddress = response.data.EmailAddress;
-          this.firstName = response.data.FirstName;
-          this.lastName = response.data.LastName;
           this.contactNo = response.data.ContactNo;
           this.gender = response.data.Gender;
           this.homeAddress = response.data.HomeAddress;
           this.postalCode = response.data.PostalCode;
           this.userType = response.data.UserType;
-          this.userName = response.data.Username;
           this.saveUserToLocalStorage();
         }
 
         return response;
-
       } catch (error) {
         // Handle errors here
         console.error("Login error:", error);
@@ -73,20 +66,46 @@ export const useUserStore = defineStore("user", {
     },
 
     // Add the register action here in a similar manner
-    async register() {
+    async register(
+      emailAddress,
+      firstName,
+      lastName,
+      contactNo,
+      gender,
+      homeAddress,
+      postalCode,
+      password,
+      dob,
+      ackTnC,
+      ackGymRules,
+      medicalHistory,
+      MedicalRemarks
+    ) {
       try {
-        const response = await axios.post("http://example-api/register/", {
-          emailAddress: this.emailAddress,
-          firstName: this.firstName,
-          lastName: this.lastName,
-          password: this.password,
+        let response = await axios.post("http://localhost:5000/user", {
+          EmailAddress: emailAddress,
+          Password: password,
+          FirstName: firstName,
+          LastName: lastName,
+          Gender: gender,
+          DateOfBirth: dob,
+          HomeAddress: homeAddress,
+          PostalCode: postalCode,
+          ContactNo: contactNo,
+          UserType: "C",
+          Verified: false,
+          FeedbackDiscover: feedbackDiscover,
+          MedicalHistory: medicalHistory,
+          MedicalRemarks: MedicalRemarks,
+          AcknowledgementTnC: ackTnC,
+          AcknowledgementOpenGymRules: ackGymRules,
         });
 
         // Handle the response data here
-        if (response.status === 201) {
+        if (response.status === 200) {
           // Update the state or take necessary actions
           // For example, you might want to update the user's information or authentication status
-          this.verified = false; // Assuming newly registered users are not automatically verified
+          return response;
         }
       } catch (error) {
         // Handle errors here
