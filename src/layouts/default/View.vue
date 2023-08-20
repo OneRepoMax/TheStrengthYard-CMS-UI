@@ -1,6 +1,6 @@
 <template>
   <v-main>
-    <router-view />
+    <router-view style="max-width: 1280px;" />
   </v-main>
 </template>
 

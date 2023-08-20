@@ -33,7 +33,7 @@
         </v-list>
     </v-navigation-drawer>
     <v-app-bar :elevation="2" color="black">
-        <v-container class="d-flex">
+        <v-container class="d-flex" style="max-width: 1280px;">
             <template class="d-flex d-md-none">
                 <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
             </template>
@@ -71,7 +71,7 @@ export default {
     },
     data() {
         return {
-            appTitle: "TSY CMS Home",
+            appTitle: "The Strength Yard",
             drawer: false,
             group: null,
             isLoggedIn: false,
