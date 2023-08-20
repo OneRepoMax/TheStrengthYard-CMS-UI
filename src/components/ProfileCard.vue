@@ -24,13 +24,13 @@
             </v-card-subtitle>
 
             <v-card-text>
-                <v-btn class="me-3 text-capitalize" x-large color="teal" rounded>
+                <v-btn class="me-3 mb-3 text-capitalize" x-large color="teal" rounded >
                     Book class
                 </v-btn>
-                <v-btn class="me-3 text-capitalize" x-large color="teal" rounded variant="outlined">
+                <v-btn class="me-3 mb-3 text-capitalize" x-large color="teal" rounded variant="outlined">
                     Purchase Membership
                 </v-btn>
-                <v-btn class="me-3 text-capitalize" x-large color="teal" rounded variant="outlined">
+                <v-btn class="me-3 mb-3 text-capitalize" x-large color="teal" rounded variant="outlined">
                     Manage Membership
                 </v-btn>
             </v-card-text>
@@ -44,7 +44,7 @@
                 <v-card-text>
 
                     <v-btn v-for="membership in membershipRecord" :key="membership.id" rounded size="small"
-                        class="me-1 text-capitalize" color="deep-purple-lighten-2">
+                        class="ma-1 text-capitalize" color="deep-purple-lighten-2">
                         {{ membership.Membership.Description }}
                     </v-btn>
                 </v-card-text>
