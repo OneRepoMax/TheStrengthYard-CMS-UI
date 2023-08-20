@@ -76,6 +76,7 @@ export const useUserStore = defineStore("user", {
       postalCode,
       password,
       dob,
+      feedbackDiscover,
       ackTnC,
       ackGymRules,
       medicalHistory,
