@@ -16,7 +16,6 @@ import DefaultView from './View.vue'
     background-image: url('../../assets/login_splash.jpg');
     background-size: cover;
     background-repeat: repeat-y;
-    margin-top: 0;
 }
 
 </style>

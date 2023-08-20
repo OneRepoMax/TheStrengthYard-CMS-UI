@@ -1,9 +1,9 @@
 <template>
     <v-main>
-        <v-container fluid justify="center">
-            <v-row justify="center" class="h-screen" align="center">
+        <v-container fluid class="login-bg" justify="center">
+            <v-row justify="center" class="h-100" align="center">
                 <v-col cols="12" lg="4" md="5">
-                    <v-card class="elevation-12">
+                    <v-card>
                         <v-card-title class="text-center">
                             <v-img src="@/assets/the-strength-yard-logo-main.svg" max-height="150px" class="ma-3"
                                 inset></v-img>
@@ -44,6 +44,14 @@
     </v-main>
 </template>
 
+<style scoped>
+.login-bg {
+    width: 100vw;
+    height: 100vh;
+    background-image: url('/src/assets/login_splash.jpg');
+    background-size: cover;
+}
+</style>
   
 <script>
 import { useUserStore } from '@/store/user'
