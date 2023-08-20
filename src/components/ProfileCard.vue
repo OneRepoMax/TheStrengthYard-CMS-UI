@@ -39,7 +39,7 @@
 
                 <v-divider></v-divider>
 
-                <v-card-title>Active Memberships</v-card-title>
+                <v-card-title class="my-2">Active Memberships</v-card-title>
 
                 <v-card-text>
 
