@@ -1,7 +1,4 @@
 <template>
-    <div>
-        Registration page
-    </div>
     <RegisterForm/>
 
 </template>

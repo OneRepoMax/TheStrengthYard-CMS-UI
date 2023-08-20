@@ -3,8 +3,8 @@
     <v-row justify="center">
       <v-col cols="12" sm="8" md="6">
         <v-card class="elevation-12">
-          <v-toolbar color="primary" dark flat>
-            <v-toolbar-title>REGISTER</v-toolbar-title>
+          <v-toolbar color="white" dark flat>
+            <v-toolbar-title class="text-center">Register</v-toolbar-title>
           </v-toolbar>
           <v-card-text>
             <v-form @submit.prevent="register">
@@ -46,12 +46,12 @@
                     required
                     counter
                 ></v-text-field>
-                <v-btn block color="primary" type="submit">Register</v-btn>
+                <v-btn block color="teal" size="large" type="submit">Register</v-btn>
             </v-form>
 
-            <a href="/account/login" class="d-flex justify-center my-5">
-                Already have an account? Log in here
-            </a>
+            <p class="text-center mt-5">Already have an account? 
+                <router-link to="/account/login">Log in here</router-link>
+            </p>
 
           </v-card-text>
         </v-card>
