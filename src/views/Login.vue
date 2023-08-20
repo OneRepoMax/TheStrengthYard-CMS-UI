@@ -48,6 +48,7 @@ export default {
     },
     data(){
         return {
+            // temp state
             emailAddress: "",
             password: "",
         }
