@@ -1,5 +1,5 @@
 <template>
-    <v-row justify="center" class="h-screen" align="center">
+    <v-row justify="center" class="h-100" align="center">
       <v-col cols="12" lg="4" md="5">
         <v-card class="elevation-12">
           <v-toolbar color="white" dark flat>
