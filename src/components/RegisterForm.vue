@@ -9,7 +9,7 @@
             <v-form @submit.prevent="register">
                 <div class="d-flex justify-center mb-3">
                     <v-avatar size="80" color="surface-variant" @click="openFileInput">
-                    <img v-if="selectedFile" :src="selectedFile" alt="Avatar" />
+                    <v-img v-if="selectedFile" :src="selectedFile" alt="Avatar" max-height="80px"></v-img>
                     <v-icon v-else>mdi-camera</v-icon>
                     </v-avatar>
                     <input
