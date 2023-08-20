@@ -1,6 +1,6 @@
 <template>
-  <v-container>
-    <v-row justify="center">
+  <!-- <v-container> -->
+    <v-row justify="center" class="h-100" align="center">
       <v-col cols="12" sm="8" md="6">
         <v-card class="elevation-12">
           <v-toolbar color="white" dark flat>
@@ -57,7 +57,7 @@
         </v-card>
       </v-col>
     </v-row>
-  </v-container>
+  <!-- </v-container> -->
 </template>
 
 <script>
