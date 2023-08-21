@@ -14,10 +14,9 @@
                     {{ fullName }}
                 </v-card-title>
                 <div>
-                    <v-btn class="me-3" icon="mdi-pencil" variant="plain"></v-btn>
+                    <v-btn class="me-3" icon="mdi-pencil" variant="plain" to="profile/edit"></v-btn>
                 </div>
             </div>
-
 
             <v-card-subtitle>
                 {{ homeAddress }}
