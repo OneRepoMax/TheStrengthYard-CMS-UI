@@ -97,8 +97,8 @@ export default {
                 { title: 'Book', icon: "mdi-login-variant", path: '/book', color: 'transparent' },
             ],
             profileItems: [
-                { title: 'View Profile', path: '/account/profile', icon: "mdi-home", color: 'transparent' },
-                { title: 'Edit Profile', path: '/account/edit-profile', icon: "mdi-home", color: 'transparent' }
+                { title: 'View Profile', path: '/profile/view', icon: "mdi-home", color: 'transparent' },
+                { title: 'Edit Profile', path: '/profile/edit', icon: "mdi-home", color: 'transparent' }
             ]
         };
     },
