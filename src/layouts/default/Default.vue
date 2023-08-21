@@ -8,7 +8,7 @@
 import DefaultView from './View.vue'
 </script>
   
-<style>
+<style scoped>
 
 .default-bg {
     width: 100vw;
