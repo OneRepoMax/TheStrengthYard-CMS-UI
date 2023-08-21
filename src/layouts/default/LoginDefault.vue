@@ -27,7 +27,7 @@ import DefaultFooter from '@/components/Footer.vue'
 }
 
 .default-bg {
-    background-color: #ECEFF1;
+    /* background-color: #ECEFF1; */
 }
 
 </style>
