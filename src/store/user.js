@@ -1,5 +1,7 @@
 import { defineStore } from "pinia";
+import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import axios from "axios";
+import { v4 as uuidv4 } from 'uuid'; 
 
 export const useUserStore = defineStore("user", {
   state: () => ({
@@ -62,6 +64,50 @@ export const useUserStore = defineStore("user", {
         // Handle errors here
         console.error("Login error:", error);
         return;
+      }
+    },
+
+    async uploadAvatar(file) {
+      const secretAccessKey = import.meta.env.VITE_S3_SECRET_KEY; // IAM user secret key
+      const accessKeyId = import.meta.env.VITE_S3_ACCESS_KEY; // IAM user access id
+      const bucket = import.meta.env.VITE_S3_BUCKET_NAME; // Bucket name
+      const region = import.meta.env.VITE_S3_REGION; // Region
+
+      const client = new S3Client({
+        region,
+        credentials: {
+          secretAccessKey,
+          accessKeyId,
+        },
+      });
+
+      // Generate random file name
+      const originalFileName = file.name
+      const extension = originalFileName.split(".").pop(); // Get the file extension
+
+      const tempRandomFileName = uuidv4();
+
+      const randomFileName = `${tempRandomFileName}.${extension}`;
+
+      const command = new PutObjectCommand({
+        Bucket: bucket,
+        Key: randomFileName,
+        Body: file,
+      });
+
+      try {
+        const response = await client.send(command);
+        if (response.$metadata.httpStatusCode == 200) {
+          // Access link will be this one
+          return {
+            status: 200,
+            s3Uri: `https://${bucket}.s3.${region}.amazonaws.com/${randomFileName}`
+          };
+        }
+        return false;
+      } catch (err) {
+        console.error(err);
+        return false;
       }
     },
 
