@@ -52,7 +52,7 @@
                     </template>
                     <v-list theme="dark">
                         <v-list-item prepend-avatar="https://randomuser.me/api/portraits/women/85.jpg"
-                            :title="userStore.firstName + userStore.lastName" :subtitle="userStore.emailAddress"
+                            :title="userStore.firstName + ' ' + userStore.lastName" :subtitle="userStore.emailAddress"
                             class="mb-3">
                         </v-list-item>
                         <v-divider></v-divider>
