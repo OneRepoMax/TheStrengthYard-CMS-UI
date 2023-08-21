@@ -4,16 +4,13 @@
             <v-col cols="12" md="8" no-gutters>
                 <profile-card :fullName="userStore.firstName + ' ' + userStore.lastName"
                     :emailAddress="userStore.emailAddress" :homeAddress="userStore.homeAddress" :membershipRecord="membershipRecord" />
+                    <Classes />
             </v-col>
+
             <v-col cols="12" md="4">
+                <org-profile-card />
                 <membership-log />
             </v-col>
-            <v-col cols="12" md="8">
-                <Classes />
-            </v-col>
-
-
-
 
         </v-row>
 
@@ -28,6 +25,7 @@ import { useUserStore } from '@/store/user'
 import ProfileCard from '@/components/ProfileCard.vue'
 import MembershipLog from '@/components/MembershipLog.vue'
 import Classes from '@/components/Classes.vue'
+import OrgProfileCard from '@/components/OrgProfileCard.vue'
 
 export default {
     name: 'LoginForm',
@@ -71,7 +69,7 @@ export default {
                 ]
         }
     },
-    components: { ProfileCard, MembershipLog, Classes }
+    components: { ProfileCard, MembershipLog, Classes, OrgProfileCard }
 
 }
 
