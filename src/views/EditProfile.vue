@@ -91,9 +91,9 @@ export default {
                     // uri to uploaded avatar
                     console.log(uploadResponse);
 
-                    // trigger registration form through this API and put in variables
+                    // trigger update profile form through this API and put in variables
                     // Edit the function below accordingly, e.g. update the parameters, etc
-                    const registerResponse = await this.userStore.register(
+                    const registerResponse = await this.userStore.updateProfile(
                         this.userStore.emailAddress,
                         this.userStore.firstName,
                         this.userStore.lastName,
