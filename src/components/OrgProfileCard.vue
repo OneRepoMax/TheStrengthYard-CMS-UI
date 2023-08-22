@@ -7,12 +7,12 @@
                 </v-col>
                 <v-col class="pa-0">
                     <v-card-title>The Strength Yard</v-card-title>
-                    <v-list class="pa-0">
+                    <v-card-subtitle class="pa-0">
                         <v-list-item>
                             369 Joo Chiat Road <br>
                             Singapore 427614
                         </v-list-item>
-                    </v-list>
+                    </v-card-subtitle>
                 </v-col>
             </v-row>
         </v-card-text>
