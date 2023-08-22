@@ -28,8 +28,6 @@
         <v-list-item>
             <v-icon title="+6569097449" size="x-small" class="me-3">mdi-phone</v-icon>Mon to  6AM – 12MN
         </v-list-item>
-
-        
         
     </v-card>
 </template>

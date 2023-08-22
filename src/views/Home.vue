@@ -2,14 +2,38 @@
     <v-container class="d-flex d-columns">
         <v-row>
             <v-col cols="12" md="8" no-gutters>
-                <profile-card :fullName="userStore.firstName + ' ' + userStore.lastName"
-                    :emailAddress="userStore.emailAddress" :homeAddress="userStore.homeAddress" :membershipRecord="membershipRecord" />
+                <template v-if="!loading">
+                    <profile-card :fullName="userStore.firstName + ' ' + userStore.lastName"
+                        :emailAddress="userStore.emailAddress" :homeAddress="userStore.homeAddress"
+                        :membershipRecord="membershipRecord" />
                     <Classes />
+                </template>
+
+                <!-- Sekelton loaders -->
+                <template v-if="loading">
+                    <v-skeleton-loader class="mb-3" elevation="3" type="card-avatar, article"
+                        :loading="loading"></v-skeleton-loader>
+                    <v-skeleton-loader class="mb-3" elevation="3" type="table-heading, list-item-two-line"
+                        :loading="loading"></v-skeleton-loader>
+                </template>
+
             </v-col>
 
             <v-col cols="12" md="4">
-                <org-profile-card />
-                <membership-log />
+                <template v-if="!loading">
+                    <org-profile-card />
+                    <membership-log />
+                </template>
+
+                <!-- Sekelton loaders -->
+                <template v-if="loading">
+                    <v-skeleton-loader class="mb-3" elevation="3" type="table-heading, list-item-two-line"
+                        :loading="loading"></v-skeleton-loader>
+                    <v-skeleton-loader class="mb-3" elevation="3"
+                        type="table-heading	, list-item-avatar-three-line, list-item-avatar-three-line, list-item-avatar-three-line"
+                        :loading="loading"></v-skeleton-loader>
+                </template>
+
             </v-col>
 
         </v-row>
@@ -38,7 +62,8 @@ export default {
     },
     data() {
         return {
-            membershipRecord: 
+            loading: true,
+            membershipRecord:
                 [
                     {
                         ActiveStatus: true,
@@ -68,6 +93,19 @@ export default {
                     }
                 ]
         }
+    },
+    mounted() {
+        const readyHandler = () => {
+            if (document.readyState == 'complete') {
+                this.loading = false;
+                document.removeEventListener('readystatechange', readyHandler);
+            }
+        };
+
+        document.addEventListener('readystatechange', readyHandler);
+
+        readyHandler()
+
     },
     components: { ProfileCard, MembershipLog, Classes, OrgProfileCard }
 
