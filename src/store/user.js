@@ -150,14 +150,65 @@ export const useUserStore = defineStore("user", {
 
         // Handle the response data here
         if (response.status === 200) {
-          // Update the state or take necessary actions
-          // For example, you might want to update the user's information or authentication status
           return response;
         }
       } catch (error) {
-        // Handle errors here
         console.error("Registration error:", error);
       }
     },
+
+    async updateProfile(
+      emailAddress,
+      firstName,
+      lastName,
+      contactNo,
+      gender,
+      homeAddress,
+      postalCode,
+      dob
+    ){
+      try { 
+
+        let response = await axios.put("http://localhost:5000/user", {
+          EmailAddress: emailAddress,
+          FirstName: firstName,
+          LastName: lastName,
+          Gender: gender,
+          DateOfBirth: dob,
+          HomeAddress: homeAddress,
+          PostalCode: postalCode,
+          ContactNo: contactNo,
+          FeedbackDiscover: feedbackDiscover,
+          MedicalHistory: medicalHistory,
+          MedicalRemarks: MedicalRemarks,
+          AcknowledgementTnC: ackTnC,
+          AcknowledgementOpenGymRules: ackGymRules,
+        });
+
+        // Handle the response data here
+        if (response.status === 200) {
+          return response;
+        }
+
+      } catch (error) {
+        console.error("Registration error:", error);
+        return 
+      }
+    }
+  },
+  async resetPassword(newPassword) {
+    try {
+      let response = await axios.put("http://localhost:5000/user/:userId", {
+        password: this.password,
+        NewPassword: newPassword,
+      });
+
+      // Handle the response data here
+      return response;
+    } catch (error) {
+      // Handle errors here
+      console.error("Reset password error:", error);
+      throw error; // Rethrow the error to propagate it
+    }
   },
 });
