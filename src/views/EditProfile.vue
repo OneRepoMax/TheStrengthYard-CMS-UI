@@ -3,7 +3,7 @@
     <v-main>
         <v-container fluid class="login-bg" justify="center">
             <v-row justify="center" class="h-100" align="center">
-                <v-col cols="12" lg="4" md="5">
+                <v-col cols="12" lg="4" md="5" align="center">
                     <v-card elevation="3">
                         <v-card-title class="text-center">
                             <v-card-title>Edit Profile</v-card-title>
@@ -17,15 +17,22 @@
 
                         </v-card-title>
                         <v-card-text>
-                            <v-text-field clearable hide-details="auto" class="mb-3" label="First Name" v-model="firstName"
+                            <v-form @submit.prevent="updateProfile" validate-on="submit" >
+                            <v-text-field clearable hide-details="auto" class="mb-3" label="First Name" v-model="this.userStore.firstName"
                                 variant="outlined"></v-text-field>
-                            <v-text-field clearable hide-details="auto" class="mb-3" label="Last Name" v-model="lastName"
+                            <v-text-field clearable hide-details="auto" class="mb-3" label="Last Name" v-model="this.userStore.lastName"
                                 variant="outlined"></v-text-field>
-                            <v-text-field clearable hide-details="auto" class="mb-3" label="Email" v-model="email"
+                            <v-text-field clearable hide-details="auto" class="mb-3" label="Email" v-model="this.userStore.emailAddress"
                                 variant="outlined"></v-text-field>
-                            <v-text-field clearable hide-details="auto" class="mb-3" label="Address" v-model="address"
+                            <v-text-field clearable hide-details="auto" class="mb-3" label="Address" v-model="this.userStore.homeAddress"
                                 variant="outlined"></v-text-field>
+                            <v-text-field clearable hide-details="auto" class="mb-3" label="Contact Number" v-model="this.userStore.contactNo"
+                            variant="outlined"></v-text-field>
+                            <v-col>
+                                <v-btn class="mb-3" to="account/reset-password" density="default" >Change Password</v-btn>
+                            </v-col>
                             <v-btn color="teal" block type="submit" size="large">Update Profile</v-btn>
+                        </v-form>
                         </v-card-text>
 
                     </v-card>
@@ -49,11 +56,10 @@ export default {
     },
     data() {
         return {
-            firstName: "David",
-            lastName: "David",
-            email: "",
-            address: "",
-            password: "",
+            firstName:"",
+            lastName: "",
+            emailAddress: "",
+            homeAddress: "",
             selectedFile: null,
             profilePicture: null,
         }
@@ -109,7 +115,7 @@ export default {
 
                         // Show success modal
                         // <insert your codes here>
-
+                            console.log("Success?")
                         // redirect to email verification (I put login as temporary measure)
                         this.$router.push({ path: '/' })
 
