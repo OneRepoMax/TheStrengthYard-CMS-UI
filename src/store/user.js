@@ -160,4 +160,19 @@ export const useUserStore = defineStore("user", {
       }
     },
   },
+  async resetPassword(newPassword) {
+    try {
+      let response = await axios.put("http://localhost:5000/user/:userId", {
+        password: this.password,
+        NewPassword: newPassword,
+      });
+
+      // Handle the response data here
+      return response;
+    } catch (error) {
+      // Handle errors here
+      console.error("Reset password error:", error);
+      throw error; // Rethrow the error to propagate it
+    }
+  },
 });

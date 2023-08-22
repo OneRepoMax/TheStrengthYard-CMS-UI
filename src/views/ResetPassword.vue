@@ -56,11 +56,11 @@ export default {
             passwordRules: [
                 v => !!v || 'Password is required',
                 v => (v && v.length >= 6) || 'Password must be at least 6 characters',
-                v => /[A-Z]/.test(v) || 'Password must contain at least one capital letter',
+                // v => /[A-Z]/.test(v) || 'Password must contain at least one capital letter',
             ],
             confirmPasswordRules: [
                 v => !!v || 'Confirmation Password is required',
-                v => v === this.password || 'Passwords do not match',
+                v => v === this.confirmPassword || 'Passwords do not match',
             ],
         }
     },
@@ -73,31 +73,9 @@ export default {
                 console.log("new password not the same as confirm password")
             } else {
                 console.log("Password changed successfully")
+                console.log("New Password" + this.newPassword)
                 this.$router.push({ path: '/' })
             }
-//             axios
-//         .post('YOUR_API_ENDPOINT/verify-initial-password', { password: this.initialPassword })
-//         .then(response => {
-//           // Initial password verified, proceed to update the password
-//           const requestData = {
-//             newPassword: this.newPassword,
-//           };
-
-//           // Make a POST request to update the password
-//           axios
-//             .post('YOUR_API_ENDPOINT/update-password', requestData)
-//             .then(response => {
-//               // Password update successful, you can redirect the user or show a success message
-//             })
-//             .catch(error => {
-//               // Handle password update error scenarios
-//             });
-//         })
-//         .catch(error => {
-//           // Handle initial password verification error
-//         });
-//     },
-//   },
 
         }
     }
