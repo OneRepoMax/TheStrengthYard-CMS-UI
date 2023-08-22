@@ -4,6 +4,7 @@ node_modules
 
 #env files
 .env
+.env.template
 
 # local env files
 .env.local
