@@ -9,11 +9,14 @@
     "lint": "eslint . --fix --ignore-path .gitignore"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.395.0",
     "@mdi/font": "7.0.96",
+    "aws-sdk": "^2.1440.0",
     "axios": "^1.4.0",
     "core-js": "^3.29.0",
     "pinia": "^2.0.0",
     "roboto-fontface": "*",
+    "uuid": "^9.0.0",
     "vue": "^3.2.0",
     "vue-router": "^4.0.0",
     "vuetify": "^3.0.0",

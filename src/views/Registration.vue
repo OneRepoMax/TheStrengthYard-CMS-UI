@@ -1,10 +1,14 @@
 <template>
-    <div>
-        Registration page
-    </div>
+    <v-main>
+        <v-container fluid justify="center">
+            <RegisterForm />
+        </v-container>
+    </v-main>
 </template>
 
 <script setup>
+
+import RegisterForm from '@/components/RegisterForm.vue'
 
 </script>
 
