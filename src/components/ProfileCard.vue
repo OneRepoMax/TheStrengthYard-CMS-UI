@@ -1,5 +1,5 @@
 <template>
-    <v-card elevation="3 mb-3">
+    <v-card elevation="3" class="mb-3">
 
         <v-img class="align-end text-white" height="200" src="@/assets/home-cover-photo.jpg" cover></v-img>
 
