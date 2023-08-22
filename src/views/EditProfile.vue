@@ -99,7 +99,7 @@ export default {
 
                     // trigger update profile form through this API and put in variables
                     // Edit the function below accordingly, e.g. update the parameters, etc
-                    const registerResponse = await this.userStore.updateProfile(
+                    const updateResponse = await this.userStore.updateProfile(
                         this.userStore.emailAddress,
                         this.userStore.firstName,
                         this.userStore.lastName,
@@ -111,18 +111,18 @@ export default {
                         uploadResponse
                     )
 
-                    if (registerResponse.status == 200) {
+                    if (updateResponse.status == 200) {
 
                         // Show success modal
                         // <insert your codes here>
-                            console.log("Success?")
+                        console.log("Success?")
                         // redirect to email verification (I put login as temporary measure)
                         this.$router.push({ path: '/' })
 
                     }
                 }
             } catch (error) {
-                console.log("Registration error: ", error);
+                console.log("Update Profile error: ", error);
             }
         }
     }
