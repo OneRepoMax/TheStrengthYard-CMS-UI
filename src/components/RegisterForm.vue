@@ -1,12 +1,18 @@
 <template>
-    <v-row justify="center" class="h-100" align="center">
-      <v-col cols="12" lg="4" md="5">
-        <v-card class="elevation-12">
+    <!-- <v-row justify="center" class="h-100" align="center"> -->
+      <!-- <v-col cols="12" lg="4" md="5"> -->
+        <!-- <v-card class="elevation-12"> -->
+          <div class="bg-teal py-2">
+            <p class="text-center" >Already have an account? 
+                <router-link class="text-white" to="/account/login">Log in here</router-link>
+            </p>
+          </div>
           <v-toolbar color="white" dark flat>
             <v-toolbar-title class="text-center font-weight-bold">Member Registration</v-toolbar-title>
           </v-toolbar>
           <v-card-text>
             <v-form @submit.prevent="register">
+                <!-- Profile Picture -->
                 <div class="d-flex justify-center mb-3">
                     <v-avatar size="80" color="surface-variant" @click="openFileInput">
                     <v-img v-if="selectedFile" :src="selectedFile" alt="Avatar" max-height="80px"></v-img>
@@ -21,10 +27,23 @@
                     />
                 </div>
                 <p class="d-flex justify-center mb-5">Profile Picture</p>
+                <!-- First Name -->
                 <v-text-field v-model="firstName" label="First Name" required :rules="nameRules" class="mt-3"></v-text-field>
+                <!-- Last Name -->
                 <v-text-field v-model="lastName" label="Last Name" required :rules="nameRules" class="mt-3"></v-text-field>
-                <v-text-field v-model="email" label="Email" required :rules="emailRules" class="mt-3"></v-text-field>
-                <v-text-field v-model="address" label="Address" :rules="addressRules" class="mt-3" required></v-text-field>
+                <!-- Gender -->
+                <v-select v-model="gender" label="Gender" :items="genders" placeholder="Select" required :rules="genderRules" class="mt-3"></v-select>
+                <!-- Date of Birth -->
+                <v-text-field v-model="dateOfBirth" label="Date of Birth" placeholder="DD/MM/YYYY" :rules="dobRules" class="mt-3" required></v-text-field>
+                <!-- Email -->
+                <v-text-field v-model="emailAddress" label="Email" required :rules="emailRules" class="mt-3"></v-text-field>
+                <!-- Address -->
+                <v-text-field v-model="homeAddress" label="Address" :rules="addressRules" class="mt-3" required></v-text-field>
+                <!-- Postal Code -->
+                <v-text-field v-model="postalCode" label="Postal Code" :rules="postalRules" class="mt-3" required></v-text-field>
+                <!-- Contact -->
+                <v-text-field v-model="contactNo" label="Contact Number" :rules="contactRules" class="mt-3" required></v-text-field>
+                <!-- Password -->
                 <v-text-field
                     v-model="password"
                     label="Password"
@@ -36,28 +55,29 @@
                     required
                     counter
                 ></v-text-field>
+                <!-- Confirm Password -->
                 <v-text-field
                     v-model="confirmPassword"
                     label="Confirm Password"
                     :append-icon="show2 ? 'mdi-eye' : 'mdi-eye-off'"
                     :rules="confirmPasswordRules"
-                    :type="show1 ? 'text' : 'password'"
+                    :type="show2 ? 'text' : 'password'"
                     @click:append="show2 = !show2"
                     class="mt-3"
                     required
                     counter
                 ></v-text-field>
-                <v-btn block color="teal" size="large" type="submit" class="mt-3">Register</v-btn>
+                <!-- <v-btn block color="teal" size="large" type="submit" class="mt-3">Register</v-btn> -->
             </v-form>
 
-            <p class="text-center mt-5">Already have an account? 
+            <!-- <p class="text-center mt-5">Already have an account? 
                 <router-link to="/account/login">Log in here</router-link>
-            </p>
+            </p> -->
 
           </v-card-text>
-        </v-card>
-      </v-col>
-    </v-row>
+        <!-- </v-card> -->
+      <!-- </v-col> -->
+    <!-- </v-row> -->
 </template>
 
 <script>
@@ -78,8 +98,13 @@ export default {
       profilePicture: null,
       firstName: '',
       lastName: '',
-      email: '',
-      address: '',
+      gender: null,
+      genders: ['Male', 'Female', 'Prefer not to say'],
+      dateOfBirth: '',
+      emailAddress: '',
+      homeAddress: '',
+      postalCode: '',
+      contactNo: '',
       password: '',
       confirmPassword: '',
       fileObject: null,
@@ -93,12 +118,29 @@ export default {
         v => !!v || 'Email is required',
         v => /.+@.+\..+/.test(v) || 'Email must be valid',
       ],
+      genderRules: [
+        v => !!v || 'Gender is required',
+      ],
+      dobRules: [
+        v => !!v || 'Date of Birth is required',
+      ],
       addressRules: [
         v => !!v || 'Address is required',
       ],
+      postalRules: [
+        v => !!v || 'Postal Code is required',
+        v => (v && v.length == 6 && /^\d+$/.test(v)) || 'Postal Code must be 6 digits',
+      ],
+      contactRules: [
+        v => !!v || 'Contact Number is required',
+      ],
       passwordRules: [
         v => !!v || 'Password is required',
-        v => (v && v.length >= 6) || 'Password must be at least 6 characters',
+        v => (v && v.length >= 8) || 'Password must be at least 8 characters',
+        v => (v && !!/[a-z]/.test(v)) || 'Password must contain at least one lowercase letter.',
+        v => (v && !!/[A-Z]/.test(v)) || 'Password must contain at least one uppercase letter.',
+        v => (v && !!/\d/.test(v)) || 'Password must contain at least one numeric character.',
+        v => (v && !!/[!@#$%^&*]/.test(v)) || 'Password must contain at least one special character.',
       ],
       confirmPasswordRules: [
         v => !!v || 'Confirmation Password is required',
@@ -113,8 +155,11 @@ export default {
         profilePicture: this.profilePicture,
         firstName: this.firstName,
         lastName: this.lastName,
-        email: this.email,
-        address: this.address,
+        gender: this.shortenGender(this.gender),
+        dateOfBirth: this.dateOfBirth,
+        emailAddress: this.emailAddress,
+        homeAddress: this.homeAddress,
+        postalCode: this.postalCode,
         password: this.password,
       });
       
@@ -148,6 +193,12 @@ export default {
         console.log("Registration error: ", error);
       }
 
+    },
+
+    shortenGender(gender){
+        if (gender === 'Male'){return 'M';}
+        else if (gender === 'Female'){return 'F';}
+        else {return 'O'}
     },
     
     openFileInput() {
