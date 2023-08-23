@@ -29,7 +29,7 @@
                             <v-text-field clearable hide-details="auto" class="mb-3" label="Contact Number" v-model="this.userStore.contactNo"
                             variant="outlined"></v-text-field>
                             <v-col>
-                                <v-btn class="mb-3" to="../account/reset-password" density="default" >Change Password</v-btn>
+                                <v-btn class="mb-3" to="/profile/reset-password" density="default" >Change Password</v-btn>
                             </v-col>
                             <v-btn color="teal" block type="submit" size="large">Update Profile</v-btn>
                         </v-form>
