@@ -6,6 +6,7 @@ const TSY_API = import.meta.env.VITE_TSY_API
 
 export const useUserStore = defineStore("user", {
   state: () => ({
+    userId: null,
     emailAddress: null,
     firstName: null,
     lastName: null,
@@ -156,6 +157,7 @@ export const useUserStore = defineStore("user", {
 
         // Handle the response data here
         if (response.status === 200) {
+          this.userId = response.UserId;
           return response;
         }
       } catch (error) {
