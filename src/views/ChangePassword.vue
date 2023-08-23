@@ -1,60 +1,62 @@
 <template>
-    <v-main>
-        <v-container fluid justify="center">
-            <v-row justify="center" class="h-100" align="center">
-                <v-col cols="12" lg="4" md="5">
-                    <v-card v-if="passwordAlertType != 'success'">
-                        <v-card-title class="text-center">
-                            <v-card-title>Change Password</v-card-title>
-                        </v-card-title>
+    <v-container fluid justify="center">
+        <v-row justify="center" align="center">
+            <v-card class="pa-3 w-100" max-width="500px">
+                <v-card-title class="text-center">
+                    <v-card-title>Change Password</v-card-title>
+                </v-card-title>
+                <v-card-text>
+                    <v-form @submit.prevent="changePassword">
+                        <!-- <v-text-field v-model="emailAddress" label="Email Address" required></v-text-field> -->
+                        <v-text-field v-model="password" label="Current Password" required :rules="passwordRules"
+                            class="mb-3" :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                            @click:append-inner="showPassword = !showPassword"
+                            :type="showPassword ? 'text' : 'password'"></v-text-field>
+                        <v-text-field v-model="newPassword" label="New Password" required :rules="passwordRules"
+                            class="mb-3" :append-inner-icon="showNewPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                            @click:append-inner="showNewPassword = !showNewPassword"
+                            :type="showNewPassword ? 'text' : 'password'"></v-text-field>
+                        <v-text-field v-model="confirmPassword" label="Confirm Password" required
+                            :rules="confirmPasswordRules" class="mb-3"
+                            :append-inner-icon="showConfirmPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                            @click:append-inner="showConfirmPassword = !showConfirmPassword"
+                            :type="showConfirmPassword ? 'text' : 'password'"></v-text-field>
                         <v-card-text>
-                            <v-form @submit.prevent="changePassword">
-                                <!-- <v-text-field v-model="emailAddress" label="Email Address" required></v-text-field> -->
-                                <v-text-field v-model="password" label="Current Password" required :rules="passwordRules"
-                                    class="mb-3" :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-                                    @click:append-inner="showPassword = !showPassword"
-                                    :type="showPassword ? 'text' : 'password'"></v-text-field>
-                                <v-text-field v-model="newPassword" label="New Password" required :rules="passwordRules"
-                                    class="mb-3" :append-inner-icon="showNewPassword ? 'mdi-eye' : 'mdi-eye-off'"
-                                    @click:append-inner="showNewPassword = !showNewPassword"
-                                    :type="showNewPassword ? 'text' : 'password'"></v-text-field>
-                                <v-text-field v-model="confirmPassword" label="Confirm Password" required
-                                    :rules="confirmPasswordRules" class="mb-3"
-                                    :append-inner-icon="showConfirmPassword ? 'mdi-eye' : 'mdi-eye-off'"
-                                    @click:append-inner="showConfirmPassword = !showConfirmPassword"
-                                    :type="showConfirmPassword ? 'text' : 'password'"></v-text-field>
-                                <v-card-text>
-                                    Password Strength: <b>{{ this.score.text }}</b>
-                                </v-card-text>
-
-                                <v-progress-linear :background-opacity="opacity" :color="score.color"
-                                    :model-value="score.value" striped height="10" class="mb-3"></v-progress-linear>
-                                <v-btn color="teal" block type="submit" size="large" class="mb-3">Change Password</v-btn>
-
-                                <v-btn block variant="outlined" to="/profile/edit" prepend-icon="mdi-arrow-left" size="large">
-                                    Back to profile
-                                </v-btn>
-                            </v-form>
+                            Password Strength: <b>{{ this.score.text }}</b>
                         </v-card-text>
-                    </v-card>
-                    <v-card v-if="passwordAlert">
-                        <v-alert :type="passwordAlertType" :title="passwordAlertMessage">
 
-                            <v-card-actions v-if="passwordAlertType == 'success'">
-                                <v-spacer></v-spacer>
-                                <v-btn variant="outlined" text="Ok" to="/">
-                                </v-btn>
-                            </v-card-actions>
-                        </v-alert>
-                    </v-card>
-                </v-col>
-            </v-row>
-        </v-container>
-    </v-main>
+                        <v-progress-linear :background-opacity="opacity" :color="score.color" :model-value="score.value"
+                            striped height="10" class="mb-5"></v-progress-linear>
+                        <v-btn color="teal" block type="submit" size="large" class="mb-5">Change Password</v-btn>
+
+                        <v-btn block variant="outlined" to="/profile/edit" prepend-icon="mdi-arrow-left" size="large">
+                            Back to profile
+                        </v-btn>
+                    </v-form>
+                </v-card-text>
+            </v-card>
+            <v-card v-if="passwordAlert">
+                <v-alert :type="passwordAlertType" :title="passwordAlertMessage">
+
+                    <v-card-actions v-if="passwordAlertType == 'success'">
+                        <v-spacer></v-spacer>
+                        <v-btn variant="outlined" text="Ok" to="/">
+                        </v-btn>
+                    </v-card-actions>
+                </v-alert>
+            </v-card>
+
+            <v-template>
+                <Modal v-model="modal.show" :path="modal.path" :title="modal.title" :message="modal.message"
+                    :icon="modal.icon" @closeModal="closeModal" />
+            </v-template>
+        </v-row>
+    </v-container>
 </template>
 
 <script>
 import { useUserStore } from "@/store/user";
+import Modal from '@/components/Modal.vue';
 import zxcvbn from "zxcvbn";
 
 export default {
@@ -97,6 +99,14 @@ export default {
             showPassword: false,
             showNewPassword: false,
             showConfirmPassword: false,
+            modal: {
+                show: false,
+                type: "success",
+                icon: "mdi-check-circle",
+                title: "Password Changed successfully",
+                message: "Success! Your password has been successfully changed.",
+                path: "/"
+            }
         };
     },
     methods: {
@@ -113,10 +123,9 @@ export default {
                     );
                     console.log(response)
                     if (response.status === 200) {
-                        this.passwordAlertMessage =
-                            "Success! Your password has been changed.";
-                        this.passwordAlertType = "success";
-                        this.passwordAlert = true;
+                        this.modal.show = true;
+                        this.modal.message = "Success! Your password has been changed.";
+                        this.modal.type = "success";
                     }
 
                     if (this.newPassword !== this.confirmPassword) {
@@ -133,6 +142,9 @@ export default {
                 this.passwordAlertType = "error";
                 this.passwordAlert = true;
             }
+        },
+        closeModal() {
+            this.modal.show = false
         },
     },
     computed: {
@@ -173,5 +185,6 @@ export default {
             }
         },
     },
+    components: { Modal }
 };
 </script>

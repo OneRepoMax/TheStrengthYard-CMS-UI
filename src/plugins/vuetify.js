@@ -14,7 +14,7 @@ import { createVuetify } from "vuetify";
 const light = {
     dark: false,
     colors: {
-      background: '#FFFFFF',
+      background: '#ECEFF1',
       surface: '#FFFFFF',
       primary: '#6200EE',
       'primary-darken-1': '#3700B3',

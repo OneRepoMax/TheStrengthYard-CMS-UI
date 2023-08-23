@@ -1,10 +1,10 @@
 <template>
     <v-app>
         <default-bar />
-        <div class="default-bg py-8">
-            <div class="login-default">
+        <div class="py-8">
+            <v-responsive class="mx-auto" max-width="1280px" min-height="87.5vh" align-content="center" >
                 <default-view />
-            </div>
+            </v-responsive>
         </div>
         <default-footer />
     </v-app>
@@ -16,18 +16,3 @@ import DefaultView from './View.vue'
 import DefaultFooter from '@/components/Footer.vue'
 </script>
 
-<style>
-
-.login-default {
-    max-width: 1280px;
-    align-content: center;
-    margin: 0 auto;
-    display: flex;
-    justify-content: center;
-}
-
-/* .default-bg {
-    background-color: #ECEFF1;
-} */
-
-</style>

@@ -195,25 +195,18 @@ export const useUserStore = defineStore("user", {
     },
 
     async updateProfile(
-      firstName,
-      lastName,
-      contactNo,
-      homeAddress,
-      postalCode,
-      gender,
-      dob,
-      displayPicture
+      profileData
     ) {
       try {
         let response = await axios.put(`${TSY_API}/user/${this.userId}`, {
-          FirstName: firstName,
-          LastName: lastName,
-          ContactNo: contactNo,
-          HomeAddress: homeAddress,
-          PostalCode: postalCode,
-          Gender: gender,
-          DateOfBirth: dob,
-          DisplayPicture: displayPicture,
+          FirstName: profileData.firstName,
+          LastName: profileData.lastName,
+          ContactNo: profileData.contactNo,
+          HomeAddress: profileData.homeAddress,
+          PostalCode: profileData.postalCode,
+          Gender: profileData.gender,
+          DateOfBirth: profileData.dob,
+          DisplayPicture: profileData.displayPicture,
         });
 
         // Handle the response data here
