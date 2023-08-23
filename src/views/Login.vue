@@ -2,8 +2,7 @@
   <v-main>
     <v-container fluid class="login-bg" justify="center">
       <v-row justify="center" class="h-100" align="center">
-        <v-col cols="12" lg="4" md="5">
-          <v-card>
+          <v-card class="pa-3 w-100" max-width="400px">
             <v-card-title class="text-center">
               <v-img
                 src="@/assets/the-strength-yard-logo-main.svg"
@@ -57,7 +56,7 @@
               </v-form>
             </v-card-text>
           </v-card>
-        </v-col>
+        
       </v-row>
     </v-container>
   </v-main>
