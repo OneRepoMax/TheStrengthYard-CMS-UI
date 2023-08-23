@@ -1,8 +1,16 @@
 <template>
     <v-navigation-drawer v-model="drawer" location="bottom" temporary theme="dark" style="height: 500px;">
         <v-list nav>
-            <v-list-item :prepend-avatar="userStore.displayPicture"
-                :title="userStore.firstName + userStore.lastName" :subtitle="userStore.emailAddress"></v-list-item>
+            <template v-if="userStore.displayPicture">
+                <v-list-item :prepend-avatar="userStore.displayPicture" :title="userStore.firstName + userStore.lastName"
+                    :subtitle="userStore.emailAddress">
+                </v-list-item>
+            </template>
+            <template v-if="!userStore.displayPicture">
+                <v-list-item prepend-icon="mdi-account-circle" :title="userStore.firstName + userStore.lastName"
+                    :subtitle="userStore.emailAddress">
+                </v-list-item>
+            </template>
             <v-list-item to="/profile/edit" prepend-icon="mdi-account" title="Manage Account">
             </v-list-item>
             <v-list-item>
@@ -49,7 +57,8 @@
                 <v-menu location="bottom">
                     <template v-slot:activator="{ props }">
                         <v-btn v-bind="props" :icon="userStore.displayPicture">
-                            <v-avatar :image="userStore.displayPicture"></v-avatar>
+                            <v-icon icon="mdi-account-circle" v-if="!userStore.displayPicture"></v-icon>
+                            <v-avatar :image="userStore.displayPicture" v-if="userStore.displayPicture"></v-avatar>
                         </v-btn>
                     </template>
                     <v-list theme="dark">

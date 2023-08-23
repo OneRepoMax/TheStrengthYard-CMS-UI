@@ -95,7 +95,7 @@ export default {
 
                 if (this.selectedFile != this.displayPicture) {
                     const uploadResponse = await this.userStore.uploadAvatar(this.profilePicture)
-                    this.displayPicture = uploadResponse.s3uri
+                    this.displayPicture = uploadResponse.s3Uri
                 }
 
                 // uri to uploaded avatar
@@ -116,7 +116,7 @@ export default {
 
                     // Show success modal
                     // <insert your codes here>
-                    console.log("Success?")
+
                     // redirect to email verification (I put login as temporary measure)
                     this.$router.push({ path: '/' })
 
