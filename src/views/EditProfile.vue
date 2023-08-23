@@ -95,15 +95,11 @@ export default {
 
                 if (this.selectedFile != this.displayPicture) {
                     const uploadResponse = await this.userStore.uploadAvatar(this.profilePicture)
-                    this.selectedFile = uploadResponse.s3uri
-                }
-
-                if (this.selectedFile.length==0){
-                    throw new Error("Display Picture cannot be empty")
+                    this.displayPicture = uploadResponse.s3uri
                 }
 
                 // uri to uploaded avatar
-                console.log(this.selectedFile);
+                console.log(this.displayPicture);
 
                 // trigger update profile form through this API and put in variables
                 // Edit the function below accordingly, e.g. update the parameters, etc
@@ -113,7 +109,7 @@ export default {
                     this.userStore.contactNo,
                     this.userStore.homeAddress,
                     this.userStore.postalCode,
-                    this.selectedFile
+                    this.displayPicture
                 )
 
                 if (updateResponse.status == 200) {
