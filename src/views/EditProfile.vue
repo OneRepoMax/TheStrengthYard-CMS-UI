@@ -6,7 +6,7 @@
                 <v-col cols="12" lg="4" md="5" align="center">
                     <v-card elevation="3">
                         <v-card-title class="text-center">
-                            <v-card-title>Edit Profile</v-card-title>
+                            <v-card-title>Manage Account</v-card-title>
                             <v-avatar size="80" color="surface-variant" @click="openFileInput">
                                 <v-img v-if="selectedFile" :src="selectedFile" alt="Avatar" max-height="80px"></v-img>
                                 <v-icon v-else>mdi-camera</v-icon>
@@ -17,22 +17,23 @@
 
                         </v-card-title>
                         <v-card-text>
-                            <v-form @submit.prevent="updateProfile" validate-on="submit" >
-                            <v-text-field clearable hide-details="auto" class="mb-3" label="First Name" v-model="this.userStore.firstName"
-                                variant="outlined"></v-text-field>
-                            <v-text-field clearable hide-details="auto" class="mb-3" label="Last Name" v-model="this.userStore.lastName"
-                                variant="outlined"></v-text-field>
-                            <v-text-field clearable hide-details="auto" class="mb-3" label="Email" v-model="this.userStore.emailAddress"
-                                variant="outlined"></v-text-field>
-                            <v-text-field clearable hide-details="auto" class="mb-3" label="Address" v-model="this.userStore.homeAddress"
-                                variant="outlined"></v-text-field>
-                            <v-text-field clearable hide-details="auto" class="mb-3" label="Contact Number" v-model="this.userStore.contactNo"
-                            variant="outlined"></v-text-field>
+                            <v-form @submit.prevent="updateProfile" validate-on="submit">
+                                <v-text-field clearable hide-details="auto" class="mb-3" label="First Name"
+                                    v-model="this.userStore.firstName" variant="outlined"></v-text-field>
+                                <v-text-field clearable hide-details="auto" class="mb-3" label="Last Name"
+                                    v-model="this.userStore.lastName" variant="outlined"></v-text-field>
+                                <v-text-field clearable hide-details="auto" class="mb-3" label="Email"
+                                    v-model="this.userStore.emailAddress" variant="outlined"></v-text-field>
+                                <v-text-field clearable hide-details="auto" class="mb-3" label="Address"
+                                    v-model="this.userStore.homeAddress" variant="outlined"></v-text-field>
+                                <v-text-field clearable hide-details="auto" class="mb-3" label="Contact Number"
+                                    v-model="this.userStore.contactNo" variant="outlined"></v-text-field>
 
-                            <v-btn block color="teal" variant="outlined" class="mb-3" to="/profile/change-password" density="default" size="large">Change Password</v-btn>
+                                <v-btn block color="teal" variant="outlined" class="mb-3" to="/profile/change-password"
+                                    density="default" size="large">Change Password</v-btn>
 
-                            <v-btn color="teal" block type="submit" size="large">Update Profile</v-btn>
-                        </v-form>
+                                <v-btn color="teal" block type="submit" size="large">Update Profile</v-btn>
+                            </v-form>
                         </v-card-text>
 
                     </v-card>
@@ -56,11 +57,12 @@ export default {
     },
     data() {
         return {
-            firstName:"",
+            firstName: "",
             lastName: "",
             emailAddress: "",
             homeAddress: "",
-            selectedFile: null,
+            selectedFile: this.userStore.displayPicture,
+            displayPicture: this.userStore.displayPicture,
             profilePicture: null,
         }
     },
@@ -90,41 +92,44 @@ export default {
         },
         async updateProfile() {
             try {
-                const uploadResponse = await this.userStore.uploadAvatar(this.profilePicture)
-                if (uploadResponse.status == 200) {
-                    console.log("success");
 
-                    // uri to uploaded avatar
-                    console.log(uploadResponse);
-
-                    // trigger update profile form through this API and put in variables
-                    // Edit the function below accordingly, e.g. update the parameters, etc
-                    const updateResponse = await this.userStore.updateProfile(
-                        this.userStore.emailAddress,
-                        this.userStore.firstName,
-                        this.userStore.lastName,
-                        this.userStore.contactNo,
-                        this.userStore.gender,
-                        this.userStore.homeAddress,
-                        this.userStore.postalCode,
-                        this.userStore.dob,
-                        uploadResponse
-                    )
-
-                    if (updateResponse.status == 200) {
-
-                        // Show success modal
-                        // <insert your codes here>
-                        console.log("Success?")
-                        // redirect to email verification (I put login as temporary measure)
-                        this.$router.push({ path: '/' })
-
-                    }
+                if (this.selectedFile != this.displayPicture) {
+                    const uploadResponse = await this.userStore.uploadAvatar(this.profilePicture)
+                    this.selectedFile = uploadResponse.s3uri
                 }
-            } catch (error) {
-                console.log("Update Profile error: ", error);
-            }
-        }
+
+                if (this.selectedFile.length==0){
+                    throw new Error("Display Picture cannot be empty")
+                }
+
+                // uri to uploaded avatar
+                console.log(this.selectedFile);
+
+                // trigger update profile form through this API and put in variables
+                // Edit the function below accordingly, e.g. update the parameters, etc
+                const updateResponse = await this.userStore.updateProfile(
+                    this.userStore.firstName,
+                    this.userStore.lastName,
+                    this.userStore.contactNo,
+                    this.userStore.homeAddress,
+                    this.userStore.postalCode,
+                    this.selectedFile
+                )
+
+                if (updateResponse.status == 200) {
+
+                    // Show success modal
+                    // <insert your codes here>
+                    console.log("Success?")
+                    // redirect to email verification (I put login as temporary measure)
+                    this.$router.push({ path: '/' })
+
+                }
+            
+    } catch(error) {
+        console.log("Update Profile error: ", error);
+    }
+}
     }
 }
 

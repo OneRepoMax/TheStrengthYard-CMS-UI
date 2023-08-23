@@ -26,8 +26,8 @@ import DefaultFooter from '@/components/Footer.vue'
     justify-content: center;
 }
 
-.default-bg {
-    /* background-color: #ECEFF1; */
-}
+/* .default-bg {
+    background-color: #ECEFF1;
+} */
 
 </style>

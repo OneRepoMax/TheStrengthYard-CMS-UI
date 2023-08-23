@@ -3,7 +3,7 @@
         <v-row>
             <v-col cols="12" md="8" no-gutters>
                 <profile-card :fullName="userStore.firstName + ' ' + userStore.lastName"
-                    :emailAddress="userStore.emailAddress" :homeAddress="userStore.homeAddress" :membershipRecord="membershipRecord" />
+                    :emailAddress="userStore.emailAddress" :homeAddress="userStore.homeAddress" :membershipRecord="membershipRecord" :displayPicture="userStore.displayPicture" />
                     <Classes />
             </v-col>
 
