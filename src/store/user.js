@@ -196,19 +196,50 @@ export const useUserStore = defineStore("user", {
       }
     }
   },
-  async resetPassword(newPassword) {
+  async resetPassword(userId, newPassword) {
+    const apiUrl = `http://localhost:5000/user/${userId}`; // Replace with your actual API URL
+    const data = { 
+      newPassword: newPassword, // Assuming "Password" is the field for storing passwords
+    };
     try {
-      let response = await axios.put("http://localhost:5000/user/:userId", {
-        password: this.password,
-        NewPassword: newPassword,
-      });
+      const response = await axios.put(apiUrl, data);
+  
+      if (response.status === 200) {
+        this.password = response.data.newPassword;
+        console.log('Password reset successfully');
+        this.saveUserToLocalStorage();
 
-      // Handle the response data here
-      return response;
+      } else {
+        console.log('Password reset failed:', response.data);
+      }
     } catch (error) {
-      // Handle errors here
-      console.error("Reset password error:", error);
-      throw error; // Rethrow the error to propagate it
+      console.error('An error occurred during the API request:', error);
     }
+  //   try {
+  //     let response = await axios.put(apiUrl, {
+  //       password: this.password,
+  //       newPassword: newPassword,
+  //       confirmPassword: confirmPassword,
+  //     });
+
+  //     if (response.status === 200) {
+  //       // this.emailAddress = response.data.EmailAddress;
+  //       // this.firstName = response.data.FirstName;
+  //       // this.lastName = response.data.LastName;
+  //       // this.contactNo = response.data.ContactNo;
+  //       // this.gender = response.data.Gender;
+  //       // this.homeAddress = response.data.HomeAddress;
+  //       // this.postalCode = response.data.PostalCode;
+  //       // this.userType = response.data.UserType;
+  //       // this.saveUserToLocalStorage();
+  //     }
+
+  //     // Handle the response data here
+  //     return response;
+  //   } catch (error) {
+  //     // Handle errors here
+  //     console.error("Reset password error:", error);
+  //     throw error; // Rethrow the error to propagate it
+  //   }
   },
 });

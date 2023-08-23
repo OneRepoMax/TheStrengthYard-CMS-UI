@@ -37,17 +37,17 @@
 </style>
   
 <script>
-// import { useUserStore } from '@/store/user'
+import { useUserStore } from '@/store/user'
 
 export default {
     name: 'resetForm',
-    // setup() {
-    //     const userStore = useUserStore()
+    setup() {
+        const userStore = useUserStore()
 
-    //     return {
-    //         userStore
-    //     }
-    // },
+        return {
+            userStore
+        }
+    },
     data(){
         return {
             password: "",
@@ -66,16 +66,24 @@ export default {
     },
     methods: {
         async resetPassword(){
-            // const response = await this.userStore.login(this.emailAddress, this.password);
+            const response = await this.userStore.resetPassword(this.newPassword);
 
-            // console.log(response);
             if (this.newPassword !== this.confirmPassword) {
                 console.log("new password not the same as confirm password")
             } else {
                 console.log("Password changed successfully")
                 console.log("New Password" + this.newPassword)
                 this.$router.push({ path: '/' })
+                console.log(response);
             }
+
+
+            // if (response == null || response.status != 200) {
+            //     console.log("invalid password")
+            // } else {
+            //     console.log("Password changed successfully")
+            //     this.$router.push({ path: '/' })
+            // }
 
         }
     }
