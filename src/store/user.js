@@ -71,7 +71,7 @@ export const useUserStore = defineStore("user", {
       const secretAccessKey = import.meta.env.VITE_S3_SECRET_KEY; // IAM user secret key
       const accessKeyId = import.meta.env.VITE_S3_ACCESS_KEY; // IAM user access id
       const bucket = import.meta.env.VITE_S3_BUCKET_NAME; // Bucket name
-      const region = import.meta.env.VITE_S3_REGION; // Region
+      const region = import.meta.env.VITE_AWS_REGION; // Region
 
       const client = new S3Client({
         region,
