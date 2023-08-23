@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import axios from "axios";
 import { v4 as uuidv4 } from 'uuid'; 
+const TSY_API = import.meta.env.VITE_TSY_API
 
 export const useUserStore = defineStore("user", {
   state: () => ({
@@ -41,10 +42,13 @@ export const useUserStore = defineStore("user", {
     },
 
     async login(emailAddress, password) {
+      console.log(TSY_API)
       try {
-        let response = await axios.post("http://localhost:5000/login", {
+
+        let response = await axios.post(`${TSY_API}/login`, {
           EmailAddress: emailAddress,
           Password: password,
+    
         });
 
         // Handle the response data here
@@ -131,7 +135,7 @@ export const useUserStore = defineStore("user", {
       MedicalRemarks
     ) {
       try {
-        let response = await axios.post("http://localhost:5000/user", {
+        let response = await axios.post(`${TSY_API}/user`, {
           EmailAddress: emailAddress,
           Password: password,
           FirstName: firstName,
@@ -171,7 +175,7 @@ export const useUserStore = defineStore("user", {
     ){
       try { 
 
-        let response = await axios.put("http://localhost:5000/user", {
+        let response = await axios.put(`${TSY_API}/user`, {
           EmailAddress: emailAddress,
           FirstName: firstName,
           LastName: lastName,
@@ -191,52 +195,30 @@ export const useUserStore = defineStore("user", {
         console.error("Registration error:", error);
         return 
       }
-    }
-  },
-  async resetPassword(userId, newPassword) {
-    const apiUrl = `http://localhost:5000/user/${userId}`; // Replace with your actual API URL
-    const data = { 
-      newPassword: newPassword, // Assuming "Password" is the field for storing passwords
-    };
-    try {
-      const response = await axios.put(apiUrl, data);
-  
-      if (response.status === 200) {
-        this.password = response.data.newPassword;
-        console.log('Password reset successfully');
-        // this.saveUserToLocalStorage();
-
-      } else {
-        console.log('Password reset failed:', response.data);
+    },
+    async resetPassword(userId, newPassword) {
+      
+      const apiUrl = `${TSY_API}/user/${userId}`; // Replace with your actual API URL
+      const data = { 
+        Password: newPassword, // Assuming "Password" is the field for storing passwords
+      };
+      try {
+        const response = await axios.put(apiUrl, data);
+    
+        if (response.status === 200) {
+          this.password = response.data.Password;
+          console.log('Password reset successfully');
+          // this.saveUserToLocalStorage();
+          
+        } else {
+          console.log('Password reset failed:', response.data);
+        }
+        return response
+      } catch (error) {
+        console.error('An error occurred during the API request:', error);
       }
-    } catch (error) {
-      console.error('An error occurred during the API request:', error);
-    }
-  //   try {
-  //     let response = await axios.put(apiUrl, {
-  //       password: this.password,
-  //       newPassword: newPassword,
-  //       confirmPassword: confirmPassword,
-  //     });
-
-  //     if (response.status === 200) {
-  //       // this.emailAddress = response.data.EmailAddress;
-  //       // this.firstName = response.data.FirstName;
-  //       // this.lastName = response.data.LastName;
-  //       // this.contactNo = response.data.ContactNo;
-  //       // this.gender = response.data.Gender;
-  //       // this.homeAddress = response.data.HomeAddress;
-  //       // this.postalCode = response.data.PostalCode;
-  //       // this.userType = response.data.UserType;
-  //       // this.saveUserToLocalStorage();
-  //     }
-
-  //     // Handle the response data here
-  //     return response;
-  //   } catch (error) {
-  //     // Handle errors here
-  //     console.error("Reset password error:", error);
-  //     throw error; // Rethrow the error to propagate it
-  //   }
+      
+    },
   },
+
 });

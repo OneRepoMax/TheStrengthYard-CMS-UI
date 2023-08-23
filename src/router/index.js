@@ -59,10 +59,10 @@ const routes = [
           import(/* webpackChunkName: "home" */ "@/views/EditProfile.vue"),
       },
       {
-        path: "reset-password",
-        name: "Reset Password",
+        path: "change-password",
+        name: "Change Password",
         component: () =>
-          import(/* webpackChunkName: "home" */ "@/views/ResetPassword.vue"),
+          import(/* webpackChunkName: "home" */ "@/views/ChangePassword.vue"),
       },
     ],
   },
