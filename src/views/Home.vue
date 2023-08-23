@@ -71,7 +71,6 @@ export default {
         }
     },
     mounted() {
-        console.log("mounted");
         // Call get user by ID
         // this.getUserInfo()
     },

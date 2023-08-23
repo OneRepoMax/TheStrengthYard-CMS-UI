@@ -77,7 +77,7 @@ export const useUserStore = defineStore("user", {
         if (response.status === 200) {
           this.saveResponseToStore(response);
           this.saveUserToLocalStorage();
-          return
+          return;
         }
       } catch (error) {
         console.error("Get User Info error:", error);
@@ -107,7 +107,6 @@ export const useUserStore = defineStore("user", {
     },
 
     async uploadAvatar(file) {
-
       const client = new S3Client({
         region,
         credentials: {
@@ -228,18 +227,38 @@ export const useUserStore = defineStore("user", {
         return;
       }
     },
-    async resetPassword(userId, newPassword) {
-      const apiUrl = `${TSY_API}/user/${userId}`; // Replace with your actual API URL
+    async changePassword(userId, newPassword) {
+      const apiUrl = `${TSY_API}/user/${userId}`; 
       const data = {
-        Password: newPassword, // Assuming "Password" is the field for storing passwords
+        Password: newPassword
       };
       try {
         const response = await axios.put(apiUrl, data);
 
         if (response.status === 200) {
           this.password = response.data.Password;
-          console.log("Password reset successfully");
+          console.log("Password changed successfully");
           // this.saveUserToLocalStorage();
+        } else {
+          console.log("Password reset failed:", response.data);
+        }
+        return response;
+      } catch (error) {
+        console.error("An error occurred during the API request:", error);
+      }
+    },
+    async resetPassword(emailAddress) {
+      const apiUrl = `${TSY_API}/resetpassword`; 
+      const data = {
+        EmailAddress: emailAddress
+      };
+      try {
+        const response = await axios.post(apiUrl, data);
+
+        if (response.status === 200) {
+          this.password = response.data.Password;
+          console.log("Password reset successfully");
+          return response
         } else {
           console.log("Password reset failed:", response.data);
         }

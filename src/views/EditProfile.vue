@@ -110,7 +110,7 @@ export default {
 
                 if (this.selectedFile != this.displayPicture) {
                     const uploadResponse = await this.userStore.uploadAvatar(this.profilePicture)
-                    this.displayPicture = uploadResponse.s3uri
+                    this.displayPicture = uploadResponse.s3Uri
                 }
 
                 // uri to uploaded avatar
