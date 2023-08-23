@@ -16,6 +16,7 @@ export const useUserStore = defineStore("user", {
     postalCode: null,
     userType: null,
     verified: false,
+    DisplayPicture: null,
   }),
   actions: {
     loadUserFromLocalStorage() {
@@ -38,6 +39,7 @@ export const useUserStore = defineStore("user", {
         postalCode: this.postalCode,
         userType: this.userType,
         verified: this.verified,
+        displayPicture: this.displayPicture
       };
       localStorage.setItem("tsyUserInfo", JSON.stringify(userStore));
     },
@@ -63,6 +65,7 @@ export const useUserStore = defineStore("user", {
           this.homeAddress = response.data.HomeAddress;
           this.postalCode = response.data.PostalCode;
           this.userType = response.data.UserType;
+          this.displayPicture = response.data.DisplayPicture
           this.saveUserToLocalStorage();
         }
 

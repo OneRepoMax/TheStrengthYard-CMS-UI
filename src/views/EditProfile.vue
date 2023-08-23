@@ -28,9 +28,9 @@
                                 variant="outlined"></v-text-field>
                             <v-text-field clearable hide-details="auto" class="mb-3" label="Contact Number" v-model="this.userStore.contactNo"
                             variant="outlined"></v-text-field>
-                            <v-col>
-                                <v-btn class="mb-3" to="/profile/change-password" density="default" >Change Password</v-btn>
-                            </v-col>
+
+                            <v-btn block color="teal" variant="outlined" class="mb-3" to="/profile/change-password" density="default" size="large">Change Password</v-btn>
+
                             <v-btn color="teal" block type="submit" size="large">Update Profile</v-btn>
                         </v-form>
                         </v-card-text>

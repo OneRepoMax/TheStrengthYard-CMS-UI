@@ -25,7 +25,9 @@
                 <v-text-field
                   v-model="password"
                   label="Password"
-                  type="password"
+                  :type="showPassword ? 'text' : 'password'"
+                  :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                  @click:append-inner="showPassword = !showPassword"
                   :rules="rules"
                   class="mt-3"
                   required
@@ -87,6 +89,7 @@ export default {
       // temp state
       emailAddress: "",
       password: "",
+      showPassword: false,
       loading: false,
       rules: [
         (value) => {
