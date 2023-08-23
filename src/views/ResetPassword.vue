@@ -66,7 +66,7 @@ export default {
     },
     methods: {
         async resetPassword(){
-            const response = await this.userStore.resetPassword(this.newPassword);
+            const response = await this.userStore.resetPassword(this.userStore.userId, this.newPassword);
 
             if (this.newPassword !== this.confirmPassword) {
                 console.log("new password not the same as confirm password")

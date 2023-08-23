@@ -39,6 +39,7 @@ const routes = [
         component: () =>
           import(/* webpackChunkName: "home" */ "@/views/ResetPassword.vue"),
       },
+      
     ],
   },
   {
@@ -56,6 +57,12 @@ const routes = [
         name: "Edit Profile",
         component: () =>
           import(/* webpackChunkName: "home" */ "@/views/EditProfile.vue"),
+      },
+      {
+        path: "reset-password",
+        name: "Reset Password",
+        component: () =>
+          import(/* webpackChunkName: "home" */ "@/views/ResetPassword.vue"),
       },
     ],
   },

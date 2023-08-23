@@ -26,6 +26,7 @@ export const useUserStore = defineStore("user", {
 
     saveUserToLocalStorage() {
       const userStore = {
+        userId: this.userId,
         emailAddress: this.emailAddress,
         firstName: this.firstName,
         lastName: this.lastName,
@@ -48,6 +49,7 @@ export const useUserStore = defineStore("user", {
 
         // Handle the response data here
         if (response.status === 200) {
+          this.userId = response.data.UserId;
           this.emailAddress = response.data.EmailAddress;
           this.firstName = response.data.FirstName;
           this.lastName = response.data.LastName;
@@ -202,7 +204,7 @@ export const useUserStore = defineStore("user", {
       if (response.status === 200) {
         this.password = response.data.newPassword;
         console.log('Password reset successfully');
-        this.saveUserToLocalStorage();
+        // this.saveUserToLocalStorage();
 
       } else {
         console.log('Password reset failed:', response.data);
