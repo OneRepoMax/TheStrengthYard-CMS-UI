@@ -8,7 +8,7 @@
                             <v-card-title>Change Password</v-card-title>
                         </v-card-title>
                         <v-card-text>
-                            <v-form @submit.prevent="resetPassword">
+                            <v-form @submit.prevent="changePassword">
                                 <!-- <v-text-field v-model="emailAddress" label="Email Address" required></v-text-field> -->
                                 <v-text-field v-model="password" label="Current Password" required :rules="passwordRules"
                                     class="mb-3" :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
@@ -100,14 +100,14 @@ export default {
         };
     },
     methods: {
-        async resetPassword() {
+        async changePassword() {
             try {
                 const LoginResponse = await this.userStore.login(
                     this.userStore.emailAddress,
                     this.password
                 );
                 if (LoginResponse.status === 200) {
-                    const response = await this.userStore.resetPassword(
+                    const response = await this.userStore.changePassword(
                         this.userStore.userId,
                         this.newPassword
                     );
