@@ -1,9 +1,9 @@
 <template>
     <v-navigation-drawer v-model="drawer" location="bottom" temporary theme="dark" style="height: 500px;">
         <v-list nav>
-            <v-list-item prepend-avatar="https://randomuser.me/api/portraits/women/85.jpg"
+            <v-list-item :prepend-avatar="userStore.displayPicture"
                 :title="userStore.firstName + userStore.lastName" :subtitle="userStore.emailAddress"></v-list-item>
-            <v-list-item to="/profile/change-password" prepend-icon="mdi-account" title="Manage Account">
+            <v-list-item to="/profile/edit" prepend-icon="mdi-account" title="Manage Account">
             </v-list-item>
             <v-list-item>
                 <v-btn block variant="flat" color="red-lighten-1" @click="logout()">
@@ -48,12 +48,12 @@
 
                 <v-menu location="bottom">
                     <template v-slot:activator="{ props }">
-                        <v-btn v-bind="props" icon="https://randomuser.me/api/portraits/women/85.jpg">
-                            <v-avatar image="https://randomuser.me/api/portraits/women/85.jpg"></v-avatar>
+                        <v-btn v-bind="props" :icon="userStore.displayPicture">
+                            <v-avatar :image="userStore.displayPicture"></v-avatar>
                         </v-btn>
                     </template>
                     <v-list theme="dark">
-                        <v-list-item prepend-avatar="https://randomuser.me/api/portraits/women/85.jpg"
+                        <v-list-item :prepend-avatar="userStore.displayPicture"
                             :title="userStore.firstName + ' ' + userStore.lastName" :subtitle="userStore.emailAddress"
                             class="mb-3">
                         </v-list-item>
