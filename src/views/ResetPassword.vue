@@ -16,7 +16,9 @@
 
                                 <v-btn color="teal" block type="submit" size="large" :disabled="loading" :loading="loading"
                                     class="mt-3">Reset Password</v-btn>
-
+                                    <v-btn block variant="outlined" to="/account/login" prepend-icon="mdi-arrow-left" size="large">
+                                    Back to login
+                                </v-btn>
                             </v-form>
                         </v-card-text>
                     </v-card>
