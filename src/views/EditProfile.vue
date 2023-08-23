@@ -26,9 +26,20 @@
                                     v-model="this.userStore.emailAddress" variant="outlined"></v-text-field>
                                 <v-text-field clearable hide-details="auto" class="mb-3" label="Address"
                                     v-model="this.userStore.homeAddress" variant="outlined"></v-text-field>
+                                    
+                                <v-text-field clearable hide-details="auto" class="mb-3" label="Postal Code"
+                                    v-model="this.userStore.postalCode" variant="outlined"></v-text-field>
+
                                 <v-text-field clearable hide-details="auto" class="mb-3" label="Contact Number"
                                     v-model="this.userStore.contactNo" variant="outlined"></v-text-field>
 
+                                <v-text-field clearable hide-details="auto" class="mb-3" label="Date of Birth"
+                                    v-model="this.userStore.dob" variant="outlined" placeholder="YYYY-MM-DD"></v-text-field>
+
+                                <v-select clearable hide-details="auto" class="mb-3" label="Gender"
+                                v-model="this.userStore.gender"  :items="['M', 'F', 'Prefer not to say']"
+                                ></v-select>
+                                
                                 <v-btn block color="teal" variant="outlined" class="mb-3" to="/profile/change-password"
                                     density="default" size="large">Change Password</v-btn>
 
@@ -55,15 +66,19 @@ export default {
             userStore
         }
     },
+    
     data() {
         return {
             firstName: "",
             lastName: "",
             emailAddress: "",
             homeAddress: "",
+            postalCode: "",
             selectedFile: this.userStore.displayPicture,
             displayPicture: this.userStore.displayPicture,
             profilePicture: null,
+            gender:"",
+            dob:"",
         }
     },
     methods: {
@@ -104,12 +119,14 @@ export default {
                 // trigger update profile form through this API and put in variables
                 // Edit the function below accordingly, e.g. update the parameters, etc
                 const updateResponse = await this.userStore.updateProfile(
-                    this.userStore.firstName,
-                    this.userStore.lastName,
-                    this.userStore.contactNo,
-                    this.userStore.homeAddress,
-                    this.userStore.postalCode,
-                    this.displayPicture
+                    firstName = this.userStore.firstName,
+                    lastName = this.userStore.lastName,
+                    contactNo = this.userStore.contactNo,
+                    homeAddress = this.userStore.homeAddress,
+                    postalCode = this.userStore.postalCode,
+                    gender = this.userStore.gender,
+                    dob = this.userStore.dob,
+                    displayPicture = this.displayPicture
                 )
 
                 if (updateResponse.status == 200) {
@@ -117,8 +134,9 @@ export default {
                     // Show success modal
                     // <insert your codes here>
                     console.log("Success?")
+                    console.log(this.userStore.gender)
                     // redirect to email verification (I put login as temporary measure)
-                    this.$router.push({ path: '/' })
+                    // this.$router.push({ path: '/' })
 
                 }
             

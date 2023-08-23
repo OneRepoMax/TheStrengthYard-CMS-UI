@@ -18,6 +18,7 @@ export const useUserStore = defineStore("user", {
     lastName: null,
     contactNo: null,
     gender: null,
+    dob:null,
     homeAddress: null,
     postalCode: null,
     userType: null,
@@ -41,6 +42,7 @@ export const useUserStore = defineStore("user", {
         lastName: this.lastName,
         contactNo: this.contactNo,
         gender: this.gender,
+        dob: this.dob,
         homeAddress: this.homeAddress,
         postalCode: this.postalCode,
         userType: this.userType,
@@ -57,6 +59,7 @@ export const useUserStore = defineStore("user", {
       this.lastName = response.data.LastName;
       this.contactNo = response.data.ContactNo;
       this.gender = response.data.Gender;
+      this.dob = response.data.DateOfBirth
       this.homeAddress = response.data.HomeAddress;
       this.postalCode = response.data.PostalCode;
       this.userType = response.data.UserType;
@@ -198,15 +201,19 @@ export const useUserStore = defineStore("user", {
       contactNo,
       homeAddress,
       postalCode,
+      gender,
+      dob,
       displayPicture
     ) {
       try {
         let response = await axios.put(`${TSY_API}/user/${this.userId}`, {
           FirstName: firstName,
           LastName: lastName,
+          ContactNo: contactNo,
           HomeAddress: homeAddress,
           PostalCode: postalCode,
-          ContactNo: contactNo,
+          Gender: gender,
+          DateOfBirth: dob,
           DisplayPicture: displayPicture,
         });
 
