@@ -178,11 +178,6 @@ export const useUserStore = defineStore("user", {
           HomeAddress: homeAddress,
           PostalCode: postalCode,
           ContactNo: contactNo,
-          FeedbackDiscover: feedbackDiscover,
-          MedicalHistory: medicalHistory,
-          MedicalRemarks: MedicalRemarks,
-          AcknowledgementTnC: ackTnC,
-          AcknowledgementOpenGymRules: ackGymRules,
         });
 
         // Handle the response data here
