@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 export const useUserStore = defineStore("user", {
   state: () => ({
+    userId: null,
     emailAddress: null,
     firstName: null,
     lastName: null,
@@ -26,6 +27,7 @@ export const useUserStore = defineStore("user", {
 
     saveUserToLocalStorage() {
       const userStore = {
+        userId: this.userId,
         emailAddress: this.emailAddress,
         firstName: this.firstName,
         lastName: this.lastName,
@@ -48,6 +50,7 @@ export const useUserStore = defineStore("user", {
 
         // Handle the response data here
         if (response.status === 200) {
+          this.userId = response.data.UserId;
           this.emailAddress = response.data.EmailAddress;
           this.firstName = response.data.FirstName;
           this.lastName = response.data.LastName;
@@ -150,6 +153,7 @@ export const useUserStore = defineStore("user", {
 
         // Handle the response data here
         if (response.status === 200) {
+          this.userId = response.UserId;
           return response;
         }
       } catch (error) {
@@ -169,7 +173,7 @@ export const useUserStore = defineStore("user", {
     ){
       try { 
 
-        let response = await axios.put("http://localhost:5000/user", {
+        let response = await axios.put(`http://localhost:5000/user/${this.userId}`, {
           EmailAddress: emailAddress,
           FirstName: firstName,
           LastName: lastName,
