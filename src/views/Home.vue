@@ -2,21 +2,10 @@
     <v-container class="d-flex d-columns">
         <v-row>
             <v-col cols="12" md="8" no-gutters>
-                <template v-if="!loading">
-                    <profile-card :fullName="userStore.firstName + ' ' + userStore.lastName"
-                        :emailAddress="userStore.emailAddress" :homeAddress="userStore.homeAddress"
-                        :membershipRecord="membershipRecord" />
-                    <Classes />
-                </template>
-
-                <!-- Sekelton loaders -->
-                <template v-if="loading">
-                    <v-skeleton-loader class="mb-3" elevation="3" type="card-avatar, article"
-                        :loading="loading"></v-skeleton-loader>
-                    <v-skeleton-loader class="mb-3" elevation="3" type="table-heading, list-item-two-line"
-                        :loading="loading"></v-skeleton-loader>
-                </template>
-
+                <profile-card :fullName="userStore.firstName + ' ' + userStore.lastName"
+                    :emailAddress="userStore.emailAddress" :homeAddress="userStore.homeAddress"
+                    :membershipRecord="membershipRecord" :displayPicture="userStore.displayPicture" />
+                <Classes />
             </v-col>
 
             <v-col cols="12" md="4">
@@ -62,7 +51,6 @@ export default {
     },
     data() {
         return {
-            loading: true,
             membershipRecord:
                 [
                     {
@@ -95,18 +83,19 @@ export default {
         }
     },
     mounted() {
-        const readyHandler = () => {
-            if (document.readyState == 'complete') {
-                this.loading = false;
-                document.removeEventListener('readystatechange', readyHandler);
-            }
-        };
-
-        document.addEventListener('readystatechange', readyHandler);
-
-        readyHandler()
-
+        // Call get user by ID
+        // this.getUserInfo()
     },
+    methods: {
+        async getUserInfo() {
+            try {
+                await this.userStore.getUserInfo();
+            } catch (error) {
+                console.log(error);
+            }
+        }
+    },
+    
     components: { ProfileCard, MembershipLog, Classes, OrgProfileCard }
 
 }
