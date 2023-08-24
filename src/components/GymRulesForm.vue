@@ -100,14 +100,37 @@
       <!-- Acknowledgement -->
       <v-container >
         <h3>Acknowledgement</h3>
-        <v-checkbox v-model="rulesAcknowledgement" label="By Clicking The Checkbox, I Acknowledge That I Have Read And Will Follow The Rules."></v-checkbox>
+        <v-checkbox
+          v-model="userStore.AcknowledgementTnC"
+          label-class="label"
+          hide-details
+          class="my-3"
+        >
+          <template v-slot:label>
+            <span class="text-left">
+              By Clicking The Checkbox, I Acknowledge That I Have Read And Accept The Terms And Conditions From This Link:
+              <a href="https://www.thestrengthyard.com/terms-conditions-strength-conditioning-gym-singapore/" target="_blank">https://www.thestrengthyard.com/terms-conditions-strength-conditioning-gym-singapore/.</a>
+              I Also Acknowledge That I Use The Facility Or Service At My Own Risk And That The Strength Yard Shall Not Be Liable For Any Loss Or Damage To Personal Property Or Death Or Personal Injury, From My Use Of The Facility Or Service.
+            </span>
+          </template>
+        </v-checkbox>
+        <v-checkbox v-model="userStore.AcknowledgementOpenGymRules" label="By Clicking The Checkbox, I Acknowledge That I Have Read And Will Follow The Rules."></v-checkbox>
       </v-container>
 
       </v-form>
 </template>
 
 <script>
+import { useUserStore } from '@/store/user'
+
 export default {
+    setup() {
+      const userStore = useUserStore()
+
+      return {
+          userStore
+      }
+    },
   data() {
     return {
       rulesAcknowledgement: '',

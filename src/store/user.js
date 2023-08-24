@@ -5,15 +5,25 @@ import { v4 as uuidv4 } from 'uuid';
 
 export const useUserStore = defineStore("user", {
   state: () => ({
+    profilePicture: null,
     emailAddress: null,
     firstName: null,
     lastName: null,
-    contactNo: null,
+    dateOfBirth: null,
     gender: null,
+    emailAddress: null,
     homeAddress: null,
     postalCode: null,
+    contactNo: null,
     userType: null,
     verified: false,
+    FeedbackDiscover: [],
+    otherFeedbackDiscover: null,
+    MedicalHistory: [],
+    otherMedicalHistory: null,
+    MedicalRemarks: null,
+    AcknowledgementOpenGymRules: null,
+    AcknowledgementTnC: null,
   }),
   actions: {
     loadUserFromLocalStorage() {
@@ -26,15 +36,25 @@ export const useUserStore = defineStore("user", {
 
     saveUserToLocalStorage() {
       const userStore = {
+        profilePicture: this.profilePicture,
         emailAddress: this.emailAddress,
         firstName: this.firstName,
         lastName: this.lastName,
-        contactNo: this.contactNo,
         gender: this.gender,
+        dateOfBirth: this.dateOfBirth,
+        emailAddress: this.emailAddress,
         homeAddress: this.homeAddress,
         postalCode: this.postalCode,
+        contactNo: this.contactNo,
         userType: this.userType,
         verified: this.verified,
+        FeedbackDiscover: this.FeedbackDiscover,
+        otherFeedbackDiscover: this.otherFeedbackDiscover,
+        MedicalHistory: this.MedicalHistory,
+        otherMedicalHistory: this.otherMedicalHistory,
+        MedicalRemarks: this.MedicalRemarks,
+        AcknowledgementOpenGymRules: this.AcknowledgementOpenGymRules,
+        AcknowledgementTnC: this.AcknowledgementTnC,
       };
       localStorage.setItem("tsyUserInfo", JSON.stringify(userStore));
     },
