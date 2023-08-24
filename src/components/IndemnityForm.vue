@@ -7,7 +7,7 @@
         <v-checkbox
           class="shrink mb-n8"
           v-for="(option, index) in options"
-          v-model="selectedOptions"
+          v-model="userStore.MedicalHistory"
           :key="index"
           :label="option"
           :value="option"
@@ -15,8 +15,8 @@
 
         <!-- Display the text input for 'Others' when it's selected -->
         <v-text-field
-          v-if="selectedOptions.includes('Others')"
-          v-model="othersText"
+          v-if="userStore.MedicalHistory.includes('Others')"
+          v-model="userStore.otherMedicalHistory"
           label="Specify 'Others'"
         ></v-text-field>
 
@@ -29,11 +29,22 @@
 </template>
 
 <script>
+
+import { useUserStore } from '@/store/user'
+
 export default {
+    setup() {
+      const userStore = useUserStore()
+
+      return {
+          userStore
+      }
+    },
   data() {
     return {
-      selectedOptions: [],
-      othersText: '',
+      validationError: '',
+      MedicalHistory: [],
+      otherMedicalHistory: '',
       options: [
         "Heart Problems",
         "Pain in Chest when exercising/ not exercising",
@@ -53,18 +64,18 @@ export default {
   },
   methods: {
     validateForm() {
-      if (this.selectedOptions.length === 0) {
+      if (userStore.MedicalHistory.length === 0) {
         this.validationError = 'Please select at least one option.';
-        console.log('Selected Options:', this.selectedOptions);
-        console.log(this.selectedOptions.length);
-        // console.log('Others Text:', this.othersText);
+        console.log('Selected Options:', userStore.MedicalHistory);
+        console.log(userStore.MedicalHistory.length);
+        // console.log('Others Text:', this.userStore.otherMedicalHistory);
       } else {
         // Reset validation error if there are selected options
         this.validationError = null;
 
         // Handle form submission or other actions here
-        console.log('Selected Options:', this.selectedOptions);
-        console.log('Others Text:', this.othersText);
+        console.log('Selected Options:', userStore.MedicalHistory);
+        console.log('Others Text:', userStore.otherMedicalHistory);
       }
     }
   },

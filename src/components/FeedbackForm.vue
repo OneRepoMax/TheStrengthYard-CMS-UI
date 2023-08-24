@@ -7,7 +7,7 @@
         <v-checkbox
           class="shrink mb-n8"
           v-for="(option, index) in options"
-          v-model="selectedOptions"
+          v-model="userStore.FeedbackDiscover"
           :key="index"
           :label="option"
           :value="option"
@@ -15,8 +15,8 @@
 
         <!-- Display the text input for 'Others' when it's selected -->
         <v-text-field
-          v-if="selectedOptions.includes('Others')"
-          v-model="othersText"
+          v-if="userStore.FeedbackDiscover.includes('Others')"
+          v-model="userStore.otherFeedbackDiscover"
           label="Specify 'Others'"
         ></v-text-field>
         <!-- <v-btn @click="validateForm">Submit</v-btn> -->
@@ -24,11 +24,24 @@
 </template>
 
 <script>
+
+import { useUserStore } from '@/store/user'
+
+
+
 export default {
+    setup() {
+      const userStore = useUserStore()
+
+      return {
+          userStore
+      }
+    },
   data() {
     return {
-      selectedOptions: [],
-      othersText: '',
+      validationError: '',
+      FeedbackDiscover: [],
+      otherFeedbackDiscover: '',
       options: [
         "Search Engine",
         "Friend's Recommendation",
@@ -41,19 +54,19 @@ export default {
     };
   },
   methods: {
-    validateForm() {
-      if (this.selectedOptions.length === 0) {
+    async validateForm() {
+      if (userStore.FeedbackDiscover.length === 0) {
         this.validationError = 'Please select at least one option.';
-        console.log('Selected Options:', this.selectedOptions);
-        console.log(this.selectedOptions.length);
-        // console.log('Others Text:', this.othersText);
+        console.log('Selected Options:', this.FeedbackDiscover);
+        console.log(userStore.FeedbackDiscover.length);
+        // console.log('Others Text:', this.otherFeedbackDiscover);
       } else {
         // Reset validation error if there are selected options
         this.validationError = null;
 
         // Handle form submission or other actions here
-        console.log('Selected Options:', this.selectedOptions);
-        console.log('Others Text:', this.othersText);
+        console.log('Selected Options:', userStore.FeedbackDiscover);
+        console.log('Others Text:', userStore.otherFeedbackDiscover);
       }
     }
   },

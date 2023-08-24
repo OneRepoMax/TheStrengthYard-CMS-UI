@@ -2,7 +2,7 @@
     <!-- <v-row justify="center" class="h-100" align="center"> -->
       <!-- <v-col cols="12" lg="4" md="5"> -->
         <!-- <v-card class="elevation-12"> -->
-          <div class="bg-teal py-2">
+          <div class="bg-cyan py-2">
             <p class="text-center" >Already have an account? 
                 <router-link class="text-white" to="/account/login">Log in here</router-link>
             </p>
@@ -11,7 +11,7 @@
             <v-toolbar-title class="text-center font-weight-bold">Member Registration</v-toolbar-title>
           </v-toolbar>
           <v-card-text>
-            <v-form @submit.prevent="register">
+            <v-form class="text-left" @submit.prevent="register">
                 <!-- Profile Picture -->
                 <div class="d-flex justify-center mb-3">
                     <v-avatar size="80" color="surface-variant" @click="openFileInput">
@@ -28,21 +28,21 @@
                 </div>
                 <p class="d-flex justify-center mb-5">Profile Picture</p>
                 <!-- First Name -->
-                <v-text-field v-model="firstName" label="First Name" required :rules="nameRules" class="mt-3"></v-text-field>
+                <v-text-field v-model="userStore.firstName" label="First Name" required :rules="nameRules" class="mt-3"></v-text-field>
                 <!-- Last Name -->
-                <v-text-field v-model="lastName" label="Last Name" required :rules="nameRules" class="mt-3"></v-text-field>
+                <v-text-field v-model="userStore.lastName" label="Last Name" required :rules="nameRules" class="mt-3"></v-text-field>
                 <!-- Gender -->
-                <v-select v-model="gender" label="Gender" :items="genders" placeholder="Select" required :rules="genderRules" class="mt-3"></v-select>
+                <v-select v-model="userStore.gender" label="Gender" :items="genders" placeholder="Select" required :rules="genderRules" class="mt-3"></v-select>
                 <!-- Date of Birth -->
-                <v-text-field v-model="dateOfBirth" label="Date of Birth" placeholder="DD/MM/YYYY" :rules="dobRules" class="mt-3" required></v-text-field>
+                <v-text-field v-model="userStore.dateOfBirth" label="Date of Birth" placeholder="DD/MM/YYYY" :rules="dobRules" class="mt-3" required></v-text-field>
                 <!-- Email -->
-                <v-text-field v-model="emailAddress" label="Email" required :rules="emailRules" class="mt-3"></v-text-field>
+                <v-text-field v-model="userStore.emailAddress" label="Email" required :rules="emailRules" class="mt-3"></v-text-field>
                 <!-- Address -->
-                <v-text-field v-model="homeAddress" label="Address" :rules="addressRules" class="mt-3" required></v-text-field>
+                <v-text-field v-model="userStore.homeAddress" label="Address" :rules="addressRules" class="mt-3" required></v-text-field>
                 <!-- Postal Code -->
-                <v-text-field v-model="postalCode" label="Postal Code" :rules="postalRules" class="mt-3" required></v-text-field>
+                <v-text-field v-model="userStore.postalCode" label="Postal Code" :rules="postalRules" class="mt-3" required></v-text-field>
                 <!-- Contact -->
-                <v-text-field v-model="contactNo" label="Contact Number" :rules="contactRules" class="mt-3" required></v-text-field>
+                <v-text-field v-model="userStore.contactNo" label="Contact Number" :rules="contactRules" class="mt-3" required></v-text-field>
                 <!-- Password -->
                 <v-text-field
                     v-model="password"
@@ -67,7 +67,7 @@
                     required
                     counter
                 ></v-text-field>
-                <!-- <v-btn block color="teal" size="large" type="submit" class="mt-3">Register</v-btn> -->
+                <!-- <v-btn block color="teal" size="large" type="submit" class="mt-3">Next</v-btn> -->
             </v-form>
 
             <!-- <p class="text-center mt-5">Already have an account? 
@@ -161,38 +161,10 @@ export default {
         homeAddress: this.homeAddress,
         postalCode: this.postalCode,
         password: this.password,
-      });
+      },
+      console.log(this.userStore.firstName)
+      );
       
-      try {
-        const uploadResponse = await this.userStore.uploadAvatar(this.profilePicture)
-        if (uploadResponse.status == 200){
-            console.log("success");
-
-            // uri to uploaded avatar
-            console.log(uploadResponse);
-
-            // trigger registration form through this API and put in variables
-            // Edit the function below accordingly, e.g. update the parameters, etc
-            const registerResponse = await this.userStore.register(
-                "...",
-                "<insert other parameters>",
-                uploadResponse
-            )
-
-                if(registerResponse.status == 200){
-
-                    // Show success modal
-                    // <insert your codes here>
-
-                    // redirect to email verification (I put login as temporary measure)
-                    this.$router.push({path: '/account/login'})
-
-                } 
-        }
-      } catch (error){
-        console.log("Registration error: ", error);
-      }
-
     },
 
     shortenGender(gender){
