@@ -30,8 +30,8 @@ export const useUserStore = defineStore("user", {
     MedicalHistory: [],
     otherMedicalHistory: null,
     MedicalRemarks: null,
-    AcknowledgementOpenGymRules: null,
-    AcknowledgementTnC: null,
+    AcknowledgementOpenGymRules: false,
+    AcknowledgementTnC: false,
   }),
   actions: {
     loadUserFromLocalStorage() {
@@ -163,20 +163,20 @@ export const useUserStore = defineStore("user", {
 
     // Add the register action here in a similar manner
     async register(
-      emailAddress,
       firstName,
       lastName,
-      contactNo,
       gender,
+      dob,
+      emailAddress,
       homeAddress,
       postalCode,
+      contactNo,
       password,
-      dob,
       feedbackDiscover,
+      medicalHistory,
+      MedicalRemarks,
       ackTnC,
       ackGymRules,
-      medicalHistory,
-      MedicalRemarks
     ) {
       try {
         let response = await axios.post(`${TSY_API}/register`, {
