@@ -45,7 +45,7 @@
                 <v-text-field v-model="userStore.contactNo" label="Contact Number" :rules="contactRules" class="mt-3" required></v-text-field>
                 <!-- Password -->
                 <v-text-field
-                    v-model="password"
+                    v-model="userStore.password"
                     label="Password"
                     :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
                     :rules="passwordRules"
@@ -144,7 +144,7 @@ export default {
       ],
       confirmPasswordRules: [
         v => !!v || 'Confirmation Password is required',
-        v => v === this.password || 'Passwords do not match',
+        v => v === this.userStore.password || 'Passwords do not match',
       ],
     };
   },
@@ -193,7 +193,7 @@ export default {
           this.selectedFile = reader.result;
         };
 
-        this.profilePicture = file
+        this.userStore.displayPicture = file
       }
     },
   },
