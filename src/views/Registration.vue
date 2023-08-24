@@ -2,7 +2,7 @@
   <v-main>
     <v-container justify="center" class="h-100" align="center">
       <v-col cols="12" md="6">
-        <v-stepper hide-actions :items="['Registration', 'Feedback', 'Indemnity', 'Gym Rules']" v-model="currentStep">
+        <v-stepper hide-actions :items="['Registration', 'Feedback', 'Indemnity', 'Acknowledgement']" v-model="currentStep">
           <template v-slot:item.1>
             <v-form @submit.prevent="nextStep(2)">
               <RegisterForm ref="registrationForm"/>
@@ -112,7 +112,14 @@ const validateFeedbackForm = () => {
   // Return true if the form is valid, false otherwise
   // Example: Check if required fields are not empty
   if (userStore.FeedbackDiscover.length != 0) {
-    console.log(userStore.FeedbackDiscover)
+    for (let i = 0; i <userStore.FeedbackDiscover.length; i++){
+        // console.log(userStore.FeedbackDiscover[i])
+        if (userStore.FeedbackDiscover[i] == 'Others'){
+            userStore.FeedbackDiscover[i] = userStore.otherFeedbackDiscover
+        }
+    }
+    // console.log(userStore.FeedbackDiscover.join(', '))
+    userStore.FeedbackDiscover = userStore.FeedbackDiscover.join(', ')
     return true;
   } else {
     // Show an error message or provide feedback to the user
@@ -125,7 +132,12 @@ const validateIndemnityForm = () => {
   // Return true if the form is valid, false otherwise
   // Example: Check if required fields are filled, and a checkbox is checked
   if (userStore.MedicalHistory.length != 0) {
-    console.log(userStore.MedicalHistory)
+    for (let i = 0; i <userStore.MedicalHistory.length; i++){
+        if (userStore.MedicalHistory[i] == 'Others'){
+            userStore.MedicalHistory[i] = userStore.otherMedicalHistory
+        }
+    }
+    userStore.MedicalHistory = userStore.MedicalHistory.join(', ')
     return true;
   } else {
     // Show an error message or provide feedback to the user
@@ -147,36 +159,51 @@ const validateGymRulesForm = () => {
 
 async function submitForm () {
     // Handle form submission for the last step
-    console.log(userStore.profilePicture);
-    // try {
-    // const uploadResponse = await userStore.uploadAvatar(userStore.profilePicture)
-    // if (uploadResponse.status == 200){
-    //     console.log("success");
+    console.log(userStore.displayPicture);
+    console.log(userStore.FeedbackDiscover);
+    console.log(userStore.MedicalHistory);
+    try {
+    const uploadResponse = await userStore.uploadAvatar(userStore.displayPicture)
+    if (uploadResponse.status == 200){
+        console.log("success");
 
-    //     // uri to uploaded avatar
-    //     console.log(uploadResponse.s3Uri);
+        // uri to uploaded avatar
+        console.log(uploadResponse.s3Uri);
 
-    //     // trigger registration form through this API and put in variables
-    //     // Edit the function below accordingly, e.g. update the parameters, etc
-    //     const registerResponse = await userStore.register(
-    //         userStore.emailAddress,
-            
-    //         uploadResponse.s3Uri
-    //     )
+        // trigger registration form through this API and put in variables
+        // Edit the function below accordingly, e.g. update the parameters, etc
+        const registerResponse = await userStore.register(
+            userStore.firstName,
+            userStore.lastName,
+            userStore.gender,
+            userStore.dateOfBirth,
+            userStore.emailAddress,
+            userStore.homeAddress,
+            userStore.postalCode,
+            userStore.contactNo,
+            userStore.password,
+            userStore.FeedbackDiscover,
+            userStore.MedicalHistory,
+            userStore.MedicalRemarks,
+            userStore.AcknowledgementTnC,
+            userStore.AcknowledgementOpenGymRules,
 
-    //         if(registerResponse.status == 200){
+            uploadResponse.s3Uri
+        )
 
-    //             // Show success modal
-    //             // <insert your codes here>
+            if(registerResponse.status == 200){
 
-    //             // redirect to email verification (I put login as temporary measure)
-    //             this.$router.push({path: '/account/login'})
+                // Show success modal
+                // <insert your codes here>
 
-    //         } 
-    // }
-    // } catch (error){
-    // console.log("Registration error: ", error);
-    // }
+                // redirect to email verification (I put login as temporary measure)
+                this.$router.push({path: '/account/login'})
+
+            } 
+    }
+    } catch (error){
+    console.log("Registration error: ", error);
+    }
 };
 
 </script>
