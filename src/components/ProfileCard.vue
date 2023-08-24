@@ -5,7 +5,11 @@
 
         <v-card-title class="mb-10">
             <v-avatar color="info" size="120" class="profile-avatar"
-                image="https://randomuser.me/api/portraits/women/85.jpg">
+                :image="displayPicture" v-if="displayPicture">
+            </v-avatar>
+            <v-avatar color="black" size="120" class="profile-avatar"
+                v-if="!displayPicture">
+                <v-icon icon="mdi-account-circle"></v-icon>
             </v-avatar>
         </v-card-title>
         <div class="mx-3 mb-3">
@@ -62,6 +66,7 @@
 export default {
     name: 'ProfileCard',
     props: {
+        displayPicture: String,
         fullName: String,
         emailAddress: String,
         homeAddress: String,

@@ -1,7 +1,14 @@
 import { defineStore } from "pinia";
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import axios from "axios";
-import { v4 as uuidv4 } from 'uuid'; 
+import { v4 as uuidv4 } from "uuid";
+
+// Declare variable
+const TSY_API = import.meta.env.VITE_TSY_API;
+const secretAccessKey = import.meta.env.VITE_S3_SECRET_KEY; // IAM user secret key
+const accessKeyId = import.meta.env.VITE_S3_ACCESS_KEY; // IAM user access id
+const bucket = import.meta.env.VITE_S3_BUCKET_NAME; // Bucket name
+const region = import.meta.env.VITE_AWS_REGION; // Region
 
 export const useUserStore = defineStore("user", {
   state: () => ({
@@ -9,12 +16,22 @@ export const useUserStore = defineStore("user", {
     emailAddress: null,
     firstName: null,
     lastName: null,
-    contactNo: null,
+    dateOfBirth: null,
     gender: null,
+    emailAddress: null,
     homeAddress: null,
     postalCode: null,
+    contactNo: null,
     userType: null,
     verified: false,
+    displayPicture: null,
+    FeedbackDiscover: [],
+    otherFeedbackDiscover: null,
+    MedicalHistory: [],
+    otherMedicalHistory: null,
+    MedicalRemarks: null,
+    AcknowledgementOpenGymRules: null,
+    AcknowledgementTnC: null,
   }),
   actions: {
     loadUserFromLocalStorage() {
@@ -31,34 +48,69 @@ export const useUserStore = defineStore("user", {
         emailAddress: this.emailAddress,
         firstName: this.firstName,
         lastName: this.lastName,
-        contactNo: this.contactNo,
         gender: this.gender,
+        dateOfBirth: this.dateOfBirth,
+        emailAddress: this.emailAddress,
         homeAddress: this.homeAddress,
         postalCode: this.postalCode,
+        contactNo: this.contactNo,
         userType: this.userType,
         verified: this.verified,
+        displayPicture: this.displayPicture,
+        FeedbackDiscover: this.FeedbackDiscover,
+        otherFeedbackDiscover: this.otherFeedbackDiscover,
+        MedicalHistory: this.MedicalHistory,
+        otherMedicalHistory: this.otherMedicalHistory,
+        MedicalRemarks: this.MedicalRemarks,
+        AcknowledgementOpenGymRules: this.AcknowledgementOpenGymRules,
+        AcknowledgementTnC: this.AcknowledgementTnC,
       };
       localStorage.setItem("tsyUserInfo", JSON.stringify(userStore));
     },
 
+    saveResponseToStore(response) {
+      this.userId = response.data.UserId;
+      this.emailAddress = response.data.EmailAddress;
+      this.firstName = response.data.FirstName;
+      this.lastName = response.data.LastName;
+      this.contactNo = response.data.ContactNo;
+      this.gender = response.data.Gender;
+      this.dob = response.data.DateOfBirth
+      this.homeAddress = response.data.HomeAddress;
+      this.postalCode = response.data.PostalCode;
+      this.userType = response.data.UserType;
+      this.displayPicture = response.data.DisplayPicture;
+      this.saveUserToLocalStorage();
+    },
+
+    async getUserInfo() {
+      try {
+        let response = await axios.get(`${TSY_API}/user/${this.userId}`);
+
+        console.log(response);
+
+        // Handle the response data here
+        if (response.status === 200) {
+          this.saveResponseToStore(response);
+          this.saveUserToLocalStorage();
+          return;
+        }
+      } catch (error) {
+        console.error("Get User Info error:", error);
+        return;
+      }
+    },
+
     async login(emailAddress, password) {
       try {
-        let response = await axios.post("http://localhost:5000/login", {
+        let response = await axios.post(`${TSY_API}/login`, {
           EmailAddress: emailAddress,
           Password: password,
         });
 
         // Handle the response data here
         if (response.status === 200) {
-          this.userId = response.data.UserId;
-          this.emailAddress = response.data.EmailAddress;
-          this.firstName = response.data.FirstName;
-          this.lastName = response.data.LastName;
-          this.contactNo = response.data.ContactNo;
-          this.gender = response.data.Gender;
-          this.homeAddress = response.data.HomeAddress;
-          this.postalCode = response.data.PostalCode;
-          this.userType = response.data.UserType;
+          this.saveResponseToStore(response);
           this.saveUserToLocalStorage();
         }
 
@@ -71,11 +123,6 @@ export const useUserStore = defineStore("user", {
     },
 
     async uploadAvatar(file) {
-      const secretAccessKey = import.meta.env.VITE_S3_SECRET_KEY; // IAM user secret key
-      const accessKeyId = import.meta.env.VITE_S3_ACCESS_KEY; // IAM user access id
-      const bucket = import.meta.env.VITE_S3_BUCKET_NAME; // Bucket name
-      const region = import.meta.env.VITE_AWS_REGION; // Region
-
       const client = new S3Client({
         region,
         credentials: {
@@ -85,7 +132,7 @@ export const useUserStore = defineStore("user", {
       });
 
       // Generate random file name
-      const originalFileName = file.name
+      const originalFileName = file.name;
       const extension = originalFileName.split(".").pop(); // Get the file extension
 
       const tempRandomFileName = uuidv4();
@@ -104,7 +151,7 @@ export const useUserStore = defineStore("user", {
           // Access link will be this one
           return {
             status: 200,
-            s3Uri: `https://${bucket}.s3.${region}.amazonaws.com/${randomFileName}`
+            s3Uri: `https://${bucket}.s3.${region}.amazonaws.com/${randomFileName}`,
           };
         }
         return false;
@@ -132,7 +179,7 @@ export const useUserStore = defineStore("user", {
       MedicalRemarks
     ) {
       try {
-        let response = await axios.post("http://localhost:5000/user", {
+        let response = await axios.post(`${TSY_API}/register`, {
           EmailAddress: emailAddress,
           Password: password,
           FirstName: firstName,
@@ -154,6 +201,8 @@ export const useUserStore = defineStore("user", {
         // Handle the response data here
         if (response.status === 200) {
           this.userId = response.UserId;
+          this.saveResponseToStore(response);
+          this.saveUserToLocalStorage();
           return response;
         }
       } catch (error) {
@@ -162,52 +211,70 @@ export const useUserStore = defineStore("user", {
     },
 
     async updateProfile(
-      emailAddress,
-      firstName,
-      lastName,
-      contactNo,
-      gender,
-      homeAddress,
-      postalCode,
-      dob
-    ){
-      try { 
-
-        let response = await axios.put(`http://localhost:5000/user/${this.userId}`, {
-          EmailAddress: emailAddress,
-          FirstName: firstName,
-          LastName: lastName,
-          Gender: gender,
-          DateOfBirth: dob,
-          HomeAddress: homeAddress,
-          PostalCode: postalCode,
-          ContactNo: contactNo,
+      profileData
+    ) {
+      try {
+        let response = await axios.put(`${TSY_API}/user/${this.userId}`, {
+          FirstName: profileData.firstName,
+          LastName: profileData.lastName,
+          ContactNo: profileData.contactNo,
+          HomeAddress: profileData.homeAddress,
+          PostalCode: profileData.postalCode,
+          Gender: profileData.gender,
+          DateOfBirth: profileData.dob,
+          DisplayPicture: profileData.displayPicture,
         });
 
         // Handle the response data here
         if (response.status === 200) {
+          this.saveResponseToStore(response);
+          this.saveUserToLocalStorage();
           return response;
         }
-
       } catch (error) {
         console.error("Registration error:", error);
-        return 
+        return;
       }
-    }
-  },
-  async resetPassword(newPassword) {
-    try {
-      let response = await axios.put("http://localhost:5000/user/:userId", {
-        password: this.password,
-        NewPassword: newPassword,
-      });
+    },
+    async changePassword(userId, newPassword) {
+      const apiUrl = `${TSY_API}/user/${userId}`; 
+      const data = {
+        Password: newPassword
+      };
+      try {
+        const response = await axios.put(apiUrl, data);
 
-      // Handle the response data here
-      return response;
-    } catch (error) {
-      // Handle errors here
-      console.error("Reset password error:", error);
-      throw error; // Rethrow the error to propagate it
-    }
+        if (response.status === 200) {
+          this.password = response.data.Password;
+          console.log("Password changed successfully");
+          // this.saveUserToLocalStorage();
+        } else {
+          console.log("Password reset failed:", response.data);
+        }
+        return response;
+      } catch (error) {
+        console.error("An error occurred during the API request:", error);
+      }
+    },
+    async resetPassword(emailAddress) {
+      const apiUrl = `${TSY_API}/resetpassword`; 
+      const data = {
+        EmailAddress: emailAddress
+      };
+      try {
+        const response = await axios.post(apiUrl, data);
+
+        if (response.status === 200) {
+          this.password = response.data.Password;
+          console.log("Password reset successfully");
+          return response
+        } else {
+          console.log("Password reset failed:", response.data);
+        }
+        return response;
+      } catch (error) {
+        console.error("An error occurred during the API request:", error);
+      }
+    },
   },
 });
