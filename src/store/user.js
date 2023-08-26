@@ -18,7 +18,6 @@ export const useUserStore = defineStore("user", {
     lastName: null,
     dateOfBirth: null,
     gender: null,
-    emailAddress: null,
     homeAddress: null,
     postalCode: null,
     contactNo: null,
@@ -50,7 +49,6 @@ export const useUserStore = defineStore("user", {
         lastName: this.lastName,
         gender: this.gender,
         dateOfBirth: this.dateOfBirth,
-        emailAddress: this.emailAddress,
         homeAddress: this.homeAddress,
         postalCode: this.postalCode,
         contactNo: this.contactNo,
@@ -75,7 +73,7 @@ export const useUserStore = defineStore("user", {
       this.lastName = response.data.LastName;
       this.contactNo = response.data.ContactNo;
       this.gender = response.data.Gender;
-      this.dob = response.data.DateOfBirth
+      this.dateOfBirth = response.data.DateOfBirth
       this.homeAddress = response.data.HomeAddress;
       this.postalCode = response.data.PostalCode;
       this.userType = response.data.UserType;
@@ -222,7 +220,7 @@ export const useUserStore = defineStore("user", {
           HomeAddress: profileData.homeAddress,
           PostalCode: profileData.postalCode,
           Gender: profileData.gender,
-          DateOfBirth: profileData.dob,
+          DateOfBirth: profileData.dateOfBirth,
           DisplayPicture: profileData.displayPicture,
         });
 

@@ -85,7 +85,7 @@ export default {
             selectedFile: this.userStore.displayPicture,
             displayPicture: this.userStore.displayPicture,
             profilePicture: null,
-            gender: null,
+            dateOfBirth: this.userStore.dateOfBirth,
             modal: {
                 show: false,
                 type: "success",
@@ -184,8 +184,8 @@ export default {
                     contactNo: this.userStore.contactNo,
                     homeAddress: this.userStore.homeAddress,
                     postalCode: this.userStore.postalCode,
-                    gender: this.userStore.postalCode,
-                    dob: this.userStore.dateOfBirth,
+                    gender: this.userStore.gender,
+                    dateOfBirth: this.userStore.dateOfBirth,
                     displayPicture: this.displayPicture
                 }).then((response) => {
                     if (response.status == 200) {
