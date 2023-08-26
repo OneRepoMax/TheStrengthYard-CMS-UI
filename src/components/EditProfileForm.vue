@@ -26,11 +26,11 @@
 
                         <v-col cols="12" md="9">
                             <v-text-field hide-details="auto" class="mb-3" label="Date of Birth" type="date"
-                            v-model="formattedDob" variant="outlined" placeholder="YYYY-MM-DD"></v-text-field>
+                                v-model="formattedDob" variant="outlined" placeholder="YYYY-MM-DD"></v-text-field>
                         </v-col>
                         <v-col cols="12" md="3">
-                            <v-select hide-details="auto" class="mb-3" label="Gender" v-model="this.userStore.gender"
-                                :items="['M', 'F', 'Prefer not to say']" variant="outlined"></v-select>
+                            <v-select hide-details="auto" class="mb-3" label="Gender" v-model="formattedGender"
+                                :items="['Male', 'Female', 'Prefer not to say']" variant="outlined"></v-select>
                         </v-col>
                         <v-col cols="12">
                             <v-text-field clearable hide-details="auto" class="mb-3" label="Email"
@@ -85,7 +85,7 @@ export default {
             selectedFile: this.userStore.displayPicture,
             displayPicture: this.userStore.displayPicture,
             profilePicture: null,
-            dob: new Date(this.userStore.dob),
+            gender: null,
             modal: {
                 show: false,
                 type: "success",
@@ -97,13 +97,46 @@ export default {
         }
     },
     computed: {
-        formattedDob() {
-            const date = new Date(this.userStore.dob);
-            const year = date.getUTCFullYear();
-            const month = String(date.getUTCMonth() + 1).padStart(2, "0");
-            const day = String(date.getUTCDate()).padStart(2, "0");
-            return `${year}-${month}-${day}`;
+        formattedDob: {
+            get() {
+                const date = new Date(this.userStore.dateOfBirth);
+                const year = date.getUTCFullYear();
+                const month = String(date.getUTCMonth() + 1).padStart(2, "0");
+                const day = String(date.getUTCDate()).padStart(2, "0");
+                return `${year}-${month}-${day}`;
+            },
+            set(newValue) {
+                this.userStore.dateOfBirth = newValue
+            }
+
+
         },
+        formattedGender: {
+            get() {
+                switch (this.userStore.gender) {
+                    case 'M':
+                        return 'Male'
+                    case 'F':
+                        return 'Female'
+                    case 'O':
+                        return 'Prefer not to say'
+                }
+            },
+            set(newValue) {
+                switch (newValue) {
+                    case 'Male':
+                        this.userStore.gender = 'M';
+                        break;
+                    case 'Female':
+                        this.userStore.gender = 'F';
+                        break;
+                    case 'Prefer not to say':
+                        this.userStore.gender = 'O';
+                        break;
+                }
+            }
+
+        }
     },
     methods: {
         openFileInput() {
@@ -151,8 +184,8 @@ export default {
                     contactNo: this.userStore.contactNo,
                     homeAddress: this.userStore.homeAddress,
                     postalCode: this.userStore.postalCode,
-                    gender: this.userStore.gender,
-                    dob: this.userStore.dob,
+                    gender: this.userStore.postalCode,
+                    dob: this.userStore.dateOfBirth,
                     displayPicture: this.displayPicture
                 }).then((response) => {
                     if (response.status == 200) {

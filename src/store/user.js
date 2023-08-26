@@ -214,6 +214,7 @@ export const useUserStore = defineStore("user", {
       profileData
     ) {
       try {
+
         let response = await axios.put(`${TSY_API}/user/${this.userId}`, {
           FirstName: profileData.firstName,
           LastName: profileData.lastName,
