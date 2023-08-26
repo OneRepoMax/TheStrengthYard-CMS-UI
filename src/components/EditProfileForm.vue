@@ -85,7 +85,6 @@ export default {
             selectedFile: this.userStore.displayPicture,
             displayPicture: this.userStore.displayPicture,
             profilePicture: null,
-            dateOfBirth: this.userStore.dateOfBirth,
             modal: {
                 show: false,
                 type: "success",
@@ -106,7 +105,11 @@ export default {
                 return `${year}-${month}-${day}`;
             },
             set(newValue) {
-                this.userStore.dateOfBirth = newValue
+                const date = new Date(newValue);
+                const year = date.getUTCFullYear();
+                const month = String(date.getUTCMonth() + 1).padStart(2, "0");
+                const day = String(date.getUTCDate()).padStart(2, "0");
+                this.userStore.dateOfBirth = `${year}-${month}-${day}`
             }
 
 
@@ -166,6 +169,17 @@ export default {
             this.modal.show = false
         },
         async updateProfile() {
+
+            console.log(JSON.stringify({
+                firstName: this.userStore.firstName,
+                lastName: this.userStore.lastName,
+                contactNo: this.userStore.contactNo,
+                homeAddress: this.userStore.homeAddress,
+                postalCode: this.userStore.postalCode,
+                gender: this.userStore.gender,
+                dateOfBirth: this.userStore.dateOfBirth,
+                displayPicture: this.displayPicture,
+            }))
             try {
 
                 if (this.selectedFile != this.displayPicture) {
@@ -189,6 +203,8 @@ export default {
                     displayPicture: this.displayPicture
                 }).then((response) => {
                     if (response.status == 200) {
+
+                        console.log(response.data);
 
                         // Show success modal
                         this.modal.show = true

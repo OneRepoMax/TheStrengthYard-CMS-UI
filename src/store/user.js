@@ -67,13 +67,20 @@ export const useUserStore = defineStore("user", {
     },
 
     saveResponseToStore(response) {
+      // format DateOfBirth
+      const dob = new Date(response.data.DateOfBirth);
+      const year = dob.getUTCFullYear();
+      const month = String(dob.getUTCMonth() + 1).padStart(2, "0");
+      const day = String(dob.getUTCDate()).padStart(2, "0");
+      const formattedDob = `${year}-${month}-${day}`
+
       this.userId = response.data.UserId;
       this.emailAddress = response.data.EmailAddress;
       this.firstName = response.data.FirstName;
       this.lastName = response.data.LastName;
       this.contactNo = response.data.ContactNo;
       this.gender = response.data.Gender;
-      this.dateOfBirth = response.data.DateOfBirth
+      this.dateOfBirth = formattedDob;
       this.homeAddress = response.data.HomeAddress;
       this.postalCode = response.data.PostalCode;
       this.userType = response.data.UserType;
@@ -174,7 +181,7 @@ export const useUserStore = defineStore("user", {
       medicalHistory,
       MedicalRemarks,
       ackTnC,
-      ackGymRules,
+      ackGymRules
     ) {
       try {
         let response = await axios.post(`${TSY_API}/register`, {
@@ -208,11 +215,8 @@ export const useUserStore = defineStore("user", {
       }
     },
 
-    async updateProfile(
-      profileData
-    ) {
+    async updateProfile(profileData) {
       try {
-
         let response = await axios.put(`${TSY_API}/user/${this.userId}`, {
           FirstName: profileData.firstName,
           LastName: profileData.lastName,
@@ -236,9 +240,9 @@ export const useUserStore = defineStore("user", {
       }
     },
     async changePassword(userId, newPassword) {
-      const apiUrl = `${TSY_API}/user/${userId}`; 
+      const apiUrl = `${TSY_API}/user/${userId}`;
       const data = {
-        Password: newPassword
+        Password: newPassword,
       };
       try {
         const response = await axios.put(apiUrl, data);
@@ -256,9 +260,9 @@ export const useUserStore = defineStore("user", {
       }
     },
     async resetPassword(emailAddress) {
-      const apiUrl = `${TSY_API}/resetpassword`; 
+      const apiUrl = `${TSY_API}/resetpassword`;
       const data = {
-        EmailAddress: emailAddress
+        EmailAddress: emailAddress,
       };
       try {
         const response = await axios.post(apiUrl, data);
@@ -266,7 +270,7 @@ export const useUserStore = defineStore("user", {
         if (response.status === 200) {
           this.password = response.data.Password;
           console.log("Password reset successfully");
-          return response
+          return response;
         } else {
           console.log("Password reset failed:", response.data);
         }
