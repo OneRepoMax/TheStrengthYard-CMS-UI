@@ -23,7 +23,7 @@
                     required
                   ></v-text-field>
                   <v-text-field
-                    v-model="formatPassword"
+                    v-model="this.password"
                     label="Password"
                     :type="showPassword ? 'text' : 'password'"
                     :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
@@ -108,14 +108,6 @@
       };
     },
     computed: {
-      formatPassword: {
-          get(){
-              return this.password
-          },
-          set(value){
-              this.password = value.trim()
-          }
-      },
       formatEmailAddress: {
           get(){
               return this.emailAddress
