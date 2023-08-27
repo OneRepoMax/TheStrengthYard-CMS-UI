@@ -39,11 +39,30 @@ const routes = [
         component: () =>
           import(/* webpackChunkName: "home" */ "@/views/ResetPassword.vue"),
       },
+      
+    ],
+  },
+  {
+    path: "/profile/",
+    component: () => import("@/layouts/default/LoginDefault.vue"),
+    children: [
       {
-        path: "edit-profile",
+        path: "view",
+        name: "Profile",
+        component: () =>
+          import(/* webpackChunkName: "home" */ "@/views/Profile.vue"),
+      },
+      {
+        path: "edit",
         name: "Edit Profile",
         component: () =>
           import(/* webpackChunkName: "home" */ "@/views/EditProfile.vue"),
+      },
+      {
+        path: "change-password",
+        name: "Change Password",
+        component: () =>
+          import(/* webpackChunkName: "home" */ "@/views/ChangePassword.vue"),
       },
     ],
   }

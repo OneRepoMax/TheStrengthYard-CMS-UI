@@ -1,13 +1,21 @@
 <template>
-  <v-app>
-    <default-bar />
-    <default-view />
-    <default-footer />
-  </v-app>
+    <v-app>
+        <default-view class="default-bg"/>
+    </v-app>
 </template>
 
 <script setup>
-  import DefaultBar from './AppBar.vue'
   import DefaultView from './View.vue'
-  import DefaultFooter from './Footer.vue'
 </script>
+  
+<style scoped>
+
+.default-bg {
+    width: 100vw;
+    min-height: 100vh; 
+    background-image: url('../../assets/login_splash.jpg');
+    background-size: cover;
+    background-repeat: repeat-y;
+}
+
+</style>
