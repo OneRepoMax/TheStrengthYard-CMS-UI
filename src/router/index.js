@@ -47,14 +47,8 @@ const routes = [
     component: () => import("@/layouts/default/LoginDefault.vue"),
     children: [
       {
-        path: "view",
-        name: "Profile",
-        component: () =>
-          import(/* webpackChunkName: "home" */ "@/views/Profile.vue"),
-      },
-      {
         path: "edit",
-        name: "Edit Profile",
+        name: "Manage Profile",
         component: () =>
           import(/* webpackChunkName: "home" */ "@/views/EditProfile.vue"),
       },

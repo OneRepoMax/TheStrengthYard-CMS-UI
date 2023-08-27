@@ -1,10 +1,8 @@
 <template>
     <v-app>
         <default-bar />
-        <div class="py-8">
-            <v-responsive class="mx-auto" max-width="1280px" min-height="87.5vh" align-content="center" >
-                <default-view />
-            </v-responsive>
+        <div class="py-8 mx-auto" max-width="1280px" min-height="87.5vh" align-content="center">
+            <default-view />
         </div>
         <default-footer />
     </v-app>

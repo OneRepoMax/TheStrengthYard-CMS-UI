@@ -1,5 +1,5 @@
 <template>
-    <v-container class="d-flex d-columns">
+    <v-container class="d-flex d-columns w-100">
         <v-row>
             <v-col cols="12" v-if="!userStore.verified">
                 <v-alert  type="warning" border="start" color="amber" title="Your account is not verified! " text="Please check your email for verification or click here to resend verification email." closable elevation="2"></v-alert>
