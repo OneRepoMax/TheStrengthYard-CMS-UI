@@ -13,47 +13,48 @@
 
             </v-card-title>
             <v-card-text>
-                <v-form @submit.prevent="updateProfile" validate-on="submit">
+                <v-form ref="form" @submit.prevent="updateProfile" validate-on="submit">
                     <v-row class="mb-3">
                         <v-col cols="12" md="6">
                             <v-text-field clearable hide-details="auto" class="mb-3" label="First Name"
-                                v-model="this.userStore.firstName" variant="outlined"></v-text-field>
+                                v-model="this.userStore.firstName" required :rules="nameRules" variant="outlined"></v-text-field>
                         </v-col>
                         <v-col cols="12" md="6">
                             <v-text-field clearable hide-details="auto" class="mb-3" label="Last Name"
-                                v-model="this.userStore.lastName" variant="outlined"></v-text-field>
+                                v-model="this.userStore.lastName" required :rules="nameRules" variant="outlined"></v-text-field>
                         </v-col>
 
                         <v-col cols="12" md="9">
                             <v-text-field hide-details="auto" class="mb-3" label="Date of Birth" type="date"
-                                v-model="formattedDob" variant="outlined" placeholder="YYYY-MM-DD"></v-text-field>
+                                v-model="formattedDob" required :rules="dobRules" variant="outlined" placeholder="YYYY-MM-DD"></v-text-field>
                         </v-col>
                         <v-col cols="12" md="3">
                             <v-select hide-details="auto" class="mb-3" label="Gender" v-model="formattedGender"
-                                :items="['Male', 'Female', 'Prefer not to say']" variant="outlined"></v-select>
+                                :items="['Male', 'Female', 'Prefer not to say']" required :rules="genderRules" variant="outlined"></v-select>
                         </v-col>
                         <v-col cols="12">
                             <v-text-field clearable hide-details="auto" class="mb-3" label="Email"
-                                v-model="this.userStore.emailAddress" variant="outlined"></v-text-field>
+                                v-model="this.userStore.emailAddress" required :rules="emailRules" variant="outlined"></v-text-field>
                         </v-col>
                         <v-col cols="12">
                             <v-text-field clearable hide-details="auto" class="mb-3" label="Address"
-                                v-model="this.userStore.homeAddress" variant="outlined"></v-text-field>
+                                v-model="this.userStore.homeAddress" required :rules="addressRules" variant="outlined"></v-text-field>
                         </v-col>
                         <v-col cols="6">
                             <v-text-field clearable hide-details="auto" class="mb-3" label="Postal Code"
-                                v-model="this.userStore.postalCode" variant="outlined"></v-text-field>
+                                v-model="this.userStore.postalCode" required :rules="postalRules" variant="outlined"></v-text-field>
                         </v-col>
                         <v-col cols="6">
                             <v-text-field clearable hide-details="auto" class="mb-3" label="Contact Number"
-                                v-model="this.userStore.contactNo" variant="outlined"></v-text-field>
+                                v-model="this.userStore.contactNo" required :rules="contactRules" variant="outlined"></v-text-field>
                         </v-col>
                     </v-row>
 
                     <v-btn block color="teal" variant="outlined" class="mb-5" to="/profile/change-password"
                         prepend-icon="mdi-key" density="default" size="large">Change Password</v-btn>
 
-                    <v-btn color="teal" block type="submit" size="large">Update Profile</v-btn>
+                    <v-btn color="teal"
+                     block type="submit" size="large">Update Profile</v-btn>
                 </v-form>
             </v-card-text>
 
@@ -85,6 +86,30 @@ export default {
             selectedFile: this.userStore.displayPicture,
             displayPicture: this.userStore.displayPicture,
             profilePicture: null,
+            nameRules: [
+            v => !!v || 'First Name is required',
+            v => (v && v.length >= 2) || 'First Name must be at least 2 characters',
+            ],
+            emailRules: [
+                v => !!v || 'Email is required',
+                v => /.+@.+\..+/.test(v) || 'Email must be valid',
+            ],
+            genderRules: [
+                v => !!v || 'Gender is required',
+            ],
+            dobRules: [
+                v => !!v || 'Date of Birth is required',
+            ],
+            addressRules: [
+                v => !!v || 'Address is required',
+            ],
+            postalRules: [
+                v => !!v || 'Postal Code is required',
+                v => (v && v.length == 6 && /^\d+$/.test(v)) || 'Postal Code must be 6 digits',
+            ],
+            contactRules: [
+                v => !!v || 'Contact Number is required',
+            ],
             modal: {
                 show: false,
                 type: "success",
@@ -141,6 +166,7 @@ export default {
 
         }
     },
+
     methods: {
         openFileInput() {
             // Trigger the click event of the hidden file input element when the avatar is clicked
