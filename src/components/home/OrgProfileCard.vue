@@ -3,7 +3,7 @@
         <v-card-text class="mb-3">
             <v-row>
                 <v-col cols="3">
-                    <v-img src="../assets/the-strength-yard-logo-main.svg" class="orgIcon"></v-img>
+                    <v-img src="@/assets/the-strength-yard-logo-main.svg" class="orgIcon"></v-img>
                 </v-col>
                 <v-col class="pa-0">
                     <v-card-title>The Strength Yard</v-card-title>
