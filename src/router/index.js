@@ -4,7 +4,7 @@ import { createRouter, createWebHistory } from "vue-router";
 const routes = [
   {
     path: "/",
-    component: () => import("@/layouts/default/Default.vue"),
+    component: () => import("@/layouts/default/LoginDefault.vue"),
     children: [
       {
         path: "",
@@ -28,7 +28,7 @@ const routes = [
           import(/* webpackChunkName: "home" */ "@/views/Login.vue"),
       },
       {
-        path: "register",
+        path: "registration",
         name: "Register",
         component: () =>
           import(/* webpackChunkName: "home" */ "@/views/Registration.vue"),
@@ -65,7 +65,31 @@ const routes = [
           import(/* webpackChunkName: "home" */ "@/views/ChangePassword.vue"),
       },
     ],
-  }
+  },
+  {
+    path: "/book/",
+    component: () => import("@/layouts/default/LoginDefault.vue"),
+    children: [
+      {
+        path: "",
+        name: "Book",
+        component: () =>
+          import(/* webpackChunkName: "home" */ "@/views/Book.vue"),
+      },
+    ],
+  },
+  {
+    path: "/schedule/",
+    component: () => import("@/layouts/default/LoginDefault.vue"),
+    children: [
+      {
+        path: "",
+        name: "Schedule",
+        component: () =>
+          import(/* webpackChunkName: "home" */ "@/views/Schedule.vue"),
+      },
+    ],
+  },
 ];
 
 const router = createRouter({

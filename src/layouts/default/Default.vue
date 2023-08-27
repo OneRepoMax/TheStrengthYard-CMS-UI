@@ -3,9 +3,9 @@
         <default-view class="default-bg"/>
     </v-app>
 </template>
-
+  
 <script setup>
-  import DefaultView from './View.vue'
+import DefaultView from './View.vue'
 </script>
   
 <style scoped>
@@ -13,7 +13,7 @@
 .default-bg {
     width: 100vw;
     min-height: 100vh; 
-    background-image: url('../../assets/login_splash.jpg');
+    background-image: url('@/assets/login_splash.jpg');
     background-size: cover;
     background-repeat: repeat-y;
 }
