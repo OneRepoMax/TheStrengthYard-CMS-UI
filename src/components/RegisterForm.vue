@@ -32,9 +32,9 @@
                 <!-- Last Name -->
                 <v-text-field v-model="userStore.lastName" label="Last Name" required :rules="nameRules" class="mt-3"></v-text-field>
                 <!-- Gender -->
-                <v-select v-model="userStore.gender" label="Gender" :items="genders" placeholder="Select" required :rules="genderRules" class="mt-3"></v-select>
+                <v-select v-model="formattedGender" label="Gender" :items="genders" placeholder="Select" required :rules="genderRules" class="mt-3"></v-select>
                 <!-- Date of Birth -->
-                <v-text-field v-model="userStore.dateOfBirth" label="Date of Birth" placeholder="DD/MM/YYYY" :rules="dobRules" class="mt-3" required></v-text-field>
+                <v-text-field v-model="userStore.dateOfBirth" label="Date of Birth" type="date" placeholder="DD-MM-YYYY" :rules="dobRules" class="mt-3" required></v-text-field>
                 <!-- Email -->
                 <v-text-field v-model="userStore.emailAddress" label="Email" required :rules="emailRules" class="mt-3"></v-text-field>
                 <!-- Address -->
@@ -57,7 +57,7 @@
                 ></v-text-field>
                 <!-- Confirm Password -->
                 <v-text-field
-                    v-model="confirmPassword"
+                    v-model="userStore.confirmPassword"
                     label="Confirm Password"
                     :append-icon="show2 ? 'mdi-eye' : 'mdi-eye-off'"
                     :rules="confirmPasswordRules"
@@ -67,7 +67,9 @@
                     required
                     counter
                 ></v-text-field>
-                <!-- <v-btn block color="teal" size="large" type="submit" class="mt-3">Next</v-btn> -->
+                <div class="text-center">
+                  <v-btn color="teal" size="large" type="submit" class="mt-3">Next</v-btn>
+                </div>
             </v-form>
 
             <!-- <p class="text-center mt-5">Already have an account? 
@@ -96,17 +98,7 @@ export default {
     return {
       selectedFile: null,
       profilePicture: null,
-      firstName: '',
-      lastName: '',
-      gender: null,
       genders: ['Male', 'Female', 'Prefer not to say'],
-      dateOfBirth: '',
-      emailAddress: '',
-      homeAddress: '',
-      postalCode: '',
-      contactNo: '',
-      password: '',
-      confirmPassword: '',
       fileObject: null,
       show1: false,
       show2: false,
@@ -148,35 +140,47 @@ export default {
       ],
     };
   },
-  methods: {
-    async register() {
-      // Add your registration logic here
-      console.log('Registration data:', {
-        profilePicture: this.profilePicture,
-        firstName: this.firstName,
-        lastName: this.lastName,
-        gender: this.shortenGender(this.gender),
-        dateOfBirth: this.dateOfBirth,
-        emailAddress: this.emailAddress,
-        homeAddress: this.homeAddress,
-        postalCode: this.postalCode,
-        password: this.password,
+
+  computed: {
+    formattedGender: {
+      get() {
+          switch (this.userStore.gender) {
+              case 'M':
+                  return 'Male'
+              case 'F':
+                  return 'Female'
+              case 'O':
+                  return 'Prefer not to say'
+          }
       },
-      console.log(this.userStore.firstName)
-      );
-      
+      set(newValue) {
+          switch (newValue) {
+              case 'Male':
+                  this.userStore.gender = 'M';
+                  break;
+              case 'Female':
+                  this.userStore.gender = 'F';
+                  break;
+              case 'Prefer not to say':
+                  this.userStore.gender = 'O';
+                  break;
+          }
+      }
+
+  }
+  },
+
+  methods: {
+    register(){
+      // console.log("run validate step");
+      this.$emit('validate-step');
     },
 
-    shortenGender(gender){
-        if (gender === 'Male'){return 'M';}
-        else if (gender === 'Female'){return 'F';}
-        else {return 'O'}
-    },
-    
     openFileInput() {
       // Trigger the click event of the hidden file input element when the avatar is clicked
       this.$refs.fileInput.click();
     },
+
     handleFileUpload(event) {
       const file = event.target.files[0];
       
@@ -197,6 +201,8 @@ export default {
       }
     },
   },
+
+
 };
 </script>
 
