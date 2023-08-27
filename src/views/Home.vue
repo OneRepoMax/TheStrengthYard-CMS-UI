@@ -1,14 +1,15 @@
 <template>
     <v-container class="d-flex d-columns">
         <v-row>
-            <v-col cols="12" md="8" no-gutters>
+            <v-col cols="12" lg="8" no-gutters>
+                <v-alert v-if="!userStore.verified" type="warning" border="start" color="amber" title="Your account is not verified! " text="Please check your email for verification or click here to resend verification email." closable class="mb-3" elevation="2"></v-alert>
                 <profile-card :fullName="userStore.firstName + ' ' + userStore.lastName"
                     :emailAddress="userStore.emailAddress" :homeAddress="userStore.homeAddress"
                     :membershipRecord="membershipRecord" :displayPicture="userStore.displayPicture" />
                 <Classes />
             </v-col>
 
-            <v-col cols="12" md="4">
+            <v-col cols="12" lg="4" no-gutters>
                 <template v-if="!loading">
                     <org-profile-card />
                     <membership-log />
@@ -51,6 +52,7 @@ export default {
     },
     data() {
         return {
+            loading: false,
             membershipRecord:
                 [
                     {
@@ -89,7 +91,9 @@ export default {
     methods: {
         async getUserInfo() {
             try {
+                this.loading=true;
                 await this.userStore.getUserInfo();
+                this.loading=false;
             } catch (error) {
                 console.log(error);
             }

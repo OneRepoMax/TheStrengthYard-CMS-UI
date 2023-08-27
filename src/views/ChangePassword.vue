@@ -25,7 +25,7 @@
                             Password Strength: <b>{{ this.score.text }}</b>
                         </v-card-text>
 
-                        <v-progress-linear :background-opacity="opacity" :color="score.color" :model-value="score.value"
+                        <v-progress-linear :color="score.color" :model-value="score.value"
                             striped height="10" class="mb-5"></v-progress-linear>
                         <v-btn color="teal" block type="submit" size="large" class="mb-5">Change Password</v-btn>
 

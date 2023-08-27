@@ -24,10 +24,14 @@
           If you have checked any of the above, please specify:
         </p>
         <v-text-field v-model="userStore.MedicalRemarks" label="Your answer" required></v-text-field>
-        <div class="text-center">
-          <v-btn @click="prev" variant="outlined" color="teal" size="large" class="mt-3">Previous</v-btn>
-          <v-btn @click="indemnity" color="teal" size="large" type="submit" class="mt-3">Next</v-btn>
-        </div>
+        <v-row>
+            <v-col cols="12" md="6" align="center" class="pt-0" order="last" order-md="first">
+                <v-btn block @click="prev" variant="outlined" color="teal" size="large" class="mt-3">Previous</v-btn>
+            </v-col>
+            <v-col cols="12" md="6" align="center" class="pt-0" >
+                <v-btn block @click="indemnity" color="teal" size="large" type="submit" class="mt-3">Next</v-btn>
+            </v-col>
+        </v-row>
       </v-form>
 </template>
 
@@ -89,5 +93,6 @@ export default {
       }
     }
   },
+  emits: ['validate-step']
 };
 </script>

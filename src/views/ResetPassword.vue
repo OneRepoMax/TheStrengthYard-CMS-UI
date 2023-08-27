@@ -20,10 +20,10 @@
                         </v-form>
                     </v-card-text>
                 </v-card>
-                <v-template>
+                <template>
                     <Modal v-model="modal.show" :path="modal.path" :title="modal.title" :message="modal.message"
                         :icon="modal.icon" @closeModal="closeModal" />
-                </v-template>
+                </template>
             </v-row>
         </v-container>
     </v-main>

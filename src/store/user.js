@@ -21,7 +21,7 @@ export const useUserStore = defineStore("user", {
     homeAddress: null,
     postalCode: null,
     contactNo: null,
-    password: null,
+    password: "",
     confirmPassword: null,
     userType: null,
     verified: false,
@@ -171,42 +171,27 @@ export const useUserStore = defineStore("user", {
     },
 
     // Add the register action here in a similar manner
-    async register(
-      emailAddress,
-      firstName,
-      lastName,
-      gender,
-      dob,
-      homeAddress,
-      postalCode,
-      contactNo,
-      password,
-      displayPicture,
-      feedbackDiscover,
-      medicalHistory,
-      MedicalRemarks,
-      ackTnC,
-      ackGymRules
-    ) {
+    async register(registerPayload) {
+
       try {
         let response = await axios.post(`${TSY_API}/register`, {
-          EmailAddress: emailAddress,
-          FirstName: firstName,
-          LastName: lastName,
-          Gender: gender,
-          DateOfBirth: dob,
-          HomeAddress: homeAddress,
-          PostalCode: postalCode,
-          ContactNo: contactNo,
-          Password: password,
+          EmailAddress: registerPayload.emailAddress,
+          FirstName: registerPayload.firstName,
+          LastName: registerPayload.lastName,
+          Gender: registerPayload.gender,
+          DateOfBirth: registerPayload.dateOfBirth,
+          HomeAddress: registerPayload.homeAddress,
+          PostalCode: registerPayload.postalCode,
+          ContactNo: registerPayload.contactNo,
+          Password: registerPayload.password,
           UserType: "C",
-          DisplayPicture: displayPicture,
+          DisplayPicture: registerPayload.displayPicture,
           Verified: false,
-          FeedbackDiscover: feedbackDiscover,
-          MedicalHistory: medicalHistory,
-          MedicalRemarks: MedicalRemarks,
-          AcknowledgementTnC: ackTnC,
-          AcknowledgementOpenGymRules: ackGymRules,
+          FeedbackDiscover: registerPayload.feedbackDiscover,
+          MedicalHistory: registerPayload.medicalHistory,
+          MedicalRemarks: registerPayload.medicalRemarks,
+          AcknowledgementTnC: registerPayload.ackTnC,
+          AcknowledgementOpenGymRules: registerPayload.ackGymRules,
         });
 
         // Handle the response data here

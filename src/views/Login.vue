@@ -2,6 +2,7 @@
   <v-main>
     <v-container fluid class="login-bg" justify="center">
       <v-row justify="center" class="h-100" align="center">
+        <v-expand-transition>
           <v-card class="pa-3 w-100" max-width="400px">
             <v-card-title class="text-center">
               <v-img
@@ -15,14 +16,14 @@
             <v-card-text>
               <v-form @submit.prevent="login" validate-on="submit">
                 <v-text-field
-                  v-model="emailAddress"
+                  v-model="formatEmailAddress"
                   label="Email Address"
                   :rules="rules"
                   class="mt-3"
                   required
                 ></v-text-field>
                 <v-text-field
-                  v-model="password"
+                  v-model="formatPassword"
                   label="Password"
                   :type="showPassword ? 'text' : 'password'"
                   :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
@@ -55,7 +56,14 @@
                 </p>
               </v-form>
             </v-card-text>
+            <v-card v-if="loginAlert">
+                <v-alert type="error" title="Invalid Login Credentials"
+                text="Please check your login credentials and try again later."
+                closable>
+                </v-alert>
+            </v-card>
           </v-card>
+        </v-expand-transition>
         
       </v-row>
     </v-container>
@@ -87,9 +95,9 @@ export default {
     return {
       // temp state
       emailAddress: "",
-      password: "",
       showPassword: false,
       loading: false,
+      loginAlert: false,
       rules: [
         (value) => {
           if (value) return true;
@@ -98,6 +106,24 @@ export default {
         },
       ],
     };
+  },
+  computed: {
+    formatPassword: {
+        get(){
+            return this.password
+        },
+        set(value){
+            this.password = value.trim()
+        }
+    },
+    formatEmailAddress: {
+        get(){
+            return this.emailAddress
+        },
+        set(value){
+            this.emailAddress  = value.trim()
+        }
+    }
   },
   methods: {
     async login() {
@@ -112,6 +138,7 @@ export default {
 
       if (response == null || response.status != 200) {
         console.log("invalid login details");
+        this.loginAlert=true;
       } else {
         console.log("Login Successful");
         this.$router.push({ path: "/" });

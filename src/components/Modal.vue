@@ -1,5 +1,5 @@
 <template>
-    <v-dialog v-model="dialog" max-width="400px" @input="$emit('input', $event)">
+    <v-dialog max-width="400px" @input="$emit('input', $event)">
         <v-card>
             <v-card-text class="text-end mb-0 pb-0">
                 <v-btn icon="mdi-close" variant="text" @click="this.$emit('closeModal')" ></v-btn>
