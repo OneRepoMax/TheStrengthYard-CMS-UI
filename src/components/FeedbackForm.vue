@@ -1,5 +1,5 @@
 <template>
-      <v-form>
+      <v-form @submit.prevent="feedback">
         <p class="text-left my-5" rules>
           How did you discover The Strength Yard?
         </p>
@@ -15,11 +15,14 @@
 
         <!-- Display the text input for 'Others' when it's selected -->
         <v-text-field
-          v-if="userStore.FeedbackDiscover.includes('Others')"
+          v-if="userStore.FeedbackDiscover.includes('Other')"
           v-model="userStore.otherFeedbackDiscover"
-          label="Specify 'Others'"
+          label="Specify 'Other'"
         ></v-text-field>
-        <!-- <v-btn @click="validateForm">Submit</v-btn> -->
+        <div class="text-center">
+          <v-btn @click="prev" variant="outlined" color="teal" size="large" class="mt-3">Previous</v-btn>
+          <v-btn @click="feedback" color="teal" size="large" type="submit" class="mt-3">Next</v-btn>
+        </div>
       </v-form>
 </template>
 
@@ -40,8 +43,6 @@ export default {
   data() {
     return {
       validationError: '',
-      FeedbackDiscover: [],
-      otherFeedbackDiscover: '',
       options: [
         "Search Engine",
         "Friend's Recommendation",
@@ -49,24 +50,34 @@ export default {
         "Google Maps",
         "Facebook Adverts",
         "Google Adverts",
-        "Others"
+        "Other"
       ],
     };
   },
   methods: {
+    feedback(){
+      // console.log("run validate step");
+      this.$emit('validate-step');
+      this.validateForm();
+    },
+
+    prev(){
+      this.$emit('prev-step');
+    },
+
     async validateForm() {
-      if (userStore.FeedbackDiscover.length === 0) {
+      if (this.userStore.FeedbackDiscover.length == 0) {
         this.validationError = 'Please select at least one option.';
-        console.log('Selected Options:', this.FeedbackDiscover);
-        console.log(userStore.FeedbackDiscover.length);
+        // console.log('Selected Options:', this.userStore.FeedbackDiscover);
+        // console.log(this.userStore.FeedbackDiscover.length);
         // console.log('Others Text:', this.otherFeedbackDiscover);
       } else {
         // Reset validation error if there are selected options
         this.validationError = null;
 
         // Handle form submission or other actions here
-        console.log('Selected Options:', userStore.FeedbackDiscover);
-        console.log('Others Text:', userStore.otherFeedbackDiscover);
+        // console.log('Selected Options:', this.userStore.FeedbackDiscover);
+        // console.log('Others Text:', this.userStore.otherFeedbackDiscover);
       }
     }
   },

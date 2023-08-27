@@ -1,5 +1,5 @@
 <template>
-      <v-form>
+      <v-form @submit.prevent="indemnity">
         <p class="text-left my-5" rules>
           Please read the following questions carefully and answer each one honestly, checking as appropriate or adding information if necessary. Responses are confidential. Have you ever had any history of the following? (If you have checked to any of the follow conditions, you must consult your doctor prior to exercise)
         </p>
@@ -15,16 +15,19 @@
 
         <!-- Display the text input for 'Others' when it's selected -->
         <v-text-field
-          v-if="userStore.MedicalHistory.includes('Others')"
+          v-if="userStore.MedicalHistory.includes('Other')"
           v-model="userStore.otherMedicalHistory"
-          label="Specify 'Others'"
+          label="Specify 'Other'"
         ></v-text-field>
 
         <p class="text-left my-5" rules>
           If you have checked any of the above, please specify:
         </p>
-        <v-text-field v-model="remarks" label="Your answer" required></v-text-field>
-        <!-- <v-btn @click="validateForm">Submit</v-btn> -->
+        <v-text-field v-model="userStore.MedicalRemarks" label="Your answer" required></v-text-field>
+        <div class="text-center">
+          <v-btn @click="prev" variant="outlined" color="teal" size="large" class="mt-3">Previous</v-btn>
+          <v-btn @click="indemnity" color="teal" size="large" type="submit" class="mt-3">Next</v-btn>
+        </div>
       </v-form>
 </template>
 
@@ -43,8 +46,6 @@ export default {
   data() {
     return {
       validationError: '',
-      MedicalHistory: [],
-      otherMedicalHistory: '',
       options: [
         "Heart Problems",
         "Pain in Chest when exercising/ not exercising",
@@ -57,25 +58,34 @@ export default {
         "Currently on medication",
         "Significant illness/operations",
         "None",
-        "Others"
+        "Other"
       ],
-      remarks: '',
     };
   },
   methods: {
+    indemnity(){
+      // console.log("run validate step");
+      this.$emit('validate-step');
+      this.validateForm();
+    },
+
+    prev(){
+      this.$emit('prev-step');
+    },
+
     validateForm() {
-      if (userStore.MedicalHistory.length === 0) {
+      if (this.userStore.MedicalHistory.length == 0) {
         this.validationError = 'Please select at least one option.';
-        console.log('Selected Options:', userStore.MedicalHistory);
-        console.log(userStore.MedicalHistory.length);
+        // console.log('Selected Options:', userStore.MedicalHistory);
+        // console.log(userStore.MedicalHistory.length);
         // console.log('Others Text:', this.userStore.otherMedicalHistory);
       } else {
         // Reset validation error if there are selected options
         this.validationError = null;
 
         // Handle form submission or other actions here
-        console.log('Selected Options:', userStore.MedicalHistory);
-        console.log('Others Text:', userStore.otherMedicalHistory);
+        // console.log('Selected Options:', userStore.MedicalHistory);
+        // console.log('Others Text:', userStore.otherMedicalHistory);
       }
     }
   },
