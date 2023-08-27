@@ -85,8 +85,8 @@
 
 <script>
 
-import DarkMode from '@/components/DarkMode.vue';
-import DarkModeButton from '@/components/DarkModeButton.vue'
+import DarkMode from '@/components/common/DarkMode.vue';
+import DarkModeButton from '@/components/common/DarkModeButton.vue'
 import { useUserStore } from '@/store/user'
 
 export default {

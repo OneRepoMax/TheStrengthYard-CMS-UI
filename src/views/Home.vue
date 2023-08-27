@@ -36,10 +36,10 @@
 <script>
 
 import { useUserStore } from '@/store/user'
-import ProfileCard from '@/components/ProfileCard.vue'
-import MembershipLog from '@/components/MembershipLog.vue'
-import Classes from '@/components/Classes.vue'
-import OrgProfileCard from '@/components/OrgProfileCard.vue'
+import ProfileCard from '@/components/home/ProfileCard.vue'
+import MembershipLog from '@/components/home/MembershipLog.vue'
+import Classes from '@/components/home/Classes.vue'
+import OrgProfileCard from '@/components/home/OrgProfileCard.vue'
 
 export default {
     name: 'LoginForm',

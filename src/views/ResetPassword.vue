@@ -31,7 +31,7 @@
 
 <script>
 import { useUserStore } from "@/store/user";
-import Modal from "@/components/Modal.vue"
+import Modal from "@/components/common/Modal.vue"
 
 export default {
     name: "LoginForm",
