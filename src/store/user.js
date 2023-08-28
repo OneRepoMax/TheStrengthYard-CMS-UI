@@ -59,13 +59,6 @@ export const useUserStore = defineStore("user", {
         userType: this.userType,
         verified: this.verified,
         displayPicture: this.displayPicture,
-        FeedbackDiscover: this.FeedbackDiscover,
-        otherFeedbackDiscover: this.otherFeedbackDiscover,
-        MedicalHistory: this.MedicalHistory,
-        otherMedicalHistory: this.otherMedicalHistory,
-        MedicalRemarks: this.MedicalRemarks,
-        AcknowledgementOpenGymRules: this.AcknowledgementOpenGymRules,
-        AcknowledgementTnC: this.AcknowledgementTnC,
       };
       localStorage.setItem("tsyUserInfo", JSON.stringify(userStore));
     },
@@ -89,6 +82,7 @@ export const useUserStore = defineStore("user", {
       this.postalCode = response.data.PostalCode;
       this.userType = response.data.UserType;
       this.displayPicture = response.data.DisplayPicture;
+      this.verified = response.data.Verified;
       this.saveUserToLocalStorage();
     },
 
