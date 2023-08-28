@@ -98,7 +98,12 @@ export default {
     return {
       selectedFile: null,
       profilePicture: null,
-      genders: ['Male', 'Female', 'Prefer not to say'],
+      firstName: '',
+      lastName: '',
+      email: '',
+      address: '',
+      password: '',
+      confirmPassword: '',
       fileObject: null,
       show1: false,
       show2: false,
@@ -171,9 +176,47 @@ export default {
   },
 
   methods: {
-    register(){
-      // console.log("run validate step");
-      this.$emit('validate-step');
+    async register() {
+      // Add your registration logic here
+      console.log('Registration data:', {
+        profilePicture: this.profilePicture,
+        firstName: this.firstName,
+        lastName: this.lastName,
+        email: this.email,
+        address: this.address,
+        password: this.password,
+      });
+      
+      try {
+        const uploadResponse = await this.userStore.uploadAvatar(this.profilePicture)
+        if (uploadResponse.status == 200){
+            console.log("success");
+
+            // uri to uploaded avatar
+            console.log(uploadResponse);
+
+            // trigger registration form through this API and put in variables
+            // Edit the function below accordingly, e.g. update the parameters, etc
+            const registerResponse = await this.userStore.register(
+                "...",
+                "<insert other parameters>",
+                uploadResponse
+            )
+
+                if(registerResponse.status == 200){
+
+                    // Show success modal
+                    // <insert your codes here>
+
+                    // redirect to email verification (I put login as temporary measure)
+                    this.$router.push({path: '/account/login'})
+
+                } 
+        }
+      } catch (error){
+        console.log("Registration error: ", error);
+      }
+
     },
 
     openFileInput() {
@@ -197,7 +240,7 @@ export default {
           this.selectedFile = reader.result;
         };
 
-        this.userStore.displayPicture = file
+        this.profilePicture = file
       }
     },
   },
