@@ -279,5 +279,19 @@ export const useUserStore = defineStore("user", {
         console.error("An error occurred during the API request:", error);
       }
     },
+    async getAllUser(){
+      const apiUrl = `${TSY_API}/user`;
+
+      try {
+        const response = await axios.get(apiUrl);
+
+        if (response.status === 200) {
+          return response;
+        } 
+        return response;
+      } catch (error) {
+        console.error("An error occurred during get all user API request:", error);
+      }
+    }
   },
 });
