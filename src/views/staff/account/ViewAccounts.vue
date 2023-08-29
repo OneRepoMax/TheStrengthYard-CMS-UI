@@ -19,13 +19,15 @@
             <!-- Skeleton loaders -->
             <template v-if="loading">
                 <v-card-text class="px-8">
-                    <v-skeleton-loader class="mb-3" elevation="3"
-                        type="list-item-avatar-three-line, list-item-avatar-three-line, list-item-avatar-three-line"
-                        :loading="loading"></v-skeleton-loader>
+                    <v-skeleton-loader elevation="3"
+                        type="list-item-avatar-three-line"
+                        :loading="loading"
+                        v-for="index in 10" :key="index"
+                    ></v-skeleton-loader>
                 </v-card-text>
             </template>
 
-            <ClientAccountList :clientAccounts="displayedAccounts" :searchValue="searchValue" />
+            <ClientAccountList :clientAccounts="displayedAccounts" />
 
             <v-divider></v-divider>
             <v-card-text class="px-8">
@@ -72,6 +74,11 @@ export default {
             accountsPerPage: 10
         }
     },
+    watch: {
+        searchValue(){
+            this.page=1;
+        }
+    },
     computed: {
         displayedAccounts() {
             const startIndex = (this.page - 1) * this.accountsPerPage;
@@ -87,8 +94,6 @@ export default {
                 return filteredAccounts.slice(startIndex, endIndex);
             }
             return this.clientAccounts.slice(startIndex, endIndex);
-
-
         },
         totalPages() {
             return Math.ceil(

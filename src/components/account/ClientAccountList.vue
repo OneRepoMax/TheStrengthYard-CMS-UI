@@ -42,7 +42,6 @@ export default {
 
     props: {
         clientAccounts: Object,
-        searchValue: String,
     },
     methods: {
         editProfile() {
