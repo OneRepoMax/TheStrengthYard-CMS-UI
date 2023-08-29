@@ -1,9 +1,9 @@
 <template>
     <v-app>
         <default-bar />
-        <div class="py-8 mx-auto" max-width="1280px" min-height="87.5vh" align-content="center">
-            <default-view />
-        </div>
+        <v-container fluid class="py-8 px-0 w-100 " min-height="87.5vh" align-content="center">
+            <default-view/>
+        </v-container>
         <default-footer />
     </v-app>
 </template>

@@ -200,6 +200,21 @@ export const useUserStore = defineStore("user", {
       }
     },
 
+    async resendVerificationEmail(emailAddress){
+      try {
+        let response = await axios.post(`${TSY_API}/verify/resend`,{
+          EmailAddress: emailAddress,
+        })
+
+        if (response.status === 200){
+          return response
+        }
+      } catch (error) {
+        console.log("Resend verification error: ", error );
+        return
+      }
+    },
+
     async updateProfile(profileData) {
       try {
         let response = await axios.put(`${TSY_API}/user/${this.userId}`, {
