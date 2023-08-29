@@ -66,6 +66,7 @@ export default {
       // temp state
       emailAddress: "",
       showPassword: false,
+      password: "",
       loading: false,
       loginAlert: false,
       rules: [
@@ -104,7 +105,7 @@ export default {
       } else {
         console.log("Login Successful");
         if (response.data.UserType.toUpperCase() == "A") {
-          this.$router.push({ path: "/admin" })
+          this.$router.push({ path: "/admin/account" })
         } else {
           this.$router.push({ path: "/" });
         }

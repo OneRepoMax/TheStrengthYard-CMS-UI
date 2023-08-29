@@ -38,7 +38,7 @@
             </v-list-item>
         </v-list>
     </v-navigation-drawer>
-    <v-app-bar :elevation="2" color="black">
+    <v-toolbar :elevation="2" color="black">
         <v-container class="d-flex" style="max-width: 1280px;">
             <template class="d-flex d-md-none">
                 <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
@@ -46,7 +46,7 @@
             <v-img class="mx-5 pa-3 d-none d-sm-block" src="@/assets/the-strength-yard-logo-main.svg" max-height="50"
                 max-width="50" contain></v-img>
             <v-app-bar-title class="font-weight-medium align-center text-capitalize my-auto">{{ appTitle
-            }}</v-app-bar-title>
+            }} <v-chip v-if="this.userStore.userType == 'A'">Admin</v-chip></v-app-bar-title>
             <div class="d-none d-md-block my-auto" v-if="!isLoggedIn">
                 <dark-mode />
                 <v-btn variant="flat" v-for="item in menuItems" :key="item.title" :to="item.path" class="mx-2"
@@ -80,7 +80,7 @@
 
             </div>
         </v-container>
-    </v-app-bar>
+    </v-toolbar>
 </template>
 
 <script>
