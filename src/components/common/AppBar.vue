@@ -96,17 +96,15 @@ export default {
 
         return { userStore }
     },
+    props:{
+        menuItems: Object,
+    },
     data() {
         return {
             appTitle: "The Strength Yard",
             drawer: false,
             group: null,
             isLoggedIn: false,
-            menuItems: [
-                { title: 'Home', path: '/', icon: "mdi-home", color: 'transparent' },
-                { title: 'Schedule', icon: "mdi-calendar-badge", path: '/schedule', color: 'transparent' },
-                { title: 'Book', icon: "mdi-login-variant", path: '/book', color: 'transparent' },
-            ],
             profileItems: [
                 { title: 'Manage Account', path: '/profile/edit', icon: "mdi-home", color: 'transparent' }
             ]
