@@ -58,7 +58,7 @@
                         </v-col>
                     </v-row>
 
-                    <v-btn block color="teal" variant="outlined" class="mb-5" to="/profile/change-password"
+                    <v-btn v-if="this.userId == null" block color="teal" variant="outlined" class="mb-5" to="/profile/change-password"
                         prepend-icon="mdi-key" density="default" size="large">Change Password</v-btn>
 
                     <v-btn color="teal" block type="submit" size="large">Update Profile</v-btn>

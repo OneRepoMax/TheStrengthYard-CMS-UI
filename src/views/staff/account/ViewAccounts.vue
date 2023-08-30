@@ -19,9 +19,10 @@
             <!-- Skeleton loaders -->
             <template v-if="loading">
                 <v-card-text class="px-8">
-                    <v-skeleton-loader elevation="3"
+                    <v-skeleton-loader 
                         type="list-item-avatar-three-line"
                         :loading="loading"
+
                         v-for="index in 10" :key="index"
                     ></v-skeleton-loader>
                 </v-card-text>
