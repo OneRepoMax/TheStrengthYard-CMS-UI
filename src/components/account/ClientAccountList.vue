@@ -19,10 +19,10 @@
                         <v-chip prepend-icon="mdi-phone">{{ account.ContactNo }}</v-chip>
                     </v-col>
                     <v-col class="hidden-xs-only text-left " cols="12" md="2">
-                        <v-btn prepend-icon="mdi-pencil" color="amber" size="small" @click.prevent="editProfile(account.UserId)">Profile</v-btn>
+                        <v-btn block prepend-icon="mdi-pencil" color="amber" size="small" @click.prevent="editProfile(account.UserId)">Profile</v-btn>
                     </v-col>
                     <v-col class="hidden-xs-only text-left" cols="12" md="2">
-                        <v-btn prepend-icon="mdi-pencil" color="light-blue" size="small">Memberships</v-btn>
+                        <v-btn block prepend-icon="mdi-pencil" color="light-blue" size="small">Memberships</v-btn>
                     </v-col>
                 </v-row>
             </v-expansion-panel-title>
