@@ -14,7 +14,7 @@
                 {{ this.message }}
             </v-card-text>
             <v-card-text>
-                <v-btn block color="teal"  class="mb-5" :to="path">Ok</v-btn>
+                <v-btn block color="teal"  class="mb-5" @click="navigate(path)">Ok</v-btn>
             </v-card-text>
         </v-card>
     </v-dialog>
@@ -29,5 +29,10 @@ export default {
         icon: String,
         message: String,
     },
+    methods: {
+        navigate(path){
+            this.$router.push(path)
+        }
+    }
 }
 </script>

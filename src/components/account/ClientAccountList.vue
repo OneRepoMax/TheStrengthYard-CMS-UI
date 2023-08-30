@@ -19,7 +19,7 @@
                         <v-chip prepend-icon="mdi-phone">{{ account.ContactNo }}</v-chip>
                     </v-col>
                     <v-col class="hidden-xs-only text-left " cols="12" md="2">
-                        <v-btn prepend-icon="mdi-pencil" color="amber" size="small" @click.prevent="editProfile()">Profile</v-btn>
+                        <v-btn prepend-icon="mdi-pencil" color="amber" size="small" @click.prevent="editProfile(account.UserId)">Profile</v-btn>
                     </v-col>
                     <v-col class="hidden-xs-only text-left" cols="12" md="2">
                         <v-btn prepend-icon="mdi-pencil" color="light-blue" size="small">Memberships</v-btn>
@@ -44,8 +44,8 @@ export default {
         clientAccounts: Object,
     },
     methods: {
-        editProfile() {
-            console.log("Hello world");
+        editProfile(userId) {
+            this.$router.push(`/admin/account/${userId}`)
         }
     }
 

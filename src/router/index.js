@@ -87,6 +87,7 @@ const routes = [
   {
     path: "/membership/payment/:id",
     component: () => import("@/layouts/default/LoginDefault.vue"),
+    props: true,
     children: [
       {
         path: "",
@@ -127,8 +128,9 @@ const routes = [
       {
         path: "account/:id",
         name: "Manage Client Account",
+        props: true,
         component: () =>
-          import(/* webpackChunkName: "home" */ "@/views/staff/account/ManageAccount.vue"),
+          import(/* webpackChunkName: "home" */ "@/views/client/profile/EditProfile.vue"),
       },
       {
         path: "membership",
@@ -139,6 +141,7 @@ const routes = [
       {
         path: "membership/:id",
         name: "Edit Memberships",
+        props: true,
         component: () =>
           import(/* webpackChunkName: "home" */ "@/views/staff/membership/EditMembership.vue"),
       },
