@@ -10,7 +10,7 @@ const accessKeyId = import.meta.env.VITE_S3_ACCESS_KEY; // IAM user access id
 const bucket = import.meta.env.VITE_S3_BUCKET_NAME; // Bucket name
 const region = import.meta.env.VITE_AWS_REGION; // Region
 
-export const useUserStore = defineStore("membership", {
+export const useMembershipStore = defineStore("membership", {
   state: () => ({
     membershipId: null,
   }),
