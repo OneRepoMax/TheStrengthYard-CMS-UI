@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
-import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+// import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import axios from "axios";
-import { v4 as uuidv4 } from "uuid";
+// import { v4 as uuidv4 } from "uuid";
 
 // Declare variable
 const TSY_API = import.meta.env.VITE_TSY_API;
@@ -30,6 +30,9 @@ export const useMembershipStore = defineStore("membership", {
           "An error occurred during get all membership API request:",
           error
         );
+
+        return error.response
+
       }
     },
     async getAllMembershipById(membershipId) {
@@ -47,6 +50,9 @@ export const useMembershipStore = defineStore("membership", {
           "An error occurred during get membership by ID API request:",
           error
         );
+
+        return error.response
+
       }
     },
     async getMembershipRecordByUserId(userId) {
@@ -60,10 +66,12 @@ export const useMembershipStore = defineStore("membership", {
         }
         return response;
       } catch (error) {
+
         console.error(
           "An error occurred during get membership by userId API request:",
           error
         );
+        return error.response
       }
     },
   },

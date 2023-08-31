@@ -22,7 +22,6 @@
                     <v-skeleton-loader 
                         type="list-item-avatar-three-line"
                         :loading="loading"
-
                         v-for="index in 10" :key="index"
                     ></v-skeleton-loader>
                 </v-card-text>
@@ -72,7 +71,7 @@ export default {
             searchValue: null,
             page: 1,
             pageLength: 1,
-            accountsPerPage: 10
+            accountsPerPage: 10,
         }
     },
     watch: {
