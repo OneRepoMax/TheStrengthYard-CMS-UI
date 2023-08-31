@@ -10,7 +10,7 @@
                     <v-col cols="12" md="5" class="d-flex justify-end align-center">
                         <v-autocomplete density="compact" variant="outlined" clearable prepend-inner-icon="mdi-magnify"
                         v-model="searchValue" :items="titles" hide-details="auto" class="me-3" label="Search membership"></v-autocomplete>
-                        <v-btn variant="outlined">Create new membership</v-btn>
+                        <v-btn variant="outlined">Create membership</v-btn>
                     </v-col>
                 </v-row>
             </v-card-text>

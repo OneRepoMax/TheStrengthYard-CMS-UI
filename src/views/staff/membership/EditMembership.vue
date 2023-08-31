@@ -1,11 +1,17 @@
 <template>
     <div>
-        Edit Membership
+        <EditMembership />
     </div>
 </template>
 
 <script>
+
+import EditMembership from "@/components/membership/EditMembership.vue"
+
 export default {
+    components: {
+        EditMembership
+    },
     setup () {
         
 
