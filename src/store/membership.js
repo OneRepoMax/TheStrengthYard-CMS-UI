@@ -13,6 +13,11 @@ const region = import.meta.env.VITE_AWS_REGION; // Region
 export const useMembershipStore = defineStore("membership", {
   state: () => ({
     membershipId: null,
+    title: null,
+    description: null,
+    type: null,
+    basefee: null,
+    picture: null,
   }),
   actions: {
     async uploadPicture(file) {
@@ -127,6 +132,27 @@ export const useMembershipStore = defineStore("membership", {
           }
         } catch (error) {
           console.error("Deletion error:", error);
+          return;
+        }
+      },
+
+      async createMembership(membershipData) {
+
+        try {
+          let response = await axios.post(`${TSY_API}/memberships`, {
+            Title: membershipData.title,
+            Description: membershipData.description,
+            Type: membershipData.type,
+            BaseFee: membershipData.basefee,
+            Picture: membershipData.picture
+          });
+  
+          // Handle the response data here
+          if (response.status === 200) {
+            return response;
+          }
+        } catch (error) {
+          console.error("Creation error:", error);
           return;
         }
       },

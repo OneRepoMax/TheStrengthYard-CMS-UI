@@ -14,7 +14,14 @@
                 {{ this.message }}
             </v-card-text>
             <v-card-text>
-                <v-btn block color="red"  class="mb-5" @click="navigate(path), this.$emit('actionModal')">Ok</v-btn>
+                <v-row class="mb-5">
+                    <v-col cols="12" md="6">
+                        <v-btn block variant="outlined" color="red" @click="this.$emit('closeModal')">Cancel</v-btn>
+                    </v-col>
+                    <v-col cols="12" md="6" class="order-first order-md-last">
+                        <v-btn block color="red" @click="navigate(path), this.$emit('actionModal')">Yes</v-btn>
+                    </v-col>
+                </v-row>
             </v-card-text>
         </v-card>
     </v-dialog>

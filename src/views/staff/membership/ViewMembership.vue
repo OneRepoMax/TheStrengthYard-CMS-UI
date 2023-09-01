@@ -10,7 +10,7 @@
                     <v-col cols="12" md="5" class="d-flex justify-end align-center">
                         <v-autocomplete density="compact" variant="outlined" clearable prepend-inner-icon="mdi-magnify"
                         v-model="searchValue" :items="titles" hide-details="auto" class="me-3" label="Search membership"></v-autocomplete>
-                        <v-btn variant="outlined">Create membership</v-btn>
+                        <v-btn variant="outlined" @click="createMembership('create')">Create membership</v-btn>
                     </v-col>
                 </v-row>
             </v-card-text>
@@ -65,7 +65,8 @@ export default {
         searchValue(){
             this.page=1;
         }
-    },computed: {
+    },
+    computed: {
         displayedMembership() {
             const startIndex = (this.page - 1) * this.membershipPerPage;
             const endIndex = startIndex + this.membershipPerPage;
@@ -122,7 +123,12 @@ export default {
             
             return
 
-        }
+        },
+
+        createMembership(membershipId) {
+            // console.log(membershipId)
+            this.$router.push(`/admin/membership/${membershipId}`)
+        },
     }
 }
 </script>

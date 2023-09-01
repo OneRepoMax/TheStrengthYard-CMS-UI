@@ -3,7 +3,9 @@
 
         <v-card elevation="3" class="pa-5" width="700px">
             <v-card-title class="text-center">
-                <v-card-title>Manage Membership</v-card-title>
+                <v-card-title v-if="this.membershipId 
+                == 'create'">Create Membership</v-card-title>
+                <v-card-title v-else>Manage Membership</v-card-title>
             </v-card-title>
             <v-card-text>
                 <v-form ref="form" @submit.prevent="updateMembership" validate-on="submit">
@@ -12,6 +14,11 @@
                             <v-text-field clearable hide-details="auto" class="mb-3" label="Title"
                                 v-model="this.membershipData.title" required
                                 variant="outlined"></v-text-field>
+                        </v-col>
+                        <v-col cols="12" md="12">
+                            <v-textarea clearable hide-details="auto" class="mb-3" label="Description"
+                                v-model="this.membershipData.description" required
+                                variant="outlined"></v-textarea>
                         </v-col>
                         <v-col cols="12" md="6">
                             <v-select hide-details="auto" class="mb-3" label="Type" v-model="this.membershipData.type"
@@ -30,7 +37,8 @@
                            <v-btn color="teal" block variant="outlined" to="/admin/membership" size="large">back</v-btn>
                         </v-col>
                         <v-col cols="12" md="6">
-                           <v-btn color="teal" block type="submit" size="large">Update</v-btn>
+                           <v-btn v-if="this.membershipId == 'create'" color="teal" block type="submit" size="large">Create</v-btn>
+                           <v-btn v-else color="teal" block type="submit" size="large">Update</v-btn>
                         </v-col>
                         
                     </v-row>
@@ -79,8 +87,9 @@ export default {
         }
     },
     mounted() {
-        if (this.membershipId == null) {
+        if (this.membershipId == "create") {
             this.membershipData = this.membershipStore.$state
+            console.log(this.membershipData)
         } else {
             this.getMembershipData();
         }
@@ -173,32 +182,63 @@ export default {
                 
                 
                 let tempmembershipId = this.membershipId
-                if (this.membershipId == null){
+                if (this.membershipId == "create"){
                     tempmembershipId = this.membershipStore.membershipId
+                    console.log("creating: new membership")
+                    // trigger update profile form through this API and put in variables
+                    // Edit the function below accordingly, e.g. update the parameters, etc
+                    await this.membershipStore.createMembership({
+                        title: this.membershipData.title,
+                        description: this.membershipData.description,
+                        type: this.membershipData.type,
+                        basefee: this.membershipData.basefee,
+                        picture: this.membershipData.picture
+                    }).then((response) => {
+                        if (response.status == 200) {
+
+                            console.log(response.data);
+                            
+                            // Show success modal
+                            this.modal.show = true
+                            this.modal.message = "Your membership has been successfully updated!"
+                            this.modal.path = "/admin/membership"
+                            this.membershipStore.$state = {
+                                membershipId: null,
+                                title: null,
+                                description: null,
+                                type: null,
+                                basefee: null,
+                                picture: null,
+                            }
+
+                        }
+                    })
+
+                } else {
+                    console.log("Updating: " + tempmembershipId)
+                    // trigger update profile form through this API and put in variables
+                    // Edit the function below accordingly, e.g. update the parameters, etc
+                    await this.membershipStore.updateMembershipById({
+                        title: this.membershipData.title,
+                        description: this.membershipData.description,
+                        type: this.membershipData.type,
+                        basefee: this.membershipData.basefee,
+                        picture: this.membershipData.picture
+                    }, tempmembershipId).then((response) => {
+                        if (response.status == 200) {
+
+                            console.log(response.data);
+
+                            // Show success modal
+                            this.modal.show = true
+                            this.modal.path = "/admin/membership"
+
+                        }
+                    })
                 }
 
-                // trigger update profile form through this API and put in variables
-                // Edit the function below accordingly, e.g. update the parameters, etc
-                await this.membershipStore.updateMembershipById({
-                    title: this.membershipData.title,
-                    description: this.membershipData.description,
-                    type: this.membershipData.type,
-                    basefee: this.membershipData.basefee,
-                    picture: this.membershipData.picture
-                }, tempmembershipId).then((response) => {
-                    if (response.status == 200) {
-
-                        console.log(response.data);
-
-                        // Show success modal
-                        this.modal.show = true
-                        this.modal.path = "/admin/membership"
-
-                    }
-                })
-
             } catch (error) {
-                console.log("Update Profile error: ", error);
+                console.log("Membership error: ", error);
             }
         }
     },
