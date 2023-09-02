@@ -4,7 +4,7 @@
         prepend-icon="mdi-information-outline">
     </v-alert>
     <template v-if="this.membershipRecord.length > 0">
-        
+
         <v-row no-gutters>
             <v-col>
                 <h5 class="text-h5">Membership Record</h5>
@@ -14,7 +14,7 @@
                 <v-btn block prepend-icon="mdi-square-edit-outline" color="light-blue" size="small">Edit Memberships</v-btn>
             </v-col>
         </v-row>
-        
+
         <v-divider class="my-3"></v-divider>
         <v-table density="compact">
             <thead>
@@ -51,29 +51,59 @@
                     <td>{{ this.formattedDate(membershipData.EndDate) }}</td>
                     <td>{{ membershipData.Membership.BaseFee }}</td>
                     <td>
-                        {{ membershipData.ActiveStatus }}
+                        <v-chip v-if="membershipData.ActiveStatus.toUpperCase() == 'ACTIVE'" color="primary" prepend-icon="mdi-check">
+                            {{ membershipData.ActiveStatus }}
+                        </v-chip>
+                        <v-chip v-if="membershipData.ActiveStatus.toUpperCase() == 'INACTIVE'" color="secondary" prepend-icon="mdi-close">
+                            {{ membershipData.ActiveStatus }}
+                        </v-chip>
+                        <v-chip v-if="membershipData.ActiveStatus.toUpperCase() == 'PAUSED'" color="orange" prepend-icon="mdi-pause">
+                            {{ membershipData.ActiveStatus }}
+                        </v-chip>
                     </td>
-                    <td><v-btn size="x-small" icon="mdi-open-in-new" variant="text"></v-btn></td>
+                    <td><v-btn size="x-small" icon="mdi-open-in-new" variant="text"
+                            @click.prevent="showMembershipLog(membershipData)"></v-btn></td>
+                    <!-- Membership Log Modal -->
+                    <div class="d-none">
+                        <MembershipLogModal v-model="membershipLog.show" @closeModal="closeModal"
+                            :membershipLog="membershipLog.data" :membership="selectedMembershipRecord" />
+                    </div>
                 </tr>
             </tbody>
         </v-table>
+
+        <v-progress-linear v-if="logLoading" indeterminate></v-progress-linear>
 
     </template>
 </template>
 
 <script>
 
-import { useDate } from 'vuetify/labs/date'
+import { useMembershipStore } from '@/store/membership'
+import MembershipLogModal from '@/components/membership/MembershipLogModal.vue'
 
 
 export default {
     setup() {
-        const date = useDate()
+        const membershipStore = useMembershipStore();
 
-        return { date }
+        return { membershipStore }
     },
     props: {
         membershipRecord: Object
+    },
+    components: {
+        MembershipLogModal
+    },
+    data() {
+        return {
+            membershipLog: {
+                show: false,
+                data: [],
+            },
+            selectedMembershipRecord: null,
+            logLoading: false,
+        }
     },
     methods: {
         formattedDate(dateInput) {
@@ -82,6 +112,22 @@ export default {
             const month = String(date.getUTCMonth() + 1).padStart(2, "0");
             const day = String(date.getUTCDate()).padStart(2, "0");
             return `${year}-${month}-${day}`;
+        },
+        closeModal() {
+            this.membershipLog.show = false
+        },
+        async showMembershipLog(membershipData) {
+            this.logLoading = true;
+            this.membershipLog.data = []
+            this.selectedMembershipRecord = membershipData
+            const response = await this.membershipStore.getMembershipLogByMembershipRecordId(membershipData.MembershipRecordId)
+            
+            this.logLoading = false;
+
+            if (response.status == 200) {
+                this.membershipLog.data = response.data
+                this.membershipLog.show = true
+            }
         }
     }
 }
