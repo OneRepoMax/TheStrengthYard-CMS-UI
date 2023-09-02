@@ -112,28 +112,36 @@ export default {
     methods: {
         async changePassword() {
             try {
+
                 const LoginResponse = await this.userStore.login(
                     this.userStore.emailAddress,
                     this.password
                 );
+
                 if (LoginResponse.status === 200) {
-                    const response = await this.userStore.changePassword(
-                        this.userStore.userId,
-                        this.newPassword
-                    );
-                    console.log(response)
-                    if (response.status === 200) {
-                        this.modal.show = true;
-                        this.modal.message = "Success! Your password has been changed.";
-                        this.modal.type = "success";
+                    if(this.newPassword !== this.confirmPassword){
+                        this.passwordAlertMessage = "Invalid Current Password";
+                        this.passwordAlertType = "error";
+                        this.passwordAlert = true;
+                        throw new Error("Two Password not the same")
+                        return
                     }
 
-                    if (this.newPassword !== this.confirmPassword) {
-                        console.log("new password not the same as confirm password");
-                    } else {
-                        console.log(response);
+                    else{
+                        const response = await this.userStore.changePassword(this.userStore.userId,this.confirmPassword);
+                        if(response.status == 200){
+                            this.modal.show = true;
+                            this.modal.message = "Success! Your password has been changed.";
+                            this.modal.type = "success";
+                        }
+                        else{
+                            this.modal.show = true;
+                            this.modal.message = "Fail to change your password, please try again";
+                            this.modal.type = "error"
+                        }
                     }
-                } else {
+                } 
+                else {
                     throw new Error("Invalid Current Password");
                 }
             } catch (error) {
