@@ -120,7 +120,7 @@ export default {
 
                 if (LoginResponse.status === 200) {
                     if(this.newPassword !== this.confirmPassword){
-                        this.passwordAlertMessage = "Invalid Current Password";
+                        this.passwordAlertMessage = "New/confirm password does not match";
                         this.passwordAlertType = "error";
                         this.passwordAlert = true;
                         throw new Error("Two Password not the same")
