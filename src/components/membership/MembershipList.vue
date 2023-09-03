@@ -87,10 +87,19 @@ export default {
             this.$router.push(`/admin/membership/${membershipId}`)
         },
 
-        deleteMembership(membershipId) {
+        async deleteMembership(membershipId) {
             console.log("deleting: " + membershipId)
-            this.modal.show = false
-            this.membershipStore.deleteMembershipById(membershipId)
+            try {
+                 await this.membershipStore.deleteMembershipById(membershipId).then((response) => {
+                    if (response.status == 200){
+                        location.reload()
+                        console.log(response.data)
+                        this.modal.show = false
+                    }
+                 })
+            } catch (error) {
+                console.error("Error deleting membership", error);
+            }
         },
         showModal(id) {
             this.modal.show = true

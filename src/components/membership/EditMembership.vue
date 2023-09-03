@@ -8,30 +8,31 @@
                 <v-card-title v-else>Manage Membership</v-card-title>
             </v-card-title>
             <v-card-text>
-                <v-form ref="form" @submit.prevent="updateMembership" validate-on="submit">
+                <v-form ref="form" @submit.prevent="validateForm" validate-on="submit">
                     <v-row class="mb-3">
                         <v-col cols="12" md="12">
                             <v-text-field clearable hide-details="auto" class="mb-3" label="Title"
-                                v-model="this.membershipData.title" required
+                                v-model="this.membershipData.title" required :rules="rules"
                                 variant="outlined"></v-text-field>
                         </v-col>
                         <v-col cols="12" md="12">
                             <v-textarea clearable hide-details="auto" class="mb-3" label="Description"
-                                v-model="this.membershipData.description" required
+                                v-model="this.membershipData.description" required :rules="rules"
                                 variant="outlined"></v-textarea>
                         </v-col>
                         <v-col cols="12" md="6">
                             <v-select hide-details="auto" class="mb-3" label="Type" v-model="this.membershipData.type"
-                                :items="['One-Time', 'Monthly', 'Yearly']" required
+                                :items="['One-Time', 'Monthly', 'Yearly']" required :rules="rules"
                                 variant="outlined"></v-select>
                         </v-col>
                         <v-col cols="12" md="6">
                             <v-text-field clearable hide-details="auto" class="mb-3" label="Base Fee ($)"
-                                v-model="this.membershipData.basefee" required
+                                v-model="this.membershipData.basefee" type="number" required :rules="rules"
                                 variant="outlined"></v-text-field>
                         </v-col>
                         <v-col cols="12" md="12">
-                                <v-file-input label="Upload Picture" prepend-icon="" append-inner-icon="mdi-paperclip" variant="outlined" accept="image/*" @change="handleFileUpload"></v-file-input>
+                                <v-file-input v-if="this.membershipId == 'create'" label="Upload Picture" prepend-icon="" append-inner-icon="mdi-paperclip" variant="outlined" :rules="pictureRules" accept="image/*" @change="handleFileUpload"></v-file-input>
+                                <v-file-input v-else label="Upload Picture" prepend-icon="" append-inner-icon="mdi-paperclip" variant="outlined" accept="image/*" @change="handleFileUpload"></v-file-input>
                         </v-col>
                         <v-col cols="12" md="6">
                            <v-btn color="teal" block variant="outlined" to="/admin/membership" size="large">back</v-btn>
@@ -96,6 +97,8 @@ export default {
     },
     data() {
         return {
+            rules: [v => (!!v) || 'This field is required'],
+            pictureRules: [v => (v == null) || 'This field is required'],
             picture: this.membershipStore.Picture,
             membershipData: {
                 title: null,
@@ -162,6 +165,49 @@ export default {
                 console.error("Error retrieving user info", error);
             }
         },
+
+        validateForm(){
+            console.log(this.membershipData.basefee)
+            // console.log(this.membershipData.description == !!this.membershipData.description)
+            // console.log(this.membershipData.type == !!this.membershipData.type)
+            // console.log(this.membershipData.title == !!this.membershipData.title)
+            // console.log(this.membershipData.basefee == !!this.membershipData.basefee)
+            // console.log(this.membershipData.picture == null)
+
+            if (this.membershipId == "create") {
+                if (this.membershipData.picture != null){
+                    this.pictureRules = [];
+                }
+                if (
+                    (this.membershipData.description == null) ||
+                    (this.membershipData.type == null) ||
+                    (this.membershipData.title == null) ||
+                    (this.membershipData.basefee == null) ||
+                    (this.membershipData.picture == null)
+                ) console.log("missing fields")
+                else {
+                    this.updateMembership();
+                }
+            } else {
+                if (
+                    (this.membershipData.description == !!this.membershipData.description) ||
+                    (this.membershipData.type == !!this.membershipData.type) ||
+                    (this.membershipData.title == !!this.membershipData.title) ||
+                    (this.membershipData.basefee == !!this.membershipData.basefee) ||
+                    (this.membershipData.picture == null)
+                ) {
+                    console.log("missing fields")
+                } if (this.membershipData.basefee == null){
+                    console.log("missing fee")
+                } else {
+                    
+                    this.updateMembership();   
+                }
+            }
+
+            
+        },
+
         async updateMembership() {
 
             console.log(JSON.stringify({
