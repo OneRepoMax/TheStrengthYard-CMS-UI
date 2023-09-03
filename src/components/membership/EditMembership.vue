@@ -12,12 +12,12 @@
                     <v-row class="mb-3">
                         <v-col cols="12" md="12">
                             <v-text-field clearable hide-details="auto" class="mb-3" label="Title"
-                                v-model="this.membershipData.title" required
+                                v-model="this.membershipData.title" required :rules="titleRule"
                                 variant="outlined"></v-text-field>
                         </v-col>
                         <v-col cols="12" md="12">
                             <v-textarea clearable hide-details="auto" class="mb-3" label="Description"
-                                v-model="this.membershipData.description" required
+                                v-model="this.membershipData.description" required :rules="descriptionRule"
                                 variant="outlined"></v-textarea>
                         </v-col>
                         <v-col cols="12" md="6">
@@ -60,6 +60,13 @@
 <script>
 import { useMembershipStore } from '@/store/membership'
 import Modal from '@/components/common/Modal.vue';
+import { reactive } from 'vue'
+
+const state = reactive({
+    error: 0,
+    loading: false,
+})
+
 
 export default {
     setup() {
@@ -111,7 +118,13 @@ export default {
                 title: "Update successful",
                 message: "Your membership has been successfully updated!",
                 path: "/"
-            }
+            },
+            titleRule: [
+                v => !!v || 'Address is required',
+            ],
+            descriptionRule: [
+                v => !!v || 'Description is required',
+            ],
         }
     },
     computed: {
@@ -121,6 +134,31 @@ export default {
     },
 
     methods: {
+
+        validateForm(){
+        state.error = 0;
+
+        if(this.membershipData.title == ""){ 
+            state.error ++;
+        };
+        if(this.membershipData.description == "" || this.membershipData.description ==null){
+            state.error ++ ;
+        };
+        
+        // not working properly, a bug - darren
+        //if(Number.isInteger(this.membershipData.basefee) != true){
+        //    state.error++;
+        //    console.log('basefee not integer')
+        //};
+
+        if (state.error == 0) {
+            return true;
+        } else {
+            return false;
+        }
+        },
+
+
         openFileInput() {
             // Trigger the click event of the hidden file input element when the avatar is clicked
             this.$refs.fileInput.click();
@@ -149,6 +187,7 @@ export default {
         },
 
         async getMembershipData() {
+
             try {
                 const response = await this.membershipStore.getMembershipById(this.membershipId)
                 if (response.status == 200) {
@@ -163,7 +202,16 @@ export default {
             }
         },
         async updateMembership() {
-
+            
+            if(this.validateForm()){
+                console.log(this.membershipData.title,' title');
+                console.log(state.error)
+                    console.log('Valid Form')
+                }
+                else{
+                    console.log('Invalid Form')
+                    return
+                }
             console.log(JSON.stringify({
                 Title: this.membershipData.title,
                 Description: this.membershipData.description,
