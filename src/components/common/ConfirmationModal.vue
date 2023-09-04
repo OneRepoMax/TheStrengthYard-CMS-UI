@@ -2,18 +2,25 @@
     <v-dialog max-width="400px" @input="$emit('input', $event)">
         <v-card :title="this.title">
             <template v-slot:append>
-                <v-btn icon="$close" variant="text" @click="this.$emit('closeModal')"></v-btn>
+                <v-btn icon="$close" variant="text" @click="$emit('closeModal')"></v-btn>
             </template>
             <v-divider></v-divider>
             <v-card-text class="text-center">
-                <v-icon size="130" color="green-darken-2">{{ icon }}</v-icon>
+                <v-icon size="130" :color="type">{{ icon }}</v-icon>
             </v-card-text>
             <v-card-text class="text-center">
                 {{ this.message }}
             </v-card-text>
             <v-divider></v-divider>
             <v-card-text>
-                <v-btn block color="teal" class="mb-5" @click="navigate(path)">Ok</v-btn>
+                <v-row dense>
+                    <v-col cols="12" md="6">
+                        <v-btn block color="red" class="mb-5" @click="$emit('closeModal')">No</v-btn>
+                    </v-col>
+                    <v-col cols="12" md="6">
+                        <v-btn block color="black" class="mb-5" @click="$emit('confirmAction')">Yes</v-btn>
+                    </v-col>
+                </v-row>
             </v-card-text>
         </v-card>
     </v-dialog>
@@ -23,20 +30,10 @@
 export default {
     props: {
         value: Boolean,
-        path: String,
         title: String,
+        type: String,
         icon: String,
         message: String,
-        closeOnClick: Boolean
     },
-    methods: {
-        navigate(path) {
-            if (this.closeOnClick) {
-                this.$emit('closeModal')
-            } else {
-                this.$router.push(path)
-            }
-        }
-    }
 }
 </script>
