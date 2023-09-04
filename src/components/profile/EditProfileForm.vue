@@ -78,6 +78,12 @@
 <script>
 import { useUserStore } from '@/store/user';
 import Modal from '@/components/common/Modal.vue';
+import { reactive } from 'vue'
+
+const state = reactive({
+    error: 0,
+    loading: false,
+})
 
 export default {
     setup() {
@@ -212,10 +218,36 @@ export default {
     },
 
     methods: {
+        validateRegistrationForm(){
+        state.error = 0;
+
+        if (this.userStore.displayPicture == null) { state.error++; }
+        if (this.userStore.firstName == null) {state.error++;} 
+        else if (this.userStore.firstName.length < 2) { state.error++; }
+        if (this.userStore.lastName == null) {state.error++;} 
+        else if (this.userStore.lastName.length < 2) { state.error++; }
+        if (this.userStore.emailAddress == null) {state.error++;} 
+        else if (/.+@.+\..+/.test(this.userStore.emailAddress) == false) { state.error++; }
+        if (this.userStore.gender == null) { state.error++; }
+        if (this.userStore.dateOfBirth == null) { state.error++; }
+        if (this.userStore.homeAddress == null) { state.error++; }
+        if (this.userStore.postalCode == null) {state.error++;} 
+        else if (this.userStore.postalCode.length != 6) { state.error++; }
+        else if (/^\d+$/.test(this.userStore.postalCode) == false) { state.error++; }
+        if (this.userStore.contactNo == null) { state.error++; }
+        console.log("error: " + state.error)
+        if (state.error == 0) {
+            return true;
+        } else {
+            return false;
+        }
+        },
+
         openFileInput() {
             // Trigger the click event of the hidden file input element when the avatar is clicked
             this.$refs.fileInput.click();
         },
+        
         handleFileUpload(event) {
             const file = event.target.files[0];
 
@@ -257,6 +289,14 @@ export default {
             }
         },
         async updateProfile() {
+            
+                if(this.validateRegistrationForm()){
+                    console.log('Valid Form')
+                }
+                else{
+                    console.log('Invalid Form')
+                    return
+                }
 
             console.log(JSON.stringify({
                 firstName: this.userProfileData.firstName,

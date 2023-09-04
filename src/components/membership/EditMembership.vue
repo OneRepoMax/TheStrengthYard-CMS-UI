@@ -27,7 +27,7 @@
                         </v-col>
                         <v-col cols="12" md="6">
                             <v-text-field clearable hide-details="auto" class="mb-3" label="Base Fee ($)"
-                                v-model="this.membershipData.basefee" type="number" required :rules="rules"
+                                v-model="this.membershipData.basefee" type="number" required :rules="feeRules"
                                 variant="outlined"></v-text-field>
                         </v-col>
                         <v-col cols="12" md="12">
@@ -61,6 +61,12 @@
 <script>
 import { useMembershipStore } from '@/store/membership'
 import Modal from '@/components/common/Modal.vue';
+import { reactive } from 'vue'
+
+const state = reactive({
+    error: 0,
+    loading: false,
+})
 
 export default {
     setup() {
@@ -99,6 +105,10 @@ export default {
         return {
             rules: [v => (!!v) || 'This field is required'],
             pictureRules: [v => (v == null) || 'This field is required'],
+            feeRules: [
+                v => (!!v) || 'This field is required',
+                v => (v > 0) || 'Base fee have to be more than 0',
+            ],
             picture: this.membershipStore.Picture,
             membershipData: {
                 title: null,
@@ -167,44 +177,24 @@ export default {
         },
 
         validateForm(){
+            state.error = 0;
+            console.log(this.membershipData.title)
+            console.log(this.membershipData.description)
             console.log(this.membershipData.basefee)
-            // console.log(this.membershipData.description == !!this.membershipData.description)
-            // console.log(this.membershipData.type == !!this.membershipData.type)
-            // console.log(this.membershipData.title == !!this.membershipData.title)
-            // console.log(this.membershipData.basefee == !!this.membershipData.basefee)
-            // console.log(this.membershipData.picture == null)
 
-            if (this.membershipId == "create") {
-                if (this.membershipData.picture != null){
-                    this.pictureRules = [];
-                }
-                if (
-                    (this.membershipData.description == null) ||
-                    (this.membershipData.type == null) ||
-                    (this.membershipData.title == null) ||
-                    (this.membershipData.basefee == null) ||
-                    (this.membershipData.picture == null)
-                ) console.log("missing fields")
-                else {
-                    this.updateMembership();
-                }
+            if (this.membershipData.title == "" || this.membershipData.title == null){state.error++;}
+            if (this.membershipData.description == "" || this.membershipData.description == null){state.error++;}
+            if (this.membershipData.type == "" || this.membershipData.type == null){state.error++;}
+            if (this.membershipData.basefee == null || this.membershipData.basefee <= 0){state.error++;}
+            if (this.membershipData.picture == null){state.error++;}
+            if (this.membershipData.picture != null){this.pictureRules = [];}
+
+            if (state.error == 0){
+                this.updateMembership();
             } else {
-                if (
-                    (this.membershipData.description == !!this.membershipData.description) ||
-                    (this.membershipData.type == !!this.membershipData.type) ||
-                    (this.membershipData.title == !!this.membershipData.title) ||
-                    (this.membershipData.basefee == !!this.membershipData.basefee) ||
-                    (this.membershipData.picture == null)
-                ) {
-                    console.log("missing fields")
-                } if (this.membershipData.basefee == null){
-                    console.log("missing fee")
-                } else {
-                    
-                    this.updateMembership();   
-                }
+                console.log("Invalid form")
+                console.log("Number of errors: " + state.error)
             }
-
             
         },
 
