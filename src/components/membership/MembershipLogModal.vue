@@ -17,12 +17,12 @@
                     prepend-icon="mdi-close" class="me-3 mb-3">
                     {{ membership.ActiveStatus }}
                 </v-chip>
-                <v-chip v-if="membership.ActiveStatus.toUpperCase() == 'ACTIVE'" color="primary"
-                    prepend-icon="mdi-check" class="me-3 mb-3">
+                <v-chip v-if="membership.ActiveStatus.toUpperCase() == 'ACTIVE'" color="primary" prepend-icon="mdi-check"
+                    class="me-3 mb-3">
                     {{ membership.ActiveStatus }}
                 </v-chip>
-                <v-chip v-if="membership.ActiveStatus.toUpperCase() == 'PAUSED'" color="orange"
-                    prepend-icon="mdi-pause" class="me-3 mb-3">
+                <v-chip v-if="membership.ActiveStatus.toUpperCase() == 'PAUSED'" color="orange" prepend-icon="mdi-pause"
+                    class="me-3 mb-3">
                     {{ membership.ActiveStatus }}
                 </v-chip>
                 <v-chip class="me-3 mb-3">
@@ -51,20 +51,23 @@
                         <v-card-text>
                             <v-row class="d-flex d-cols" dense>
                                 <v-col cols="12" sm="3">
-                                    <v-select :items="logForm.actionTypes" v-model="input.actionType" label="Action Type"
-                                        hide-details="auto" density="compact" class="p-0" variant="solo">
+                                    <v-select :items="logForm.actionTypes" v-model="logFormData.actionType"
+                                        label="Action Type" hide-details="auto" density="compact" class="p-0"
+                                        variant="solo">
                                     </v-select>
                                 </v-col>
                                 <v-col cols="12" sm="3">
                                     <v-text-field type="date" density="compact" label="Date" hide-details="auto"
-                                        variant="solo">
+                                        v-model="logFormData.date" variant="solo">
                                     </v-text-field>
                                 </v-col>
                                 <v-col cols="12" sm="6">
                                     <v-text-field label="Description" placeholder="Enter description here..." type="text"
-                                        hide-details="auto" density="compact" variant="solo">
+                                        hide-details="auto" density="compact" variant="solo"
+                                        v-model="logFormData.description">
                                         <template v-slot:append-inner>
-                                            <v-btn size="small" color="black" @click.prevent="addMembershipLog()">
+                                            <v-btn size="small" color="black" @click.prevent="addMembershipLog()"
+                                                :loading="logForm.loading">
                                                 Submit
                                             </v-btn>
                                         </template>
@@ -84,7 +87,7 @@
                             </v-btn>
                         </v-timeline-item>
 
-                        <v-timeline-item v-for="log in membershipLog" :key="log.MembershipLogId" dot-color="black"
+                        <v-timeline-item v-for="log in sortedMembershipLog" :key="log.MembershipLogId" dot-color="black"
                             size="x-small">
                             <div class="mb-4">
                                 <div class="font-weight-normal">
@@ -97,27 +100,54 @@
                 </v-card-text>
             </div>
         </v-card>
+        <template>
+            <Modal v-model="modal.show" :path="modal.path" :title="modal.title" :message="modal.message" :icon="modal.icon"
+                @closeModal="closeModal" :closeOnClick="true" />
+        </template>
     </v-dialog>
 </template>
 
 <script>
+
+import { useMembershipStore } from '@/store/membership'
+import Modal from '@/components/common/Modal.vue'
+
+
 export default {
+    setup() {
+        const membershipStore = useMembershipStore();
+
+        return { membershipStore }
+    },
     props: {
         membershipLog: Object,
         membership: Object
     },
+    components: {
+        Modal
+    },
     data() {
         return {
-            input: {
+            logFormData: {
                 actionType: null,
                 description: null,
                 date: null,
-                membershipRecordId: this.membershipLog.MembershipRecordId
+                membershipRecordId: this.membership.MembershipRecordId
             },
             logForm: {
                 show: false,
-                actionTypes: ['Active', 'Pause', 'Terminate']
-            }
+                actionTypes: ['Resume', 'Pause', 'Terminate'],
+                loading: false,
+            },
+            modal: {
+                show: false,
+                type: "success",
+                icon: "mdi-check-circle",
+                title: "Update successful",
+                message: "Membership log  has been successfully created!",
+                path: "/admin/account"
+            },
+            membershipLogData: [...this.membershipLog],
         }
     },
     methods: {
@@ -135,11 +165,35 @@ export default {
             const day = String(date.getUTCDate()).padStart(2, "0");
             return `${day}-${month}-${year}`;
         },
-        addMembershipLog(){
-            this.$emit('addMembershipLog', {...this.input})
+        async addMembershipLog() {
+
+            // API CALL
+            this.logForm.loading = true;
+            this.logForm.membershipRecordId = this.membership.MembershipRecordId
+            const response = await this.membershipStore.createMembershipLog(this.logFormData);
+            this.logForm.loading = false;
+
+            console.log(response.data);
+
+            if (response.status == 200) {
+                this.membershipLogData.push(response.data.log);
+                this.modal.show = true;
+            }
         },
-        emits: ['closeModal', 'addMembershipLog']
-    }
+        closeModal() {
+            this.modal.show = false
+        },
+    },
+    computed: {
+        sortedMembershipLog() {
+            return [...this.membershipLogData].sort((a, b) => {
+                const dateA = new Date(a.Date).getTime();
+                const dateB = new Date(b.Date).getTime();
+                return dateB - dateA;
+            });
+        },
+    },
+    emits: ['closeModal', 'addMembershipLog']
 }
 </script>
 

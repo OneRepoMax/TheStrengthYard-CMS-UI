@@ -27,10 +27,15 @@ export default {
         title: String,
         icon: String,
         message: String,
+        closeOnClick: Boolean
     },
     methods: {
         navigate(path) {
-            this.$router.push(path)
+            if (this.closeOnClick) {
+                this.$emit('closeModal')
+            } else {
+                this.$router.push(path)
+            }
         }
     }
 }

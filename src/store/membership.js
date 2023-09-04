@@ -93,12 +93,34 @@ export const useMembershipStore = defineStore("membership", {
       const apiUrl = `${TSY_API}/membershiplog`;
 
       try {
-        const response = await axios.post(apiUrl,{
-            Date: payload.date,
-            ActionType: payload.actionType,
-            Description: payload.description,
-            MembershipRecordId: payload.membershipRecordId
-          });
+        const response = await axios.post(apiUrl, {
+          Date: payload.date,
+          ActionType: payload.actionType,
+          Description: payload.description,
+          MembershipRecordId: payload.membershipRecordId,
+        });
+
+        if (response.status === 200) {
+          return response;
+        }
+        return response;
+      } catch (error) {
+        console.error("An error occurred during POST membership log:", error);
+        return error.response;
+      }
+    },
+    async updateMembershipRecord(payload) {
+
+      const membershipRecordId = payload.membershipRecordId;
+      const apiUrl = `${TSY_API}/membershiprecord/${membershipRecordId}`;
+
+      try {
+        const response = await axios.put(apiUrl, {
+            MembershipRecordId: membershipRecordId,
+            StartDate: payload.startDate,
+            EndDate: payload.endDate,
+            ActiveStatus: payload.status
+        });
 
         if (response.status === 200) {
           return response;
@@ -106,30 +128,52 @@ export const useMembershipStore = defineStore("membership", {
         return response;
       } catch (error) {
         console.error(
-          "An error occurred during POST membership log:",
+          "An error occurred updating membership log by membership record ID:",
           error
         );
         return error.response;
       }
     },
-      },
-      async updateMembershipRecord(membershipRecordId) {
-        const apiUrl = `${TSY_API}/membershiplog/${membershipRecordId}`;
+    async deleteMembershipRecord(membershipRecordId){
+        const apiUrl = `${TSY_API}/membershiprecord/${membershipRecordId}`;
+
+      try {
+        const response = await axios.delete(apiUrl);
+
+        if (response.status === 200) {
+          return response;
+        }
+        return response;
+      } catch (error) {
+        console.error(
+          "An error occurred updating membership log by membership record ID:",
+          error
+        );
+        return error.response;
+      }
+    },
+    async createMembershipLog(payload) {
+
+        const apiUrl = `${TSY_API}/membershiplog`;
   
         try {
-          const response = await axios.get(apiUrl);
+          const response = await axios.post(apiUrl, {
+              MembershipRecordId: payload.membershipRecordId,
+              Date: payload.date,
+              ActionType: payload.actionType,
+              Description: payload.description,
+          });
   
           if (response.status === 200) {
             return response;
           }
           return response;
         } catch (error) {
-  
           console.error(
-            "An error occurred during get membership log by membershyip record ID:",
+            "An error occurred when creating membership log by membership record ID:",
             error
           );
-          return error.response
+          return error.response;
         }
       },
   },
