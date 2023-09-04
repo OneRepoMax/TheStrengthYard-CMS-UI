@@ -189,7 +189,7 @@ export default {
                 show: false,
                 type: "danger",
                 icon: "mdi-delete",
-                title: "Delete Membership Record",
+                title: "Delete Record",
                 message: "Are you sure you want to delete the membership record?",
                 path: "/admin/account"
             }
