@@ -10,11 +10,28 @@
             <v-divider></v-divider>
             <v-img :src="membership.Membership.Picture" cover max-height="130px"></v-img>
             <v-card-title>{{ membership.Membership.Title }}</v-card-title>
-            <v-card-subtitle class="d-flex d-cols">
-                <v-chip class="me-3">
+            <v-card-subtitle class="d-flex d-cols flex-wrap">
+                <v-chip v-if="membership.ActiveStatus.toUpperCase() == 'INACTIVE'
+                    || membership.ActiveStatus.toUpperCase() == 'EXPIRED'
+                    || membership.ActiveStatus.toUpperCase() == 'PENDING PAYMENT'" color="secondary"
+                    prepend-icon="mdi-close" class="me-3 mb-3">
                     {{ membership.ActiveStatus }}
                 </v-chip>
-                <v-chip class="me-3">
+                <v-chip v-if="membership.ActiveStatus.toUpperCase() == 'ACTIVE'" color="primary"
+                    prepend-icon="mdi-check" class="me-3 mb-3">
+                    {{ membership.ActiveStatus }}
+                </v-chip>
+                <v-chip v-if="membership.ActiveStatus.toUpperCase() == 'PAUSED'" color="orange"
+                    prepend-icon="mdi-pause" class="me-3 mb-3">
+                    {{ membership.ActiveStatus }}
+                </v-chip>
+                <v-chip class="me-3 mb-3">
+                    {{ membership.Membership.Type }}
+                </v-chip>
+                <v-chip class="me-3 mb-3">
+                    Base Fee: {{ membership.Membership.BaseFee }}
+                </v-chip>
+                <v-chip class="me-3 mb-3">
                     Membership Record ID: {{ membership.MembershipRecordId }}
                 </v-chip>
                 <v-chip>
@@ -53,8 +70,7 @@
                             <template v-slot:icon>
                                 <v-icon>mdi-plus</v-icon>
                             </template>
-                            <v-btn class="mx-0" color="orange" block
-                                @click.prevent="logForm.show = !logForm.show">
+                            <v-btn class="mx-0" color="orange" block @click.prevent="logForm.show = !logForm.show">
                                 New log
                             </v-btn>
                         </v-timeline-item>
