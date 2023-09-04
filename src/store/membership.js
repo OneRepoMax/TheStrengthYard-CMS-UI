@@ -112,5 +112,25 @@ export const useMembershipStore = defineStore("membership", {
         return error.response;
       }
     },
+      },
+      async updateMembershipRecord(membershipRecordId) {
+        const apiUrl = `${TSY_API}/membershiplog/${membershipRecordId}`;
+  
+        try {
+          const response = await axios.get(apiUrl);
+  
+          if (response.status === 200) {
+            return response;
+          }
+          return response;
+        } catch (error) {
+  
+          console.error(
+            "An error occurred during get membership log by membershyip record ID:",
+            error
+          );
+          return error.response
+        }
+      },
   },
 });
