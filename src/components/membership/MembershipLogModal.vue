@@ -2,7 +2,7 @@
     <v-dialog max-width="800px" @input="$emit('input', $event)">
         <v-card elevation="3" title="Membership Log">
             <template v-slot:append>
-                <v-btn icon="$close" variant="text" @click="this.$emit('closeModal')"></v-btn>
+                <v-btn icon="$close" variant="text" @click="$emit('closeModal')"></v-btn>
             </template>
             <template v-slot:prepend>
                 <v-icon prepend-icon class="me-2">mdi-text-account</v-icon>
@@ -11,7 +11,14 @@
             <v-img :src="membership.Membership.Picture" cover max-height="130px"></v-img>
             <v-card-title>{{ membership.Membership.Title }}</v-card-title>
             <v-card-subtitle class="d-flex d-cols">
-                <v-chip class="me-3">
+                <v-chip v-if="membership.ActiveStatus.toUpperCase() == 'ACTIVE'" color="primary" prepend-icon="mdi-check" class="me-3">
+                    {{ membership.ActiveStatus }}
+                </v-chip>
+                <v-chip v-if="membership.ActiveStatus.toUpperCase() == 'INACTIVE'" color="black" prepend-icon="mdi-close" class="me-3">
+                    {{ membership.ActiveStatus }}
+                </v-chip>
+                <v-chip v-if="membership.ActiveStatus.toUpperCase() == 'PAUSED'" text-color="black"
+                    prepend-icon="mdi-pause" class="me-3">
                     {{ membership.ActiveStatus }}
                 </v-chip>
                 <v-chip class="me-3">
@@ -27,34 +34,42 @@
                     <div class="font-weight-bold ms-1 mb-2">
                         Membership Log
                     </div>
-                    <v-row class="d-flex d-cols" dense v-if="logForm.show">
-                        <v-col cols="12" sm="3">
-                            <v-select :items="logForm.actionTypes" v-model="input.actionType" label="Action Type"
-                                hide-details="auto" density="compact" class="p-0" variant="solo">
-                            </v-select>
-                        </v-col>
-                        <v-col cols="12" sm="3">
-                            <v-text-field type="date" density="compact" label="Date" hide-details="auto" variant="solo">
-                            </v-text-field>
-                        </v-col>
-                        <v-col cols="12" sm="6">
-                            <v-text-field label="Description" placeholder="Enter description here..." type="text"
-                                hide-details="auto" density="compact" variant="solo">
-                                <template v-slot:append-inner>
-                                    <v-btn size="small" color="black" @click.prevent="addMembershipLog()">
-                                        Submit
-                                    </v-btn>
-                                </template>
-                            </v-text-field>
-                        </v-col>
-                    </v-row>
+                    <v-card color="grey-lighten-4" title="Add membership log" v-if="logForm.show">
+                        <template v-slot:append>
+                            <v-btn icon="$close" variant="text" @click="logForm.show = false"></v-btn>
+                        </template>
+                        <v-card-text>
+                            <v-row class="d-flex d-cols" dense>
+                                <v-col cols="12" sm="3">
+                                    <v-select :items="logForm.actionTypes" v-model="input.actionType" label="Action Type"
+                                        hide-details="auto" density="compact" class="p-0" variant="solo">
+                                    </v-select>
+                                </v-col>
+                                <v-col cols="12" sm="3">
+                                    <v-text-field type="date" density="compact" label="Date" hide-details="auto"
+                                        variant="solo">
+                                    </v-text-field>
+                                </v-col>
+                                <v-col cols="12" sm="6">
+                                    <v-text-field label="Description" placeholder="Enter description here..." type="text"
+                                        hide-details="auto" density="compact" variant="solo">
+                                        <template v-slot:append-inner>
+                                            <v-btn size="small" color="black" @click.prevent="addMembershipLog()">
+                                                Submit
+                                            </v-btn>
+                                        </template>
+                                    </v-text-field>
+                                </v-col>
+                            </v-row>
+                        </v-card-text>
+                    </v-card>
+
                     <v-timeline align="start" density="compact">
                         <v-timeline-item fill-dot class="mb-12" dot-color="orange" size="large" v-if="!logForm.show">
                             <template v-slot:icon>
                                 <v-icon>mdi-plus</v-icon>
                             </template>
-                            <v-btn class="mx-0" color="orange" block
-                                @click.prevent="logForm.show = !logForm.show">
+                            <v-btn class="mx-0" color="orange" block @click.prevent="logForm.show = !logForm.show">
                                 New log
                             </v-btn>
                         </v-timeline-item>
@@ -87,6 +102,7 @@ export default {
                 actionType: null,
                 description: null,
                 date: null,
+                membershipRecordId: this.membershipLog.MembershipRecordId
             },
             logForm: {
                 show: false,
@@ -109,9 +125,10 @@ export default {
             const day = String(date.getUTCDate()).padStart(2, "0");
             return `${day}-${month}-${year}`;
         },
-        addMembershipLog() {
-
+        addMembershipLog(){
+            this.$emit('addMembershipLog', {...this.input})
         },
+        emits: ['closeModal', 'addMembershipLog']
     }
 }
 </script>

@@ -92,7 +92,7 @@ export default {
         },
         phoneCall(contactNo){
             window.open(`tel:${contactNo}`)
-        }
+        },
     },
 
 

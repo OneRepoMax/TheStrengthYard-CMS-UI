@@ -77,6 +77,9 @@ export default {
     watch: {
         searchValue(){
             this.page=1;
+        },
+        accountsPerPage(){
+            this.page=1;
         }
     },
     computed: {

@@ -54,10 +54,10 @@
                         <v-chip v-if="membershipData.ActiveStatus.toUpperCase() == 'ACTIVE'" color="primary" prepend-icon="mdi-check">
                             {{ membershipData.ActiveStatus }}
                         </v-chip>
-                        <v-chip v-if="membershipData.ActiveStatus.toUpperCase() == 'INACTIVE'" color="secondary" prepend-icon="mdi-close">
+                        <v-chip v-if="membershipData.ActiveStatus.toUpperCase() == 'INACTIVE'" color="black" prepend-icon="mdi-close">
                             {{ membershipData.ActiveStatus }}
                         </v-chip>
-                        <v-chip v-if="membershipData.ActiveStatus.toUpperCase() == 'PAUSED'" color="orange" prepend-icon="mdi-pause">
+                        <v-chip v-if="membershipData.ActiveStatus.toUpperCase() == 'PAUSED'" text-color="black" prepend-icon="mdi-pause">
                             {{ membershipData.ActiveStatus }}
                         </v-chip>
                     </td>
@@ -66,7 +66,7 @@
                     <!-- Membership Log Modal -->
                     <div class="d-none">
                         <MembershipLogModal v-model="membershipLog.show" @closeModal="closeModal"
-                            :membershipLog="membershipLog.data" :membership="selectedMembershipRecord" />
+                            :membershipLog="membershipLog.data" :membership="selectedMembershipRecord" @addMembershipLog="addMembershipLog"/>
                     </div>
                 </tr>
             </tbody>
@@ -127,6 +127,13 @@ export default {
             if (response.status == 200) {
                 this.membershipLog.data = response.data
                 this.membershipLog.show = true
+            }
+        },
+        async addMembershipLog(payload){
+            const response = await this.membershipStore.addMembershipLog(payload);
+
+            if(response.status == 200){
+                
             }
         }
     }

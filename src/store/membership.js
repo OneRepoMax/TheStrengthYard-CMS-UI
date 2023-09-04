@@ -31,8 +31,7 @@ export const useMembershipStore = defineStore("membership", {
           error
         );
 
-        return error.response
-
+        return error.response;
       }
     },
     async getAllMembershipById(membershipId) {
@@ -51,8 +50,7 @@ export const useMembershipStore = defineStore("membership", {
           error
         );
 
-        return error.response
-
+        return error.response;
       }
     },
     async getMembershipRecordByUserId(userId) {
@@ -66,32 +64,53 @@ export const useMembershipStore = defineStore("membership", {
         }
         return response;
       } catch (error) {
-
         console.error(
           "An error occurred during get membership by userId API request:",
           error
         );
-        return error.response
+        return error.response;
       }
     },
     async getMembershipLogByMembershipRecordId(membershipRecordId) {
-        const apiUrl = `${TSY_API}/membershiplog/${membershipRecordId}`;
-  
-        try {
-          const response = await axios.get(apiUrl);
-  
-          if (response.status === 200) {
-            return response;
-          }
+      const apiUrl = `${TSY_API}/membershiplog/${membershipRecordId}`;
+
+      try {
+        const response = await axios.get(apiUrl);
+
+        if (response.status === 200) {
           return response;
-        } catch (error) {
-  
-          console.error(
-            "An error occurred during get membership log by membershyip record ID:",
-            error
-          );
-          return error.response
         }
-      },
+        return response;
+      } catch (error) {
+        console.error(
+          "An error occurred during get membership log by membershyip record ID:",
+          error
+        );
+        return error.response;
+      }
+    },
+    async addMembershipLog(payload) {
+      const apiUrl = `${TSY_API}/membershiplog`;
+
+      try {
+        const response = await axios.post(apiUrl,{
+            Date: payload.date,
+            ActionType: payload.actionType,
+            Description: payload.description,
+            MembershipRecordId: payload.membershipRecordId
+          });
+
+        if (response.status === 200) {
+          return response;
+        }
+        return response;
+      } catch (error) {
+        console.error(
+          "An error occurred during POST membership log:",
+          error
+        );
+        return error.response;
+      }
+    },
   },
 });
