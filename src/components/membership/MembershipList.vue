@@ -7,7 +7,7 @@
                         <p>{{ membership.MembershipTypeId }}</p>
                     </v-col> -->
                     <v-col cols="12" md="6">
-                        <p>{{ membership.Title }}</p>
+                        <strong>{{ membership.Title }}</strong>
                     </v-col>
                     <v-col cols="12" md="1">
                         <p>{{ membership.Type }}</p>
@@ -24,6 +24,12 @@
                 </v-row>
             </v-expansion-panel-title>
             <v-expansion-panel-text>
+                <!-- Skeleton loaders -->
+                <template v-if="loading">
+                        <v-card-text class="px-8">
+                            <v-skeleton-loader type="list-item-three-line" :loading="loading"></v-skeleton-loader>
+                        </v-card-text>
+                    </template>
                 <v-card-text>
                     <v-row>
                         <v-col cols="12" md="3">
@@ -72,6 +78,7 @@ export default {
     data() {
         return {
             membershipId: null,
+            loading: false,
             modal: {
                 show: false,
                 type: "success",

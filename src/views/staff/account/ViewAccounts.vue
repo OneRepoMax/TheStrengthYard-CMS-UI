@@ -10,7 +10,6 @@
                     <v-col cols="12" md="5" class="d-flex justify-end align-center">
                         <v-autocomplete density="compact" variant="outlined" clearable prepend-inner-icon="mdi-magnify"
                             v-model="searchValue" :items="fullNames" hide-details="auto" class="me-3" label="Search account name"></v-autocomplete>
-                        <v-btn prepend-icon="mdi-filter" variant="outlined">Filters</v-btn>
                     </v-col>
                 </v-row>
             </v-card-text>

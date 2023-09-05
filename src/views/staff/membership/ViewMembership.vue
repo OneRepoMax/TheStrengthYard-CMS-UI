@@ -14,12 +14,25 @@
                     </v-col>
                 </v-row>
             </v-card-text>
+            <v-divider></v-divider>
+
+            <!-- Skeleton loaders -->
+            <template v-if="loading">
+                <v-card-text class="px-8">
+                    <v-skeleton-loader 
+                        type="list-item-three-line"
+                        :loading="loading"
+                        v-for="index in 10" :key="index"
+                    ></v-skeleton-loader>
+                </v-card-text>
+            </template>
 
 
             <!-- Manage membership page -->
             <MembershipList :membershipList="displayedMembership"/>
 
             <v-divider></v-divider>
+            
             <v-card-text class="px-8">
                 <v-row>
                     <v-col cols="12" sm="2" class="d-flex justify-end align-center">
