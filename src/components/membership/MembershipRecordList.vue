@@ -109,9 +109,9 @@
                         <v-btn size="x-small" icon="mdi-delete" variant="text"
                             @click.prevent="confirmationModal.show = true"></v-btn>
                         <template>
-                            <ConfirmationModal v-model="confirmationModal.show" :title="confirmationModal.title"
+                            <ConfirmationModal v-model="confirmationModal.show" :title="confirmationModal.title" 
                                 :message="confirmationModal.message" :icon="confirmationModal.icon"
-                                @closeModal="closeConfirmationModal" @confirmAction="deleteMembershipRecord(index)" />
+                                @closeModal="closeConfirmationModal" @action="deleteMembershipRecord(index)" :color="confirmationModal.color" />
                         </template>
                     </td>
 
@@ -135,7 +135,7 @@
 
     <template>
         <Modal v-model="modal.show" :path="modal.path" :title="modal.title" :message="modal.message" :icon="modal.icon"
-            @closeModal="closeCommonModal" :closeOnClick="true" />
+            @closeModal="closeCommonModal" :closeOnClick="true"/>
     </template>
 </template>
 
@@ -188,7 +188,8 @@ export default {
             confirmationModal: {
                 show: false,
                 type: "danger",
-                icon: "mdi-delete",
+                icon: "mdi-alert",
+                color: 'red',
                 title: "Delete Record",
                 message: "Are you sure you want to delete the membership record?",
                 path: "/admin/account"
