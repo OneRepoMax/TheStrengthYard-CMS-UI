@@ -78,14 +78,16 @@
                     </v-card>
 
                     <v-timeline align="start" density="compact">
-                        <v-timeline-item fill-dot class="mb-12" dot-color="orange" size="large" v-if="!logForm.show">
-                            <template v-slot:icon>
-                                <v-icon>mdi-plus</v-icon>
-                            </template>
-                            <v-btn class="mx-0" color="orange" block @click.prevent="logForm.show = !logForm.show">
-                                New log
-                            </v-btn>
-                        </v-timeline-item>
+                        <template v-if="this.userStore.userType == 'A'">
+                            <v-timeline-item fill-dot class="mb-12" dot-color="orange" size="large" v-if="!logForm.show">
+                                <template v-slot:icon>
+                                    <v-icon>mdi-plus</v-icon>
+                                </template>
+                                <v-btn class="mx-0" color="orange" block @click.prevent="logForm.show = !logForm.show">
+                                    New log
+                                </v-btn>
+                            </v-timeline-item>
+                        </template>
 
                         <v-timeline-item v-for="log in sortedMembershipLog" :key="log.MembershipLogId" dot-color="black"
                             size="x-small">
@@ -110,17 +112,21 @@
 <script>
 
 import { useMembershipStore } from '@/store/membership'
+import { useUserStore } from '@/store/user';
 import Modal from '@/components/common/Modal.vue'
 
 
 export default {
     setup() {
+
+        const userStore = useUserStore();
         const membershipStore = useMembershipStore();
 
-        return { membershipStore }
+
+        return { userStore, membershipStore }
     },
     props: {
-        membershipLog: Object,
+        membershipLog: Array,
         membership: Object
     },
     components: {
@@ -172,8 +178,6 @@ export default {
             this.logForm.membershipRecordId = this.membership.MembershipRecordId
             const response = await this.membershipStore.createMembershipLog(this.logFormData);
             this.logForm.loading = false;
-
-            console.log(response.data);
 
             if (response.status == 200) {
                 this.membershipLogData.push(response.data.log);

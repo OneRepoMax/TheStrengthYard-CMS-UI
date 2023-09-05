@@ -1,16 +1,20 @@
 <template>
-    <v-container fluid class="mx-auto" max-width="800px">
-        <v-card>
+    <v-container fluid class="mx-auto">
+        <v-card max-width="1280px" class="mx-auto">
             <v-card-text>
                 <v-row align="center" dense>
                     <v-col cols="12" md="5">
                         <v-card-title>Manage Memberships</v-card-title>
                     </v-col>
                     <v-spacer></v-spacer>
-                    <v-col cols="12" md="5" class="d-flex justify-end align-center">
+                    <v-col cols="12" md="3" >
                         <v-autocomplete density="compact" variant="outlined" clearable prepend-inner-icon="mdi-magnify"
-                        v-model="searchValue" :items="titles" hide-details="auto" class="me-3" label="Search membership"></v-autocomplete>
-                        <v-btn variant="outlined" @click="createMembership('create')">Create membership</v-btn>
+                        v-model="searchValue" :items="titles" hide-details="auto" class="me-3 w-100" label="Search membership"></v-autocomplete>
+                    </v-col>
+                    <v-col>
+                        <v-btn class="d-none d-md-block" variant="outlined" @click="createMembership('create')">Create membership</v-btn>
+                        <v-btn block class="d-block d-sm-none" variant="outlined" @click="createMembership('create')">Create membership</v-btn>
+                        
                     </v-col>
                 </v-row>
             </v-card-text>
