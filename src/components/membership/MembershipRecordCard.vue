@@ -1,20 +1,13 @@
 <template>
-    <div class="scroll-container" ref="outerContainer">
+    <div class="scroll-container w-100" ref="outerContainer">
         <div class="scroll-content" ref="innerContainer">
             <v-btn @click="scrollLeft" class="arrow-button left" icon :class="{ 'hidden': scrollPosition === 0 }">">
                 <v-icon>mdi-chevron-left</v-icon>
             </v-btn>
             <template v-for="membership in membershipRecord">
-                <v-card max-width="300px" variant="flat" class="me-3">
+                <v-card max-width="250px" variant="flat" class="me-3">
                     <v-img :src="membership.Membership.Picture">
-                    </v-img>
-                    <v-card-title class="text-subtitle-1">
-                        <p class="text-wrap">
-                            {{ membership.Membership.Title }}
-                        </p>
-                    </v-card-title>
-                    <v-card-subtitle>
-                        <div class="d-flex flex-wrap">
+                        <div align="end">
                             <v-chip v-if="membership.ActiveStatus.toUpperCase() == 'INACTIVE'
                                 || membership.ActiveStatus.toUpperCase() == 'EXPIRED'
                                 || membership.ActiveStatus.toUpperCase() == 'PENDING PAYMENT'" color="secondary"
@@ -29,20 +22,26 @@
                                 prepend-icon="mdi-pause" class="me-3 mb-3">
                                 {{ membership.ActiveStatus }}
                             </v-chip>
-                            <v-chip class="me-3 mb-3">
-                                {{ membership.Membership.Type }}
-                            </v-chip>
-                            <v-chip class="me-3 mb-3">
-                                Base Fee: {{ membership.Membership.BaseFee }}
-                            </v-chip>
-                            <v-chip class="me-3 mb-3">
-                                Membership Record ID: {{ membership.MembershipRecordId }}
-                            </v-chip>
-                            <v-chip>
-                                <v-icon icon="mdi-calendar" size="18" color="error" class="me-1 pb-1"></v-icon>
-                                {{ formattedDate(membership.StartDate) }} to {{ formattedDate(membership.EndDate) }}
-                            </v-chip>
                         </div>
+                    </v-img>
+                    <v-card-title class="text-subtitle-1">
+                        <p class="text-wrap">
+                            {{ membership.Membership.Title }}
+                        </p>
+                    </v-card-title>
+                    <v-card-subtitle class="mb-2">
+                        <v-icon color="error" icon="mdi-refresh" size="small"></v-icon>
+                        <span class="mx-1"> {{ membership.Membership.Type }}</span>
+                    </v-card-subtitle>
+                    <v-card-subtitle class="mb-2">
+                        <v-icon color="error" icon="mdi-currency-usd" size="small"></v-icon>
+                        <span class="mx-1">
+                            {{ membership.Membership.BaseFee }}
+                        </span>
+                    </v-card-subtitle>
+                    <v-card-subtitle class="mb-2">
+                        <v-icon icon="mdi-calendar" size="18" class="me-1 pb-1"></v-icon>
+                        {{ formattedDate(membership.StartDate) }} to {{ formattedDate(membership.EndDate) }}
 
                     </v-card-subtitle>
                 </v-card>
@@ -72,15 +71,20 @@ export default {
     methods: {
         formattedDate(dateInput) {
             const date = new Date(dateInput);
-            const year = date.getUTCFullYear();
-            const month = String(date.getUTCMonth() + 1).padStart(2, "0");
-            const day = String(date.getUTCDate()).padStart(2, "0");
-            return `${day}-${month}-${year}`;
+            const year = String(date.getUTCFullYear()).slice(2);
+            const monthNames = [
+                "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+            ];
+            const month = monthNames[date.getUTCMonth()];
+            const day = String(date.getUTCDate());
+
+            return `${day} ${month} ${year}`;
         },
         scrollLeft() {
             const innerContainer = this.$refs.innerContainer;
             if (innerContainer) {
-                this.scrollPosition += 300; 
+                this.scrollPosition += 300;
                 if (this.scrollPosition > 0) {
                     this.scrollPosition = 0;
                 }
@@ -91,7 +95,7 @@ export default {
         scrollRight() {
             const innerContainer = this.$refs.innerContainer;
             if (innerContainer) {
-                this.scrollPosition -= 500; 
+                this.scrollPosition -= 500;
                 const outerContainer = this.$refs.outerContainer;
                 const maxScrollWidth = innerContainer.scrollWidth - outerContainer.offsetWidth;
                 if (this.scrollPosition < -maxScrollWidth) {
