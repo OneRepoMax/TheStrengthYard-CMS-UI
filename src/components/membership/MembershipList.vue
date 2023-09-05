@@ -41,7 +41,9 @@
     </v-expansion-panels>
 
     <template>
-        <Modal v-model="modal.show" :path="modal.path" :title="modal.title" :message="modal.message" :icon="modal.icon" @closeModal="closeModal" @actionModal="actionModal" />
+        <Modal v-model="modal.show" :title="modal.title" 
+        :message="modal.message" :icon="modal.icon" 
+                    @closeModal="closeModal" @action="actionModal" :color="modal.color" />
     </template>
 </template>
 
@@ -77,7 +79,7 @@ export default {
                 title: "Are you sure you want to delete?",
                 message: "This action cannot be undone",
                 path: "/admin/membership",
-                iconColor: "red"
+                color: "red"
             }
         }
     },
