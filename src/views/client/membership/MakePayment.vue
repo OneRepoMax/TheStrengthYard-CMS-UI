@@ -12,12 +12,12 @@
                         <template v-for="category in categories" :key="category">
                             <v-card-title>{{ category }} Memberships</v-card-title>
                             <v-divider class="mb-5"></v-divider>
-                            <v-row>
-                                <v-col v-for="membership in groupedMemberships[category]"
+                            <div dense class="d-flex flex-wrap">
+                                <div v-for="membership in groupedMemberships[category]"
                                     :key="membership.MembershipTypeId">
                                     <PurchaseMembership :membership="membership" />
-                                </v-col>
-                            </v-row>
+                                </div>
+                            </div>
                         </template>
                     </template>
                 </div>
