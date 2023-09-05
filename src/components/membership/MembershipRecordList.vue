@@ -107,11 +107,11 @@
                     </td>
                     <td v-if="!membershipRecordForm.show">
                         <v-btn size="x-small" icon="mdi-delete" variant="text"
-                            @click.prevent="confirmationModal.show = true"></v-btn>
+                            @click.prevent="modalWarning.show = true"></v-btn>
                         <template>
-                            <ConfirmationModal v-model="confirmationModal.show" :title="confirmationModal.title" 
-                                :message="confirmationModal.message" :icon="confirmationModal.icon"
-                                @closeModal="closeConfirmationModal" @action="deleteMembershipRecord(index)" :color="confirmationModal.color" />
+                            <ModalWarning v-model="modalWarning.show" :title="modalWarning.title" 
+                                :message="modalWarning.message" :icon="modalWarning.icon"
+                                @closeModal="closeModalWarning" @action="deleteMembershipRecord(index)" :color="modalWarning.color" />
                         </template>
                     </td>
 
@@ -144,7 +144,7 @@
 import { useMembershipStore } from '@/store/membership'
 import MembershipLogModal from '@/components/membership/MembershipLogModal.vue'
 import Modal from '@/components/common/Modal.vue'
-import ConfirmationModal from '@/components/common/ConfirmationModal.vue'
+import ModalWarning from '@/components/common/ModalWarning.vue'
 
 export default {
     setup() {
@@ -158,7 +158,7 @@ export default {
     components: {
         MembershipLogModal,
         Modal,
-        ConfirmationModal,
+        ModalWarning,
     },
     data() {
         return {
@@ -185,7 +185,7 @@ export default {
                 message: "",
                 path: "/admin/account"
             },
-            confirmationModal: {
+            modalWarning: {
                 show: false,
                 type: "danger",
                 icon: "mdi-alert",
@@ -269,7 +269,7 @@ export default {
             this.$router.go()
         },
         async deleteMembershipRecord(index) {
-            this.confirmationModal.show = false;
+            this.modalWarning.show = false;
             console.log(this.membershipRecord[index].MembershipRecordId);
             const response = await this.membershipStore.deleteMembershipRecord(this.membershipRecord[index].MembershipRecordId);
             if (response.status === 200) {
@@ -277,8 +277,8 @@ export default {
                 this.modal.message = "Membership record has been deleted!"
             }
         },
-        closeConfirmationModal() {
-            this.confirmationModal.show = false
+        closeModalWarning() {
+            this.modalWarning.show = false
         }
 
     }
