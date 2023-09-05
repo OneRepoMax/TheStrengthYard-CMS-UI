@@ -1,5 +1,5 @@
 <template>
-    <v-card class="my-2" min-width="250px" min-height="520px">
+    <v-card class="my-2" max-width="250px" min-height="520px">
         <v-img class="align-end text-white" height="200" :src="membership.Picture" cover>
             <v-card-title>{{ membership.Type }}</v-card-title>
         </v-img>
