@@ -6,7 +6,7 @@
             </template>
             <v-divider></v-divider>
             <v-card-text class="text-center">
-                <v-icon size="130" :color="type">{{ icon }}</v-icon>
+                <v-icon size="130" :color="this.color">{{ icon }}</v-icon>
             </v-card-text>
             <v-card-text class="text-center">
                 {{ this.message }}
@@ -15,10 +15,10 @@
             <v-card-text>
                 <v-row dense>
                     <v-col cols="12" md="6">
-                        <v-btn block color="red" class="mb-5" @click="$emit('closeModal')">No</v-btn>
+                        <v-btn block variant="outlined" :color="this.color" class="mb-5" @click="$emit('closeModal')">No</v-btn>
                     </v-col>
                     <v-col cols="12" md="6">
-                        <v-btn block color="black" class="mb-5" @click="$emit('confirmAction')">Yes</v-btn>
+                        <v-btn block :color="this.color" class="mb-5" @click="$emit('action')">Yes</v-btn>
                     </v-col>
                 </v-row>
             </v-card-text>
@@ -33,6 +33,7 @@ export default {
         title: String,
         type: String,
         icon: String,
+        color: String,
         message: String,
     },
 }
