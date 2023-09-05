@@ -1,142 +1,142 @@
 <template>
-    <v-container fluid class="mx-auto" max-width="800px">
-        <v-card>
-            <!-- <v-card-text>
-                <v-row align="center" dense>
-                    <v-col cols="12" md="5">
-                        <v-card-title>Manage Memberships</v-card-title>
-                    </v-col>
-                    <v-spacer></v-spacer>
-                    <v-col cols="12" md="5" class="d-flex justify-end align-center">
-                        <v-autocomplete density="compact" variant="outlined" clearable prepend-inner-icon="mdi-magnify"
-                        v-model="searchValue" :items="titles" hide-details="auto" class="me-3" label="Search membership"></v-autocomplete>
-                        <v-btn variant="outlined" @click="createMembership('create')">Create membership</v-btn>
-                    </v-col>
-                </v-row>
-            </v-card-text> -->
+    <!-- No membership placeholder -->
+    <v-alert v-if="this.membershipRecord.length == 0" type="info" title="There's no membership record found for this user"
+        prepend-icon="mdi-information-outline">
+    </v-alert>
+    <template v-if="this.membershipRecord.length > 0">
+        
+        <v-row no-gutters>
+            <v-col>
+                <v-card-title class="my-2">Membership Record</v-card-title>
 
+                <!-- <div>All membership record listed in this account.</div> -->
+            </v-col>
+            <!-- <v-col class="hidden-xs-only text-left" cols="12" md="2">
+                <v-btn block prepend-icon="mdi-square-edit-outline" color="light-blue" size="small">Edit Memberships</v-btn>
+            </v-col> -->
+        </v-row>
 
-            <!-- Manage membership page -->
-            <MembershipRecordList :membershipRecordList="displayedMembershipRecord"/>
+        <v-divider></v-divider>
+        <v-table density="compact">
+            <thead>
+                <tr>
+                    <th class="text-left font-weight-bold">
+                        Membership Title
+                    </th>
+                    <th class="text-left font-weight-bold">
+                        Type
+                    </th>
+                    <th class="text-left font-weight-bold">
+                        Start Date
+                    </th>
+                    <th class="text-left font-weight-bold">
+                        End Date
+                    </th>
+                    <th class="text-left font-weight-bold">
+                        Fee
+                    </th>
+                    <th class="text-left font-weight-bold">
+                        Status
+                    </th>
+                    <!-- <th class="text-left font-weight-bold">
+                        Log
+                    </th> -->
 
-            <v-divider></v-divider>
-            <v-card-text class="px-8">
-                <v-row>
-                    <v-col cols="12" sm="2" class="d-flex justify-end align-center">
-                        <v-select label="Results per page:" :items="[10, 50, 100]" v-model="membershipPerPage"
-                            variant="outlined" max-width="40px" density="compact" hide-details="auto"></v-select>
-                    </v-col>
-                    <v-spacer></v-spacer>
-                    <v-col class="d-flex justify-end align-center">
-                        <v-pagination v-model="page" :length="totalPages"></v-pagination>
-                    </v-col>
-                </v-row>
-            </v-card-text>
-        </v-card>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="membershipData in this.membershipRecord" :key="membershipData.MembershipRecordId">
+                    <td>{{ membershipData.Membership.Title }}</td>
+                    <td>{{ membershipData.Membership.Type }}</td>
+                    <td>{{ this.formattedDate(membershipData.StartDate) }}</td>
+                    <td>{{ this.formattedDate(membershipData.EndDate) }}</td>
+                    <td>{{ membershipData.Membership.BaseFee }}</td>
+                    <td>
+                        <!-- <v-chip v-if="membershipData.ActiveStatus.toUpperCase() == 'ACTIVE'" color="primary"
+                                prepend-icon="mdi-check">
+                                {{ membershipData.ActiveStatus }}
+                            </v-chip>
+                            <v-chip v-if="membershipData.ActiveStatus.toUpperCase() == 'INACTIVE'
+                                || membershipData.ActiveStatus.toUpperCase() == 'EXPIRED'
+                                || membershipData.ActiveStatus.toUpperCase() == 'PENDING PAYMENT'" color="secondary"
+                                prepend-icon="mdi-close">
+                                {{ membershipData.ActiveStatus }}
+                            </v-chip>
+                            <v-chip v-if="membershipData.ActiveStatus.toUpperCase() == 'PAUSED'" color="orange"
+                                prepend-icon="mdi-pause">
+                                {{ membershipData.ActiveStatus }}
+                            </v-chip> -->
+                    </td>
+                    <!-- <td><v-btn size="x-small" icon="mdi-open-in-new" variant="text"
+                            @click.prevent="showMembershipLog(membershipData)"></v-btn></td> -->
+                    <!-- Membership Log Modal -->
+                    <!-- <div class="d-none">
+                        <MembershipLogModal v-model="membershipLog.show" @closeModal="closeModal"
+                            :membershipLog="membershipLog.data" :membership="selectedMembershipRecord" />
+                    </div> -->
+                </tr>
+            </tbody>
+        </v-table>
 
-    </v-container>
+        <v-progress-linear v-if="logLoading" indeterminate></v-progress-linear>
+
+    </template>
 </template>
 
 <script>
-// import { useUserStore } from '@/store/user';
+
 import { useMembershipStore } from '@/store/membership'
-import MembershipRecordList from "@/components/membership/MembershipRecordList.vue"
+// import MembershipLogModal from '@/components/membership/MembershipLogModal.vue'
+
 
 export default {
-    components: {
-        MembershipRecordList
-    },
-    setup () {
-        // const userStore = useUserStore()
+    setup() {
         const membershipStore = useMembershipStore();
-        return { 
-            membershipStore,
-            // userStore 
-        }
+
+        return { membershipStore }
+    },
+    props: {
+        membershipRecord: Object
+    },
+    components: {
+        // MembershipLogModal
     },
     data() {
         return {
-            MembershipRecordList: [],
-            titles: [],
-            loading: false,
-            searchValue: null,
-            page: 1,
-            pageLength: 1,
-            membershipPerPage: 10
+            membershipLog: {
+                show: false,
+                data: [],
+            },
+            selectedMembershipRecord: null,
+            logLoading: false,
         }
     },
-    watch: {
-        searchValue(){
-            this.page=1;
-        },
-        
-    },
-    computed: {
-        displayedMembershipRecord() {
-            const startIndex = (this.page - 1) * this.membershipPerPage;
-            const endIndex = startIndex + this.membershipPerPage;
-
-            if (this.searchValue != null) {
-
-                const filteredMembership = this.MembershipRecordList.filter(membership =>
-                    `${membership.Title}`
-                        .toLowerCase()
-                        .includes(this.searchValue.toLowerCase())
-                );
-                return filteredMembership.slice(startIndex, endIndex);
-            }
-            return this.MembershipRecordList.slice(startIndex, endIndex);
-        },
-        totalPages() {
-            return Math.ceil(
-                (this.searchValue
-                    ? this.displayedMembership.length
-                    : this.MembershipRecordList.length) / this.membershipPerPage
-            );
-        },
-        userId() {
-            return this.$route.params.id || null;
-        },
-    },
-    mounted() {
-        this.getMembershipRecordList();
-    },
     methods: {
-        async getMembershipRecordList() {
-
-            try {
-                this.loading = true;
-                const response = await this.membershipStore.getMembershipLogsByMembershipRecordID(this.membershipStore.userId);
-                this.loading = false;
-                if (response == null || response.status != 200) {
-                    return
-                } else {
-                    if (response.status == 200) {
-                        this.MembershipRecordList = response.data
-                        console.log(this.MembershipRecordList)
-                        for (const membership of this.MembershipRecordList) {
-                            const title = `${membership.Title}`;
-                            if (this.titles.indexOf(title) === -1) {
-                                this.titles.push(title);
-                            }
-                        }
-                    }
-                }
-
-                return
-
-            } catch (error) {
-                console.error("An error occurred during get all membership API request:", error);
-            }
-            
-            return
-
+        formattedDate(dateInput) {
+            const date = new Date(dateInput);
+            const year = date.getUTCFullYear();
+            const month = String(date.getUTCMonth() + 1).padStart(2, "0");
+            const day = String(date.getUTCDate()).padStart(2, "0");
+            return `${year}-${month}-${day}`;
         },
+        closeModal() {
+            this.membershipLog.show = false
+        },
+        async showMembershipLog(membershipData) {
+            this.logLoading = true;
+            this.membershipLog.data = []
+            this.selectedMembershipRecord = membershipData
+            const response = await this.membershipStore.getMembershipLogByMembershipRecordId(membershipData.MembershipRecordId)
+            
+            this.logLoading = false;
 
+            if (response.status == 200) {
+                this.membershipLog.data = response.data
+                this.membershipLog.show = true
+            }
+        }
     }
 }
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>
