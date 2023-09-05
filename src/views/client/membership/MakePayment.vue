@@ -1,52 +1,54 @@
 <template>
-  <v-row>
-    <v-card
-      class="mx-auto my-2"
-      min-width="400"
-      v-for="membership in this.membershipList"
-      :key="membership.MembershipTypeId"
-      :value="membership.MembershipTypeId"
-    >
-      <v-img
-        class="align-end text-white"
-        height="200"
-        src="@/assets/home-cover-photo.jpg"
-        cover
-      >
-        <v-card-title>{{ membership.Type }}</v-card-title>
-      </v-img>
+  <v-main>
+    <v-container fluid justify="center" class="h-screen">
+      <v-row justify="center" class="h-100 w-100" align="center">
+        <v-card
+          class="mx-auto my-2"
+          min-width="400"
+          height="400"
+          v-for="membership in this.membershipList"
+          :key="membership.MembershipTypeId"
+          :value="membership.MembershipTypeId"
+        >
+          <v-img
+            class="align-end text-white"
+            height="200"
+            src="@/assets/home-cover-photo.jpg"
+            cover
+          >
+            <v-card-title>{{ membership.Type }}</v-card-title>
+          </v-img>
 
-      <v-card-subtitle class="pt-4">
-        {{ membership.Title }}
-      </v-card-subtitle>
+          <v-card-subtitle class="pt-4">
+            {{ membership.Title }}
+          </v-card-subtitle>
 
-      <v-card-text>
-        <div>{{ membership.BaseFee }}</div>
-      </v-card-text>
+          <v-card-text>
+            <div>{{ membership.BaseFee }}</div>
+          </v-card-text>
 
-      <v-card-actions>
-        <v-btn color="teal" :disabled="loading" :loading="loading" @click.prevent="showModal()"> Purchase </v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-row>
+          <v-card-actions>
+            <v-btn
+              color="teal"
+              :disabled="loading"
+              :loading="loading"
+              
+            >
+              Purchase
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-row>
+    </v-container>
+  </v-main>
 
-  <template>
-    <Modal
-      v-model="modal.show"
-      :path="modal.path"
-      :title="modal.title"
-      :message="modal.message"
-      :icon="modal.icon"
-      @closeModal="closeModal"
-    />
-  </template>
 </template>
 
 <script>
 import { useMembershipStore } from "@/store/membership";
-import Modal from "@/components/common/Modal.vue";
 
 export default {
+  name: "purchseMembership",
   props: {
     membershipList: Object,
   },
@@ -58,14 +60,6 @@ export default {
     return {
       membershipId: null,
       loading: false,
-      modal: {
-        show: false,
-        type: "success",
-        icon: "mdi-cart-check",
-        title: "Purchase membership successfully",
-        message: "Would you like to make payment now?",
-        path: '/'
-      },
     };
   },
   mounted() {
@@ -97,16 +91,8 @@ export default {
 
       return;
     },
-    showModal() {
-            this.modal.show = true
-            // this.membershipId = id
-        },
-    closeModal() {
-      this.modal.show = false;
-    },
   },
   components: {
-    Modal,
   },
 };
 </script>

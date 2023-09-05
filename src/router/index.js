@@ -82,6 +82,12 @@ const routes = [
         component: () =>
           import(/* webpackChunkName: "home" */ "@/views/client/membership/ManageMembership.vue"),
       },
+      {
+        path: "purchase-membership",
+        name: "Purchase Membership",
+        component: () =>
+          import(/* webpackChunkName: "home" */ "@/views/client/membership/MakePayment.vue"),
+      },
     ],
   },
   {
@@ -93,7 +99,7 @@ const routes = [
         path: "",
         name: "Book",
         component: () =>
-          import(/* webpackChunkName: "home" */ "@/views/client/membership/MakePayment.vue"),
+          import(/* webpackChunkName: "home" */ ""),
       },
     ],
   },
