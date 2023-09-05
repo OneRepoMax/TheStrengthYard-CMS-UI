@@ -52,7 +52,6 @@
           :color="activeTab === 'BookClass' ? 'teal' : ''"
           @click="showComponent('BookClass')"
         >
-          <!-- @click="showComponent = 'ComponentA'" -->
           Book class
         </v-btn>
         <v-btn
@@ -60,9 +59,8 @@
           x-large
           :color="activeTab === 'MakePayment' ? 'teal' : ''"
           rounded
-          @click="showComponent('MakePayment')"
+          to="membership/purchase-membership"
         >
-          <!-- variant="outlined" -->
           Purchase Membership
         </v-btn>
         <v-btn
@@ -72,17 +70,13 @@
           rounded
           @click="showComponent('ManageMembership')"
         >
-          <!-- variant="outlined" -->
-
-          <!-- @click="showComponent = 'ComponentC'" -->
           Manage Membership
         </v-btn>
       </v-card-text>
       <v-main>
+        <v-divider></v-divider>
         <div v-if="currentComponent === 'BookClass'">
           <div v-if="membershipRecord.length > 0">
-            <v-divider></v-divider>
-
             <v-card-title class="my-2">Active Memberships</v-card-title>
 
             <v-card-text>
@@ -99,33 +93,20 @@
             </v-card-text>
           </div>
         </div>
-        <v-container>
-          <v-row>
-            <!-- <component :is="currentComponent"></component> -->
-            <!-- <BookClass :is="currentComponent" ></BookClass> -->
-            <MakePayment
-              :membershipList="displayedMembership"
-              :is="currentComponent"
-              v-if="currentComponent === 'MakePayment'"
-            />
-          </v-row>
-        </v-container>
-        <v-container>
-            <ManageMembership
-            :membershipRecordList="displayedMembershipRecord"
-              :is="currentComponent"
-              v-if="currentComponent === 'ManageMembership'"
-            />
-        </v-container>
+        <ManageMembership
+          v-if="!loading && currentComponent === 'ManageMembership'"
+          :membershipRecord="this.membershipRecord"
+          :is="currentComponent"
+        />
       </v-main>
     </div>
   </v-card>
+  <MakePaymentSlide :membershipList="displayedMembership" />
 </template>
 
 <script>
-// import BookClass from "../membership/BookClass.vue"
-import MakePayment from "../../views/client/membership/MakePayment.vue";
-import ManageMembership from "../../views/client/membership/ManageMembership.vue"
+import ManageMembership from "../../views/client/membership/ManageMembership.vue";
+import MakePaymentSlide from "../membership/PaymentSlider.vue";
 import { useMembershipStore } from "@/store/membership";
 
 export default {
@@ -166,13 +147,6 @@ export default {
       }
       return this.MembershipList.slice(startIndex, endIndex);
     },
-    // totalPages() {
-    //   return Math.ceil(
-    //     (this.searchValue
-    //       ? this.displayedMembership.length
-    //       : this.MembershipList.length) / this.membershipPerPage
-    //   );
-    // },
   },
   mounted() {
     this.getMembershipList();
@@ -231,10 +205,8 @@ export default {
     membershipRecord: Array,
   },
   components: {
-    // BookClass,
-    MakePayment,
-    ManageMembership
-    //   ComponentC
+    ManageMembership,
+    MakePaymentSlide,
   },
 };
 </script>
@@ -247,7 +219,6 @@ export default {
   z-index: 99;
 }
 .active-button {
-  //   background-color: #1976D2; /* Change this color to your preferred active color */
   color: "teal";
 }
 </style>
