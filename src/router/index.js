@@ -91,19 +91,6 @@ const routes = [
     ],
   },
   {
-    path: "/membership/payment/:id",
-    component: () => import("@/layouts/default/LoginDefault.vue"),
-    props: true,
-    children: [
-      {
-        path: "",
-        name: "Book",
-        component: () =>
-          import(/* webpackChunkName: "home" */ ""),
-      },
-    ],
-  },
-  {
     path: "/schedule/",
     component: () => import("@/layouts/default/LoginDefault.vue"),
     children: [

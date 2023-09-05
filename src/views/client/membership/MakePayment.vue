@@ -1,98 +1,89 @@
 <template>
-  <v-main>
-    <v-container fluid justify="center" class="h-screen">
-      <v-row justify="center" class="h-100 w-100" align="center">
-        <v-card
-          class="mx-auto my-2"
-          min-width="400"
-          height="400"
-          v-for="membership in this.membershipList"
-          :key="membership.MembershipTypeId"
-          :value="membership.MembershipTypeId"
-        >
-          <v-img
-            class="align-end text-white"
-            height="200"
-            src="@/assets/home-cover-photo.jpg"
-            cover
-          >
-            <v-card-title>{{ membership.Type }}</v-card-title>
-          </v-img>
-
-          <v-card-subtitle class="pt-4">
-            {{ membership.Title }}
-          </v-card-subtitle>
-
-          <v-card-text>
-            <div>{{ membership.BaseFee }}</div>
-          </v-card-text>
-
-          <v-card-actions>
-            <v-btn
-              color="teal"
-              :disabled="loading"
-              :loading="loading"
-              
-            >
-              Purchase
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-row>
-    </v-container>
-  </v-main>
-
+    <v-main>
+        <v-container fluid max-width="800px" class="d-flex flex-wrap">
+            <v-card>
+                <div class="pa-5">
+                    <v-card-title>Purchase Membership</v-card-title>
+                    <v-card-text>
+                        Here’s Our Gym Classes For Those Who Enjoy The Camaraderie Of Training In A Group While Getting
+                        Functionally Stronger!
+                    </v-card-text>
+                    <template v-if="!loading">
+                        <template v-for="category in categories" :key="category">
+                            <v-card-title>{{ category }} Memberships</v-card-title>
+                            <v-divider class="mb-5"></v-divider>
+                            <v-row>
+                                <v-col v-for="membership in groupedMemberships[category]"
+                                    :key="membership.MembershipTypeId">
+                                    <PurchaseMembership :membership="membership" />
+                                </v-col>
+                            </v-row>
+                        </template>
+                    </template>
+                </div>
+            </v-card>
+        </v-container>
+    </v-main>
 </template>
+  
 
 <script>
 import { useMembershipStore } from "@/store/membership";
+import PurchaseMembership from "@/components/membership/PurchaseMembership.vue";
 
 export default {
-  name: "purchseMembership",
-  props: {
-    membershipList: Object,
-  },
-  setup() {
-    const membershipStore = useMembershipStore();
-    return { membershipStore };
-  },
-  data() {
-    return {
-      membershipId: null,
-      loading: false,
-    };
-  },
-  mounted() {
-    this.getMembershipList();
-  },
-
-  methods: {
-    async getMembershipList() {
-      try {
-        this.loading = true;
-        const response = await this.membershipStore.getAllMembership();
-        this.loading = false;
-        if (response == null || response.status != 200) {
-          return;
-        } else {
-          if (response.status == 200) {
-            this.MembershipList = response.data;
-            console.log(this.MembershipList);
-          }
-        }
-
-        return;
-      } catch (error) {
-        console.error(
-          "An error occurred during get all membership API request:",
-          error
-        );
-      }
-
-      return;
+    setup() {
+        const membershipStore = useMembershipStore();
+        return { membershipStore };
     },
-  },
-  components: {
-  },
+    data() {
+        return {
+            loading: false,
+            membershipList: [],
+            groupedMemberships: {}, // New property to store grouped memberships
+        };
+    },
+    computed: {
+        categories() {
+            // Extract unique membership categories from groupedMemberships
+            return Object.keys(this.groupedMemberships);
+        },
+    },
+    methods: {
+        async getMembershipList() {
+            try {
+                this.loading = true;
+                const response = await this.membershipStore.getAllMembership();
+                this.loading = false;
+                if (response.status == 200) {
+                    this.membershipList = response.data;
+                    this.groupMemberships(); // Call the grouping function after getting the list
+                    console.log(this.membershipList);
+                }
+            } catch (error) {
+                console.error("An error occurred during get all membership API request:", error);
+            }
+        },
+        groupMemberships() {
+            this.groupedMemberships = {}; // Clear the existing grouped memberships
+
+            // Group memberships by category
+            this.membershipList.forEach((membership) => {
+                const category = membership.Type;
+                if (!this.groupedMemberships[category]) {
+                    this.groupedMemberships[category] = [];
+                }
+                this.groupedMemberships[category].push(membership);
+            });
+
+            console.log(this.groupedMemberships);
+        },
+    },
+    components: {
+        PurchaseMembership,
+    },
+    mounted() {
+        this.getMembershipList();
+    },
 };
 </script>
