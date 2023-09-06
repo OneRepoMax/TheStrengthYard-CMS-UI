@@ -77,12 +77,6 @@ const routes = [
     component: () => import("@/layouts/default/LoginDefault.vue"),
     children: [
       {
-        path: "",
-        name: "Book",
-        component: () =>
-          import(/* webpackChunkName: "home" */ "@/views/client/membership/ManageMembership.vue"),
-      },
-      {
         path: "purchase-membership",
         name: "Purchase Membership",
         component: () =>

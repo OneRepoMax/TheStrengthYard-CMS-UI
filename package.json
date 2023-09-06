@@ -19,6 +19,7 @@
     "roboto-fontface": "*",
     "uuid": "^9.0.0",
     "vue": "^3.2.0",
+    "vue-paypal-checkout": "^3.2.0",
     "vue-router": "^4.0.0",
     "vuetify": "^3.0.0",
     "webfontloader": "^1.0.0",
