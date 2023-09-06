@@ -298,6 +298,26 @@ export const useMembershipStore = defineStore("membership", {
           );
         }
       },
+
+      async getMembershipRecordsByFilter(status){
+        const apiUrl = `${TSY_API}/membershiprecord/filter`;
+        const data = {
+          ActiveStatus: status,
+        };
+        try {
+          const response = await axios.post(apiUrl, data);
+  
+          if (response.status === 200) {
+            return response;
+          }
+          return response;
+        } catch (error) {
+          console.error(
+            "An error occurred during get membership Record by filter:",
+            error
+          );
+        }
+      },
   },
 
 
