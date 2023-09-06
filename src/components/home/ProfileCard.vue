@@ -25,7 +25,7 @@
         <v-icon icon="mdi-account-circle"></v-icon>
       </v-avatar>
     </v-card-title>
-    <div class="mx-3 mb-3">
+    <div class="mx-3">
       <div class="d-flex flex-no-wrap justify-space-between">
         <v-card-title>
           {{ fullName }}
@@ -49,16 +49,6 @@
           class="me-3 mb-3 text-capitalize"
           x-large
           rounded
-          :color="activeTab === 'BookClass' ? 'teal' : ''"
-          @click="showComponent('BookClass')"
-        >
-          Book class
-        </v-btn>
-        <v-btn
-          class="me-3 mb-3 text-capitalize"
-          x-large
-          :color="activeTab === 'MakePayment' ? 'teal' : ''"
-          rounded
           to="membership/purchase-membership"
         >
           Purchase Membership
@@ -77,11 +67,9 @@
       </div>
     </div>
   </v-card>
-  <MakePaymentSlide :membershipList="displayedMembership" />
 </template>
 
 <script>
-import MakePaymentSlide from "../membership/PaymentSlider.vue";
 import MembershipRecordCard from "@/components/membership/MembershipRecordCard.vue";
 import { useMembershipStore } from "@/store/membership";
 
@@ -92,21 +80,10 @@ export default {
   },
   data() {
     return {
-      activeTab: "BookClass",
-      currentComponent: "BookClass",
       MembershipList: [],
       titles: [],
       loading: false,
-      searchValue: null,
-      page: 1,
-      pageLength: 1,
-      membershipPerPage: 10,
     };
-  },
-  watch: {
-    searchValue() {
-      this.page = 1;
-    },
   },
   computed: {
     displayedMembership() {
@@ -124,40 +101,7 @@ export default {
       return this.MembershipList.slice(startIndex, endIndex);
     },
   },
-  mounted() {
-    this.getMembershipList();
-  },
   methods: {
-    async getMembershipList() {
-      try {
-        this.loading = true;
-        const response = await this.membershipStore.getAllMembership();
-        this.loading = false;
-        if (response == null || response.status != 200) {
-          return;
-        } else {
-          if (response.status == 200) {
-            this.MembershipList = response.data;
-            console.log(this.MembershipList);
-            for (const membership of this.MembershipList) {
-              const title = `${membership.Title}`;
-              if (this.titles.indexOf(title) === -1) {
-                this.titles.push(title);
-              }
-            }
-          }
-        }
-
-        return;
-      } catch (error) {
-        console.error(
-          "An error occurred during get all membership API request:",
-          error
-        );
-      }
-
-      return;
-    },
 
     createMembership(membershipId) {
       // console.log(membershipId)
@@ -182,7 +126,6 @@ export default {
   },
   components: {
     MembershipRecordCard,
-    MakePaymentSlide,
   },
 };
 </script>

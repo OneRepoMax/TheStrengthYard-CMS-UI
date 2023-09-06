@@ -12,7 +12,7 @@
                                 <v-progress-linear :active="isActive" color="deep-purple" height="4"
                                     indeterminate></v-progress-linear>
                             </template>
-                            <v-img :src="membership.Membership.Picture">
+                            <v-img :src="membership.Membership.Picture" max-height="150px" cover>
                             </v-img>
                             <v-card-title class="text-subtitle-1">
                                 <p class="text-wrap">{{ membership.Membership.Title }}</p>

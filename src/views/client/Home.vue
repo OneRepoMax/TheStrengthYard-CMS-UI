@@ -9,25 +9,31 @@
             </v-alert>
         </v-col>
         <v-col cols="12" lg="8">
+
             <!-- Skeleton loaders -->
-            <v-skeleton-loader class="mb-3" elevation="3" v-if="loading" type="card-avatar, article, divider, list-item-three-line, list-item-three-line" loading>
+            <v-skeleton-loader class="mb-3" elevation="3" v-if="loading"
+                type="card-avatar, article, divider, list-item-three-line, list-item-three-line" loading>
             </v-skeleton-loader>
 
-            <v-skeleton-loader elevation="3" v-if="loading" type="article, list-item-three-line, list-item-three-line" loading>
+            <v-skeleton-loader elevation="3" v-if="loading" type="article, list-item-three-line, list-item-three-line"
+                loading>
             </v-skeleton-loader>
 
             <profile-card v-if="!loading" :fullName="userStore.firstName + ' ' + userStore.lastName"
                 :emailAddress="userStore.emailAddress" :homeAddress="userStore.homeAddress"
                 :membershipRecord="membershipRecord" :displayPicture="userStore.displayPicture" />
             <Classes />
+
+            <PurchaseMembershipSlider />
+
         </v-col>
 
         <v-col cols="12" lg="4">
 
 
             <!-- Sekelton loaders -->
-            <v-skeleton-loader class="mb-3" elevation="3" type="table-heading, list-item-two-line"
-                loading v-if="loading"></v-skeleton-loader>
+            <v-skeleton-loader class="mb-3" elevation="3" type="table-heading, list-item-two-line" loading
+                v-if="loading"></v-skeleton-loader>
             <v-skeleton-loader class="mb-3" elevation="3"
                 type="table-heading	, list-item-avatar-three-line, list-item-avatar-three-line, list-item-avatar-three-line"
                 loading v-if="loading"></v-skeleton-loader>
@@ -56,6 +62,8 @@ import MembershipLog from '@/components/home/MembershipLog.vue'
 import Classes from '@/components/home/Classes.vue'
 import OrgProfileCard from '@/components/home/OrgProfileCard.vue'
 import Modal from '@/components/common/Modal.vue'
+import PurchaseMembershipSlider from "@/components/membership/PurchaseMembershipSlider.vue";
+
 
 export default {
     name: 'LoginForm',
@@ -111,12 +119,15 @@ export default {
                 this.membershipRecord = response.data
             }
         },
+        async getMembership(){
+
+        },
         closeModal() {
             this.modal.show = false
         },
     },
 
-    components: { ProfileCard, MembershipLog, Classes, OrgProfileCard, Modal }
+    components: { ProfileCard, MembershipLog, Classes, OrgProfileCard, Modal, PurchaseMembershipSlider }
 
 }
 

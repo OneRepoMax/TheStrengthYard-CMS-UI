@@ -2,6 +2,7 @@
     <v-main>
         <v-container fluid max-width="800px" class="d-flex flex-wrap justify-center align-center">
             <v-card>
+                <v-img src="@/assets/purchaseMembershipBanner.png" max-height="250px" cover></v-img>
                 <div class="pa-5">
                     <v-card-title>Purchase Membership</v-card-title>
                     <v-card-text>
@@ -15,7 +16,7 @@
                             <div dense class="d-flex flex-wrap">
                                 <div v-for="membership in groupedMemberships[category]"
                                     :key="membership.MembershipTypeId">
-                                    <PurchaseMembership :membership="membership" />
+                                    <PurchaseMembershipCard :membership="membership" />
                                 </div>
                             </div>
                         </template>
@@ -29,7 +30,7 @@
 
 <script>
 import { useMembershipStore } from "@/store/membership";
-import PurchaseMembership from "@/components/membership/PurchaseMembership.vue";
+import PurchaseMembershipCard from "@/components/membership/PurchaseMembershipCard.vue";
 
 export default {
     setup() {
@@ -80,7 +81,7 @@ export default {
         },
     },
     components: {
-        PurchaseMembership,
+        PurchaseMembershipCard,
     },
     mounted() {
         this.getMembershipList();
