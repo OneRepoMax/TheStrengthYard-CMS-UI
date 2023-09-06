@@ -78,7 +78,7 @@ export const useMembershipStore = defineStore("membership", {
         return error.response;
       }
     },
-    async getAllMembershipById(membershipId) {
+    async getMembershipById(membershipId) {
       const apiUrl = `${TSY_API}/memberships/${membershipId}`;
 
       try {

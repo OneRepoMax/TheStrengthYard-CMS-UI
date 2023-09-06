@@ -22,9 +22,10 @@
             <profile-card v-if="!loading" :fullName="userStore.firstName + ' ' + userStore.lastName"
                 :emailAddress="userStore.emailAddress" :homeAddress="userStore.homeAddress"
                 :membershipRecord="membershipRecord" :displayPicture="userStore.displayPicture" />
-            <Classes />
 
             <PurchaseMembershipSlider />
+
+            <Classes />
 
         </v-col>
 
@@ -47,10 +48,6 @@
 
     </v-row>
 
-    <template v-if="modal.show">
-        <Modal v-model="modal.show" :path="modal.path" :title="modal.title" :message="modal.message" :icon="modal.icon"
-            @closeModal="closeModal" />
-    </template>
 </template>
 
 <script>

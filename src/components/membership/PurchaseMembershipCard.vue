@@ -8,9 +8,8 @@
       :class="{ 'on-hover': isHovering }"
       v-bind="props"
       variant="flat"
-      @click="navigateToRoute('/next-route')"
+      @click="navigateToRoute('/membership/' + membership.MembershipTypeId + '/checkout')"
     >
-      <!-- navigateToRoute's route to change when new screen is built -->
       <v-img
         class="align-end text-white"
         height="200"

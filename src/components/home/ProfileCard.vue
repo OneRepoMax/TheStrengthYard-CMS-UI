@@ -49,6 +49,7 @@
           class="me-3 mb-3 text-capitalize"
           x-large
           rounded
+          color="teal"
           to="membership/purchase-membership"
         >
           Purchase Membership

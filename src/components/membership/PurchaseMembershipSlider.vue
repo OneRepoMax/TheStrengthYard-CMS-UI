@@ -19,26 +19,28 @@
                     <v-row dense>
                         <v-col v-for="membership in slice" :key="membership.MembershipTypeId"
                             :value="membership.MembershipTypeId" class="px-0">
-                            <v-hover v-slot="{ isHovering, props }"></v-hover>
-                            <v-card class="mx-5 my-2" :class="{ 'on-hover': isHovering }" variant="flat"
-                                @click="navigateToRoute('/membership/purchase-membership')" v-bind="props" height="400px">
-                                <v-img class="align-end text-white" max-height="150px" :src="membership.Picture" cover>
-                                </v-img>
-                                <v-card-title class="text-subtitle-1">
-                                    <p class="text-wrap">{{ membership.Title }}</p>
-                                </v-card-title>
-                                <v-card-subtitle class="mb-2">
-                                    <p class="text-wrap">{{ membership.Description }}</p>
-                                </v-card-subtitle>
-                                <v-card-subtitle class="mb-2">
-                                    <v-icon color="error" icon="mdi-refresh" size="small"></v-icon>
-                                    <span class="mx-1">{{ membership.Type }}</span>
-                                </v-card-subtitle>
-                                <v-card-subtitle class="mb-2">
-                                    <v-icon color="error" icon="mdi-currency-usd" size="small"></v-icon>
-                                    <span class="mx-1">{{ membership.BaseFee }}</span>
-                                </v-card-subtitle>
-                            </v-card>
+                            <v-hover v-slot="{ isHovering, props }">
+                                <v-card class="mx-5 my-2" :class="{ 'on-hover': isHovering }" variant="flat"
+                                    @click="navigateToRoute('/membership/' + membership.MembershipTypeId + '/checkout')" v-bind="props"
+                                    height="400px">
+                                    <v-img class="align-end text-white" max-height="150px" :src="membership.Picture" cover>
+                                    </v-img>
+                                    <v-card-title class="text-subtitle-1">
+                                        <p class="text-wrap">{{ membership.Title }}</p>
+                                    </v-card-title>
+                                    <v-card-subtitle class="mb-2">
+                                        <p class="text-wrap">{{ membership.Description }}</p>
+                                    </v-card-subtitle>
+                                    <v-card-subtitle class="mb-2">
+                                        <v-icon color="error" icon="mdi-refresh" size="small"></v-icon>
+                                        <span class="mx-1">{{ membership.Type }}</span>
+                                    </v-card-subtitle>
+                                    <v-card-subtitle class="mb-2">
+                                        <v-icon color="error" icon="mdi-currency-usd" size="small"></v-icon>
+                                        <span class="mx-1">{{ membership.BaseFee }}</span>
+                                    </v-card-subtitle>
+                                </v-card>
+                            </v-hover>
                         </v-col>
                     </v-row>
                 </v-carousel-item>
@@ -80,7 +82,6 @@ export default {
 
             if (response.status == 200) {
                 this.membershipList = response.data;
-                console.log(this.MembershipList);
             }
 
         },
