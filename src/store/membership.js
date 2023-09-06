@@ -281,45 +281,24 @@ export const useMembershipStore = defineStore("membership", {
           return;
         }
       },
-
-      
-      async getMembershipRecordByUserId(userId) {
+      async getMembershipLogsByMembershipRecordID(userId){
         const apiUrl = `${TSY_API}/membershiprecord/${userId}`;
-  
+    
         try {
           const response = await axios.get(apiUrl);
-  
+    
           if (response.status === 200) {
             return response;
           }
           return response;
         } catch (error) {
-  
           console.error(
-            "An error occurred during get membership by userId API request:",
+            "An error occurred during get membership Record by ID API request:",
             error
           );
-          return error.response
-        }
-      },
-      async getMembershipLogByMembershipRecordId(membershipRecordId) {
-        const apiUrl = `${TSY_API}/membershiplog/${membershipRecordId}`;
-  
-        try {
-          const response = await axios.get(apiUrl);
-  
-          if (response.status === 200) {
-            return response;
-          }
-          return response;
-        } catch (error) {
-  
-          console.error(
-            "An error occurred during get membership log by membershyip record ID:",
-            error
-          );
-          return error.response
         }
       },
   },
+
+
 });
