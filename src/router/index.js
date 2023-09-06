@@ -86,7 +86,7 @@ const routes = [
         path: "purchase-membership",
         name: "Purchase Membership",
         component: () =>
-          import(/* webpackChunkName: "home" */ "@/views/client/membership/MakePayment.vue"),
+          import(/* webpackChunkName: "home" */ "@/views/client/membership/PurchaseMembership.vue"),
       },
     ],
   },
