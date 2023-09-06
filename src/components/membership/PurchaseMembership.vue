@@ -1,6 +1,6 @@
 <template>
     <v-card class="my-2 me-4" max-width="250px" min-height="540px" height="550px">
-        <v-img class="align-end text-white" height="200" :src="membership.Picture" cover>
+        <v-img class="align-end text-white" height="200" src="@/assets/purchaseMembershipBanner.png" cover>
             <v-card-title>{{ membership.Type }}</v-card-title>
         </v-img>
         <v-card-title class="text-subtitle-1 title">

@@ -19,13 +19,13 @@
           <v-img
             class="align-end text-white"
             min-height="100"
-            src="@/assets/home-cover-photo.jpg"
+            src="@/assets/purchaseMembershipBanner.png"
             cover
           >
             <v-card-title>{{ membership.Type }}</v-card-title>
           </v-img>
 
-          <v-card-subtitle class="pt-4 text-wrap">
+          <v-card-subtitle class="pt-4 text-wrap subtext">
             {{ membership.Title }}
           </v-card-subtitle>
 
@@ -51,7 +51,6 @@
 
 <script>
 import { useMembershipStore } from "@/store/membership";
-// import Modal from "@/components/common/Modal.vue";
 
 export default {
   props: {
@@ -65,14 +64,6 @@ export default {
     return {
       membershipId: null,
       loading: false,
-      // modal: {
-      //   show: false,
-      //   type: "success",
-      //   icon: "mdi-cart-check",
-      //   title: "Purchase membership successfully",
-      //   message: "Would you like to make payment now?",
-      //   path: '/'
-      // },
     };
   },
   mounted() {
@@ -117,3 +108,11 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+
+.subtext {
+  height: 50px;
+}
+
+</style>
