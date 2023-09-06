@@ -1,13 +1,15 @@
 <template>
   <v-sheet class="mx-auto my-5" elevation="8" min-height="200">
+    <v-card-title class="pt-4 pb-0">Available Memberships</v-card-title>
     <v-slide-group
       v-model="model"
       class="pa-4"
       selected-class="bg-success"
       show-arrows
+      
     >
-      <v-slide-group-item>
-        <v-hover v-slot="{ isHovering, props }">
+      <v-slide-group-item >
+        <v-hover v-slot="{ isHovering }">
           <v-card
             class="mx-5 my-2"
             width="250"
@@ -17,6 +19,7 @@
             :key="membership.MembershipTypeId"
             :value="membership.MembershipTypeId"
             :class="{ 'on-hover': isHovering }"
+            variant="flat"
             @click="navigateToRoute('/membership/purchase-membership')"
           >
             <v-img
@@ -74,7 +77,12 @@ export default {
   mounted() {
     this.getMembershipList();
   },
-
+  computed: {
+    availableMemberships() {
+      // Filter out memberships that are in the membershipRecord
+      return this.membershipList.filter(membership => !this.isInMembershipRecord(membership));
+    },
+  },
   methods: {
     async getMembershipList() {
       try {
@@ -109,6 +117,15 @@ export default {
     },
     navigateToRoute(route) {
       this.$router.push(route);
+    },
+    isInMembershipRecord(membership) {
+      // Ensure this.membershipRecord is defined before using some
+      if (this.membershipRecord && this.membershipRecord.length > 0) {
+        return this.membershipRecord.some(
+          (record) => record.MembershipTypeId === membership.MembershipTypeId
+        );
+      }
+      return false; // Return false if membershipRecord is undefined or empty
     },
   },
   components: {

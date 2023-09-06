@@ -7,6 +7,7 @@
       height="550px"
       :class="{ 'on-hover': isHovering }"
       v-bind="props"
+      variant="flat"
       @click="navigateToRoute('/next-route')"
     >
       <!-- navigateToRoute's route to change when new screen is built -->
