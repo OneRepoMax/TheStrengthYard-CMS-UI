@@ -7,43 +7,47 @@
       show-arrows
     >
       <v-slide-group-item>
-        <v-card
-          class="mx-5 my-2"
-          width="250"
-          height="250"
-          min-height="150"
-          v-for="membership in this.membershipList"
-          :key="membership.MembershipTypeId"
-          :value="membership.MembershipTypeId"
-        >
-          <v-img
-            class="align-end text-white"
-            min-height="100"
-            src="@/assets/purchaseMembershipBanner.png"
-            cover
+        <v-hover v-slot="{ isHovering, props }">
+          <v-card
+            class="mx-5 my-2"
+            width="250"
+            height="250"
+            min-height="150"
+            v-for="membership in this.membershipList"
+            :key="membership.MembershipTypeId"
+            :value="membership.MembershipTypeId"
+            :class="{ 'on-hover': isHovering }"
+            @click="navigateToRoute('/membership/purchase-membership')"
           >
-            <v-card-title>{{ membership.Type }}</v-card-title>
-          </v-img>
-
-          <v-card-subtitle class="pt-4 text-wrap subtext">
-            {{ membership.Title }}
-          </v-card-subtitle>
-
-          <v-card-text>
-            <div>{{ membership.BaseFee }}</div>
-          </v-card-text>
-
-          <v-card-actions>
-            <v-btn
-              color="teal"
-              :disabled="loading"
-              :loading="loading"
-              to="membership/purchase-membership"
+            <v-img
+              class="align-end text-white"
+              min-height="100"
+              src="@/assets/purchaseMembershipBanner.png"
+              cover
             >
-              Purchase
-            </v-btn>
-          </v-card-actions>
-        </v-card>
+              <v-card-title>{{ membership.Type }}</v-card-title>
+            </v-img>
+
+            <v-card-subtitle class="pt-4 text-wrap subtext">
+              {{ membership.Title }}
+            </v-card-subtitle>
+
+            <v-card-text>
+              <div>{{ membership.BaseFee }}</div>
+            </v-card-text>
+
+            <v-card-actions>
+              <v-btn
+                color="teal"
+                :disabled="loading"
+                :loading="loading"
+                to="membership/purchase-membership"
+              >
+                Purchase
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-hover>
       </v-slide-group-item>
     </v-slide-group>
   </v-sheet>
@@ -55,6 +59,7 @@ import { useMembershipStore } from "@/store/membership";
 export default {
   props: {
     membershipList: Object,
+    membershipRecord: Array,
   },
   setup() {
     const membershipStore = useMembershipStore();
@@ -102,6 +107,9 @@ export default {
     closeModal() {
       this.modal.show = false;
     },
+    navigateToRoute(route) {
+      this.$router.push(route);
+    },
   },
   components: {
     // Modal,
@@ -110,9 +118,19 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 .subtext {
   height: 50px;
 }
 
+.v-card {
+  transition: opacity 0.2s ease-in-out;
+}
+
+.v-card:hover {
+  cursor: pointer;
+}
+
+.v-card:not(.on-hover) {
+  opacity: 1;
+}
 </style>
