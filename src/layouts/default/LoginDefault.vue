@@ -35,7 +35,8 @@ export default {
             ]
         } else if (this.userStore.userType == "A"){
             this.menuItems = [
-                { title: 'Home', path: '/admin/home', icon: "mdi-home", color: 'transparent' },
+                { title: 'Home', path: '/', icon: "mdi-home", color: 'transparent' },
+                { title: 'Dashboard', path: '/admin/home', icon: "mdi-home", color: 'transparent' },
                 { title: 'Account', icon: "mdi-account", path: '/admin/account', color: 'transparent' },
                 { title: 'Membership', icon: "mdi-list-box", path: '/admin/membership', color: 'transparent' },
             ]
