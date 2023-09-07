@@ -34,6 +34,9 @@
 <script>
 
 export default {
+    props:{
+        membershipLog: Array
+    },
     data: () => ({
         show: true,
         messages: [
