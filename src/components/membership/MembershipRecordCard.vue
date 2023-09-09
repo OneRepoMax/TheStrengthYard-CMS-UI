@@ -136,7 +136,14 @@ export default {
         show: false,
         data: [],
       },
+      isMobile: window.innerWidth < 600,
     };
+  },
+  created() {
+    window.addEventListener('resize', this.handleResize);
+  },
+  beforeUnmount() {
+    window.removeEventListener('resize', this.handleResize);
   },
   methods: {
     formattedDate(dateInput) {
@@ -181,6 +188,13 @@ export default {
       // Determine the number of columns based on screen width
       return window.innerWidth < 600 ? 1 : 3; // Show 1 card on mobile, 3 cards on larger screens
     },
+    handleResize() {
+      const isMobileNow = window.innerWidth < 600;
+      if (isMobileNow !== this.isMobile) {
+        // Screen size has changed, trigger a page reload
+        location.reload();
+      }
+    }
   },
   computed: {
     slicedMembershipRecords() {
