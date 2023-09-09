@@ -5,7 +5,7 @@
                 <template v-if="membership != null">
                     <v-img :src="membership.Picture" max-height="250px" cover></v-img>
                     <div class="pa-5">
-                        <v-card-title class="d-flex mb-3">
+                        <v-card-title class="d-flex mb-3 text-wrap">
                             <p class="text-h5 word-wrap me-3 font-weight-bold">{{ membership.Title }}</p>
                             <span>
                                 <v-chip>
@@ -17,7 +17,7 @@
                             <p class="text-body-1">Membership Fee: <strong>S${{ membership.BaseFee }} {{ membership.Type
                             }}</strong></p>
                         </v-card-text>
-                        <v-card-text class="py-0">
+                        <v-card-text class="py-0 text-wrap">
                             <p class="text-body-1">{{ membership.Description }}</p>
                         </v-card-text>
                        
