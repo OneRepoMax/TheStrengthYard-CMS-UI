@@ -12,7 +12,7 @@
             </v-col>
             <v-col class="hidden-xs-only text-left" cols="12" md="2" v-if="!membershipRecordForm.show">
                 <v-btn block prepend-icon="mdi-plus" color="light-blue" size="small"
-                    @click.prevent="membershipRecordForm.show = true">Add</v-btn>
+                    @click.prevent="membershipRecordAddForm.show = true">Add</v-btn>
             </v-col>
         </v-row>
 
@@ -109,12 +109,11 @@
                         <v-btn size="x-small" icon="mdi-delete" variant="text"
                             @click.prevent="modalWarning.show = true"></v-btn>
                         <template>
-                            <ModalWarning v-model="modalWarning.show" :title="modalWarning.title" 
-                                :message="modalWarning.message" :icon="modalWarning.icon"
-                                @closeModal="closeModalWarning" @action="deleteMembershipRecord(index)" :color="modalWarning.color" />
+                            <ModalWarning v-model="modalWarning.show" :title="modalWarning.title"
+                                :message="modalWarning.message" :icon="modalWarning.icon" @closeModal="closeModalWarning"
+                                @action="deleteMembershipRecord(index)" :color="modalWarning.color" />
                         </template>
                     </td>
-
                 </tr>
             </tbody>
         </v-table>
@@ -133,9 +132,15 @@
             :membership="selectedMembershipRecord" @addMembershipLog="addMembershipLog" />
     </template>
 
-    <template>
+    <!-- Add Membership Record Form -->
+    <template v-if="membershipRecordAddForm.show">
+        <MembershipRecordForm v-model="membershipRecordAddForm.show" color="teal" @action="addRecordSuccess()" :userId="this.userId"
+            @closeModal="closeAddMembershipRecord()" />
+    </template>
+
+    <template v-if="modal.show">
         <Modal v-model="modal.show" :path="modal.path" :title="modal.title" :message="modal.message" :icon="modal.icon"
-            @closeModal="closeCommonModal" :closeOnClick="true"/>
+            @closeModal="closeCommonModal" :closeOnClick="true" />
     </template>
 </template>
 
@@ -143,6 +148,7 @@
 
 import { useMembershipStore } from '@/store/membership'
 import MembershipLogModal from '@/components/membership/MembershipLogModal.vue'
+import MembershipRecordForm from '@/components/membership/AddMembershipRecordForm.vue'
 import Modal from '@/components/common/Modal.vue'
 import ModalWarning from '@/components/common/ModalWarning.vue'
 
@@ -153,10 +159,12 @@ export default {
         return { membershipStore }
     },
     props: {
-        membershipRecord: Object
+        membershipRecord: Object,
+        userId: Number,
     },
     components: {
         MembershipLogModal,
+        MembershipRecordForm,
         Modal,
         ModalWarning,
     },
@@ -168,6 +176,15 @@ export default {
             },
             selectedMembershipRecord: null,
             logLoading: false,
+            membershipRecordAddForm: {
+                show: false,
+                data: {
+                    userId: null,
+                    membershipTypeId: null,
+                    startDate: null,
+                    endDate: null,
+                }
+            },
             membershipRecordForm: {
                 show: false,
                 status: [],
@@ -266,6 +283,9 @@ export default {
         },
         closeCommonModal() {
             this.modal.show = false
+            this.modal.type = "success";
+            this.modal.title = "";
+            this.modal.message = "";
             this.$router.go()
         },
         async deleteMembershipRecord(index) {
@@ -279,6 +299,15 @@ export default {
         },
         closeModalWarning() {
             this.modalWarning.show = false
+        },
+        closeAddMembershipRecord() {
+            this.membershipRecordAddForm.show = false
+        },
+        addRecordSuccess() {
+            this.closeAddMembershipRecord();
+            this.modal.title = "Add successful"
+            this.modal.message = "Membership record has been successfully added!"
+            this.modal.show = true;
         }
 
     }

@@ -36,7 +36,7 @@
                             <v-skeleton-loader type="list-item-three-line" :loading="loading"></v-skeleton-loader>
                         </v-card-text>
                     </template>
-                    <MembershipRecordList v-if="!loading" :membershipRecord="this.membershipRecord" />
+                    <MembershipRecordList v-if="!loading" :membershipRecord="this.membershipRecord" :userId="account.UserId" />
                 </v-card-text>
             </v-expansion-panel-text>
         </v-expansion-panel>

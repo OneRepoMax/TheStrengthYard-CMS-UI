@@ -300,7 +300,7 @@ export const useMembershipStore = defineStore("membership", {
       },
 
       async getMembershipRecordsByFilter(status){
-        const apiUrl = `${TSY_API}/membershiprecord/filter`;
+        const apiUrl = `${TSY_API}/membershiprecord`;
         const data = {
           ActiveStatus: status,
         };
@@ -318,6 +318,30 @@ export const useMembershipStore = defineStore("membership", {
           );
         }
       },
+
+      async addMembershipRecord(payload){
+        const apiUrl = `${TSY_API}/membershiprecord`;
+        const data = {
+             UserId: payload.userId,
+             MembershipTypeId: payload.membershipTypeId,
+             StartDate: payload.startDate,
+             EndDate: payload.endDate,
+             ActiveStatus: payload.status,
+        }
+        try {
+            const response = await axios.post(apiUrl, data);
+    
+            if (response.status === 200) {
+              return response;
+            }
+            return response;
+          } catch (error) {
+            console.error(
+              "An error occurred during add membership Record:",
+              error
+            );
+          }
+      } 
   },
 
 

@@ -26,11 +26,11 @@
       }}</v-card-subtitle>
       
       <v-card-subtitle class="my-2">
-        <v-icon color="error" icon="mdi-refresh" size="small"></v-icon>
+        <v-icon icon="mdi-refresh" size="small"></v-icon>
         <span class="mx-1">{{ membership.Type }}</span>
       </v-card-subtitle>
       <v-card-subtitle class="mb-2">
-        <v-icon color="error" icon="mdi-currency-usd" size="small"></v-icon>
+        <v-icon icon="mdi-currency-usd" size="small"></v-icon>
         <span class="mx-1">{{ membership.BaseFee }}</span>
       </v-card-subtitle>
     </v-card>
