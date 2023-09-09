@@ -5,7 +5,7 @@
                 <template v-if="membership != null">
                     <v-img :src="membership.Picture" max-height="250px" cover></v-img>
                     <div class="pa-5">
-                        <v-card-title class="d-flex mb-3 text-wrap">
+                        <v-card-title class="d-flex mb-3">
                             <p class="text-h5 word-wrap me-3 font-weight-bold">{{ membership.Title }}</p>
                             <span>
                                 <v-chip>
@@ -26,7 +26,7 @@
                 </template>
 
                 <v-card-text max-width="300px">
-                    <div id="paypal-button-container" class="paypalBtn"></div>
+                    <div id="paypal-button-container"></div>
                 </v-card-text>
             </v-card>
 
@@ -83,7 +83,7 @@ export default {
                         layout: "vertical",
                         label: "paypal",
                         size: "small",
-                        height: 40,
+                        height: 40
                     },
                     // createSubscription: async function (data, actions) {
                     //     // 1. get the selected package
@@ -123,10 +123,4 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-
-.paypalBtn {
-    width: 100%;
-}
-
-</style>
+<style lang="scss" scoped></style>
