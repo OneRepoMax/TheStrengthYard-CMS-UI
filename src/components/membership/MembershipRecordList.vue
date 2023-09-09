@@ -1,8 +1,9 @@
 <template>
     <!-- No membership placeholder -->
-    <v-alert v-if="this.membershipRecord.length == 0" type="info" title="There's no membership record found for this user"
-        prepend-icon="mdi-information-outline">
-    </v-alert>
+    <v-btn v-if="this.membershipRecord.length == 0" type="info" block color="info"
+        prepend-icon="mdi-information-outline" @click.prevent="membershipRecordAddForm.show = true">
+        There's no membership record found for this user, click to add membership record
+    </v-btn>
     <template v-if="this.membershipRecord.length > 0">
 
         <v-row no-gutters>
