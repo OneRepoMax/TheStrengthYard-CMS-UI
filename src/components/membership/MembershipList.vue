@@ -80,7 +80,7 @@ export default {
                 show: false,
                 type: "success",
                 icon: "mdi-alert",
-                title: "Are you sure you want to delete?",
+                title: "Confirm deletion?",
                 message: "This action cannot be undone",
                 path: "/admin/membership",
                 color: "red"

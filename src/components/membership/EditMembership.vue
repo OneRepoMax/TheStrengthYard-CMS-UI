@@ -7,44 +7,55 @@
                 == 'create'">Create Membership</v-card-title>
                 <v-card-title v-else>Manage Membership</v-card-title>
             </v-card-title>
+            <v-form ref="form" @submit.prevent="validateForm" validate-on="submit">
+
             <v-card-text>
-                <v-form ref="form" @submit.prevent="validateForm" validate-on="submit">
-                    <v-row class="mb-3">
-                        <v-col cols="12" md="12">
-                            <v-text-field clearable hide-details="auto" class="mb-3" label="Title"
-                                v-model="this.membershipData.title" required :rules="rules"
-                                variant="outlined"></v-text-field>
-                        </v-col>
-                        <v-col cols="12" md="12">
-                            <v-textarea clearable hide-details="auto" class="mb-3" label="Description"
-                                v-model="this.membershipData.description" required :rules="rules"
-                                variant="outlined"></v-textarea>
-                        </v-col>
-                        <v-col cols="12" md="6">
-                            <v-select hide-details="auto" class="mb-3" label="Type" v-model="this.membershipData.type"
-                                :items="['One-Time', 'Monthly', 'Yearly']" required :rules="rules"
-                                variant="outlined"></v-select>
-                        </v-col>
-                        <v-col cols="12" md="6">
-                            <v-text-field clearable hide-details="auto" class="mb-3" label="Base Fee ($)"
-                                v-model="this.membershipData.basefee" type="number" required :rules="feeRules"
-                                variant="outlined"></v-text-field>
-                        </v-col>
-                        <v-col cols="12" md="12">
-                                <v-file-input v-if="this.membershipId == 'create'" label="Upload Picture" prepend-icon="" append-inner-icon="mdi-paperclip" variant="outlined" :rules="pictureRules" accept="image/*" @change="handleFileUpload"></v-file-input>
-                                <v-file-input v-else label="Upload Picture" prepend-icon="" append-inner-icon="mdi-paperclip" variant="outlined" accept="image/*" @change="handleFileUpload"></v-file-input>
-                        </v-col>
-                        <v-col cols="12" md="6">
-                           <v-btn color="teal" block variant="outlined" to="/admin/membership" size="large">back</v-btn>
-                        </v-col>
-                        <v-col cols="12" md="6">
-                           <v-btn v-if="this.membershipId == 'create'" color="teal" block type="submit" size="large">Create</v-btn>
-                           <v-btn v-else color="teal" block type="submit" size="large">Update</v-btn>
-                        </v-col>
-                        
-                    </v-row>
-                </v-form>
+                <v-row>
+                    <v-col cols="12" md="12">
+                        <v-text-field clearable hide-details="auto" class="mb-3" label="Title"
+                            v-model="this.membershipData.title" required :rules="rules"
+                            variant="outlined"></v-text-field>
+                    </v-col>
+                    <v-col cols="12" md="12">
+                        <v-textarea clearable hide-details="auto" class="mb-3" label="Description"
+                            v-model="this.membershipData.description" required :rules="rules"
+                            variant="outlined"></v-textarea>
+                    </v-col>
+                    <v-col cols="12" md="6">
+                        <v-select hide-details="auto" class="mb-3" label="Type" v-model="this.membershipData.type"
+                            :items="['One-Time', 'Monthly', 'Yearly']" required :rules="rules"
+                            variant="outlined"></v-select>
+                    </v-col>
+                    <v-col cols="12" md="6">
+                        <v-text-field v-if="this.membershipId == 'create'" clearable hide-details="auto" class="mb-3" label="Base Fee ($)" v-model="this.membershipData.basefee" type="number" required :rules="feeRules" variant="outlined"></v-text-field>
+                        <v-text-field v-else disabled hide-details="auto" class="mb-3" label="Base Fee ($)" v-model="this.membershipData.basefee" type="number" required :rules="feeRules" variant="outlined"></v-text-field>
+                    </v-col>
+                    <v-col cols="12" md="12">
+                            <v-file-input v-if="this.membershipId == 'create'" label="Upload Picture" prepend-icon="" append-inner-icon="mdi-paperclip" variant="outlined" :rules="pictureRules" accept="image/*" @change="handleFileUpload"></v-file-input>
+                            <v-file-input v-else label="Upload Picture" prepend-icon="" append-inner-icon="mdi-paperclip" variant="outlined" accept="image/*" @change="handleFileUpload"></v-file-input>
+                    </v-col>
+                </v-row>
             </v-card-text>
+                        
+            <v-divider></v-divider>
+            <v-card-text>
+                <v-row>
+                    <v-col cols="12" md="6">
+                        <v-btn color="teal" block variant="outlined" to="/admin/membership" size="large">back</v-btn>
+                    </v-col>
+                    <v-col cols="12" md="6">
+                        <v-btn v-if="this.membershipId == 'create'" color="teal" block type="submit" size="large">Create</v-btn>
+                        <v-btn v-else color="teal" block type="submit" size="large">Update</v-btn>
+                    </v-col>
+                    <v-col cols="12" v-if="showError">
+                        <v-alert type="error" title="Oops, please check your details"
+                            text="Please verify your membership details" closable>
+                        </v-alert>
+                    </v-col>
+                </v-row>
+            </v-card-text>
+                    
+            </v-form>
 
             <template>
                 <Modal v-model="modal.show" :path="modal.path" :title="modal.title" :message="modal.message"
@@ -124,7 +135,8 @@ export default {
                 title: "Update successful",
                 message: "Your membership has been successfully updated!",
                 path: "/"
-            }
+            },
+            showError: false,
         }
     },
     computed: {
@@ -190,10 +202,12 @@ export default {
             if (this.membershipData.picture != null){this.pictureRules = [];}
 
             if (state.error == 0){
+                this.showError = false
                 this.updateMembership();
             } else {
                 console.log("Invalid form")
                 console.log("Number of errors: " + state.error)
+                this.showError = true
             }
             
         },

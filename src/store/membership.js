@@ -300,7 +300,7 @@ export const useMembershipStore = defineStore("membership", {
       },
 
       async getMembershipRecordsByFilter(status){
-        const apiUrl = `${TSY_API}/membershiprecord`;
+        const apiUrl = `${TSY_API}/membershiprecord/filter`;
         const data = {
           ActiveStatus: status,
         };
