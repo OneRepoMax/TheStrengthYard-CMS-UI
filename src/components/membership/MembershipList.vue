@@ -3,11 +3,8 @@
         <v-expansion-panel v-for="membership in this.membershipList" :key="membership.MembershipTypeId" :value="membership.MembershipTypeId">
             <v-expansion-panel-title>
                 <v-row align="center" class="spacer" dense>
-                    <!-- <v-col cols="12" md="1">
-                        <p>{{ membership.MembershipTypeId }}</p>
-                    </v-col> -->
                     <v-col cols="12" md="6">
-                        <p>{{ membership.Title }}</p>
+                        <strong>{{ membership.Title }}</strong>
                     </v-col>
                     <v-col cols="12" md="1">
                         <p>{{ membership.Type }}</p>
@@ -15,15 +12,21 @@
                     <v-col cols="12" md="1">
                         <p>${{ membership.BaseFee }}</p>
                     </v-col>
-                    <v-col class="hidden-xs-only" cols="12" md="2">
-                        <v-btn block prepend-icon="mdi-pencil" color="amber" size="small" @click.prevent="editMembership(membership.MembershipTypeId)">Membership</v-btn>
+                    <v-col  cols="12" md="2">
+                        <v-btn block prepend-icon="mdi-square-edit-outline" color="amber" size="small" @click.prevent="editMembership(membership.MembershipTypeId)">Edit</v-btn>
                     </v-col>
-                    <v-col class="hidden-xs-only" cols="12" md="2">
+                    <v-col cols="12" md="2" align="right">
                         <v-btn block prepend-icon="mdi-delete" color="red" size="small" @click.prevent="showModal(membership.MembershipTypeId)">Delete</v-btn>
                     </v-col>
                 </v-row>
             </v-expansion-panel-title>
             <v-expansion-panel-text>
+                <!-- Skeleton loaders -->
+                <template v-if="loading">
+                        <v-card-text class="px-8">
+                            <v-skeleton-loader type="list-item-three-line" :loading="loading"></v-skeleton-loader>
+                        </v-card-text>
+                    </template>
                 <v-card-text>
                     <v-row>
                         <v-col cols="12" md="3">
@@ -41,7 +44,9 @@
     </v-expansion-panels>
 
     <template>
-        <Modal v-model="modal.show" :path="modal.path" :title="modal.title" :message="modal.message" :icon="modal.icon" @closeModal="closeModal" @actionModal="actionModal" />
+        <Modal v-model="modal.show" :title="modal.title" 
+        :message="modal.message" :icon="modal.icon" 
+                    @closeModal="closeModal" @action="actionModal" :color="modal.color" />
     </template>
 </template>
 
@@ -70,6 +75,7 @@ export default {
     data() {
         return {
             membershipId: null,
+            loading: false,
             modal: {
                 show: false,
                 type: "success",
@@ -77,7 +83,7 @@ export default {
                 title: "Are you sure you want to delete?",
                 message: "This action cannot be undone",
                 path: "/admin/membership",
-                iconColor: "red"
+                color: "red"
             }
         }
     },

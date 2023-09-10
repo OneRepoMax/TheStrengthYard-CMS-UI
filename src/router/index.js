@@ -9,9 +9,6 @@ const routes = [
       {
         path: "",
         name: "Home",
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
         component: () =>
           import(/* webpackChunkName: "home" */ "@/views/client/Home.vue"),
       },
@@ -25,19 +22,19 @@ const routes = [
         path: "login",
         name: "Login",
         component: () =>
-          import(/* webpackChunkName: "home" */ "@/views/client/account/Login.vue"),
+          import(/* webpackChunkName: "Login" */ "@/views/client/account/Login.vue"),
       },
       {
         path: "registration",
         name: "Register",
         component: () =>
-          import(/* webpackChunkName: "home" */ "@/views/client/account/Registration.vue"),
+          import(/* webpackChunkName: "Registration" */ "@/views/client/account/Registration.vue"),
       },
       {
         path: "reset-password",
         name: "Reset Password",
         component: () =>
-          import(/* webpackChunkName: "home" */ "@/views/client/account/ResetPassword.vue"),
+          import(/* webpackChunkName: "ResetPassword" */ "@/views/client/account/ResetPassword.vue"),
       },
       
     ],
@@ -50,13 +47,13 @@ const routes = [
         path: "edit",
         name: "Manage Profile",
         component: () =>
-          import(/* webpackChunkName: "home" */ "@/views/client/profile/EditProfile.vue"),
+          import(/* webpackChunkName: "EditProfile" */ "@/views/client/profile/EditProfile.vue"),
       },
       {
         path: "change-password",
         name: "Change Password",
         component: () =>
-          import(/* webpackChunkName: "home" */ "@/views/client/profile/ChangePassword.vue"),
+          import(/* webpackChunkName: "ChangePassword" */ "@/views/client/profile/ChangePassword.vue"),
       },
     ],
   },
@@ -68,7 +65,7 @@ const routes = [
         path: "",
         name: "Book",
         component: () =>
-          import(/* webpackChunkName: "home" */ "@/views/client/classes/Book.vue"),
+          import(/* webpackChunkName: "Book" */ "@/views/client/classes/Book.vue"),
       },
     ],
   },
@@ -77,23 +74,17 @@ const routes = [
     component: () => import("@/layouts/default/LoginDefault.vue"),
     children: [
       {
-        path: "",
-        name: "Book",
+        path: "purchase-membership",
+        name: "Purchase Membership",
         component: () =>
-          import(/* webpackChunkName: "home" */ "@/views/client/membership/ManageMembership.vue"),
+          import(/* webpackChunkName: "PurchaseMembership" */ "@/views/client/membership/PurchaseMembership.vue"),
       },
-    ],
-  },
-  {
-    path: "/membership/payment/:id",
-    component: () => import("@/layouts/default/LoginDefault.vue"),
-    props: true,
-    children: [
       {
-        path: "",
-        name: "Book",
+        path: ":id/checkout",
+        name: "Checkout Membership",
+        props: true,
         component: () =>
-          import(/* webpackChunkName: "home" */ "@/views/client/membership/MakePayment.vue"),
+          import(/* webpackChunkName: "Checkout" */ "@/views/client/payment/Checkout.vue"),
       },
     ],
   },
@@ -105,7 +96,7 @@ const routes = [
         path: "",
         name: "Schedule",
         component: () =>
-          import(/* webpackChunkName: "home" */ "@/views/client/classes/Schedule.vue"),
+          import(/* webpackChunkName: "Schedule" */ "@/views/client/classes/Schedule.vue"),
       },
     ],
   },
@@ -117,33 +108,33 @@ const routes = [
         path: "home",
         name: "Admin Home",
         component: () =>
-          import(/* webpackChunkName: "home" */ "@/views/staff/StaffHome.vue"),
+          import(/* webpackChunkName: "StaffHome" */ "@/views/staff/StaffHome.vue"),
       },
       {
         path: "account",
         name: "View Client Accounts",
         component: () =>
-          import(/* webpackChunkName: "home" */ "@/views/staff/account/ViewAccounts.vue"),
+          import(/* webpackChunkName: "ViewAccounts" */ "@/views/staff/account/ViewAccounts.vue"),
       },
       {
         path: "account/:id",
         name: "Manage Client Account",
         props: true,
         component: () =>
-          import(/* webpackChunkName: "home" */ "@/views/client/profile/EditProfile.vue"),
+          import(/* webpackChunkName: "EditProfile" */ "@/views/client/profile/EditProfile.vue"),
       },
       {
         path: "membership",
         name: "Manage Memberships",
         component: () =>
-          import(/* webpackChunkName: "home" */ "@/views/staff/membership/ViewMembership.vue"),
+          import(/* webpackChunkName: "ViewMembership" */ "@/views/staff/membership/ViewMembership.vue"),
       },
       {
         path: "membership/:id",
         name: "Edit Memberships",
         props: true,
         component: () =>
-          import(/* webpackChunkName: "home" */ "@/views/staff/membership/EditMembership.vue"),
+          import(/* webpackChunkName: "EditMembership" */ "@/views/staff/membership/EditMembership.vue"),
       },
     ],
   },

@@ -5,7 +5,8 @@
             <v-card-title class="text-center">
                 <v-card-title>Manage Account</v-card-title>
                 <v-avatar size="80" color="surface-variant" @click="openFileInput">
-                    <v-img v-if="this.userProfileData.displayPicture" :src="this.userProfileData.displayPicture" alt="Avatar" max-height="80px"></v-img>
+                    <v-img v-if="this.userProfileData.displayPicture" :src="this.userProfileData.displayPicture"
+                        alt="Avatar" max-height="80px"></v-img>
                     <v-icon v-else>mdi-camera</v-icon>
                 </v-avatar>
                 <input ref="fileInput" type="file" style="display: none" accept="image/*" @change="handleFileUpload" />
@@ -58,8 +59,9 @@
                         </v-col>
                     </v-row>
 
-                    <v-btn v-if="this.userId == null" block color="teal" variant="outlined" class="mb-5" to="/profile/change-password"
-                        prepend-icon="mdi-key" density="default" size="large">Change Password</v-btn>
+                    <v-btn v-if="this.userId == null" block color="teal" variant="outlined" class="mb-5"
+                        to="/profile/change-password" prepend-icon="mdi-key" density="default" size="large">Change
+                        Password</v-btn>
 
                     <v-btn color="teal" block type="submit" size="large">Update Profile</v-btn>
                 </v-form>
@@ -218,36 +220,36 @@ export default {
     },
 
     methods: {
-        validateRegistrationForm(){
-        state.error = 0;
+        validateRegistrationForm() {
+            state.error = 0;
 
-        if (this.userStore.displayPicture == null) { state.error++; }
-        if (this.userStore.firstName == null) {state.error++;} 
-        else if (this.userStore.firstName.length < 2) { state.error++; }
-        if (this.userStore.lastName == null) {state.error++;} 
-        else if (this.userStore.lastName.length < 2) { state.error++; }
-        if (this.userStore.emailAddress == null) {state.error++;} 
-        else if (/.+@.+\..+/.test(this.userStore.emailAddress) == false) { state.error++; }
-        if (this.userStore.gender == null) { state.error++; }
-        if (this.userStore.dateOfBirth == null) { state.error++; }
-        if (this.userStore.homeAddress == null) { state.error++; }
-        if (this.userStore.postalCode == null) {state.error++;} 
-        else if (this.userStore.postalCode.length != 6) { state.error++; }
-        else if (/^\d+$/.test(this.userStore.postalCode) == false) { state.error++; }
-        if (this.userStore.contactNo == null) { state.error++; }
-        console.log("error: " + state.error)
-        if (state.error == 0) {
-            return true;
-        } else {
-            return false;
-        }
+            if (this.userStore.displayPicture == null) { state.error++; }
+            if (this.userStore.firstName == null) { state.error++; }
+            else if (this.userStore.firstName.length < 2) { state.error++; }
+            if (this.userStore.lastName == null) { state.error++; }
+            else if (this.userStore.lastName.length < 2) { state.error++; }
+            if (this.userStore.emailAddress == null) { state.error++; }
+            else if (/.+@.+\..+/.test(this.userStore.emailAddress) == false) { state.error++; }
+            if (this.userStore.gender == null) { state.error++; }
+            if (this.userStore.dateOfBirth == null) { state.error++; }
+            if (this.userStore.homeAddress == null) { state.error++; }
+            if (this.userStore.postalCode == null) { state.error++; }
+            else if (this.userStore.postalCode.length != 6) { state.error++; }
+            else if (/^\d+$/.test(this.userStore.postalCode) == false) { state.error++; }
+            if (this.userStore.contactNo == null) { state.error++; }
+            console.log("error: " + state.error)
+            if (state.error == 0) {
+                return true;
+            } else {
+                return false;
+            }
         },
 
         openFileInput() {
             // Trigger the click event of the hidden file input element when the avatar is clicked
             this.$refs.fileInput.click();
         },
-        
+
         handleFileUpload(event) {
             const file = event.target.files[0];
 
@@ -275,28 +277,28 @@ export default {
                 const response = await this.userStore.getUserById(this.userId)
                 if (response.status == 200) {
                     this.userProfileData.firstName = response.data[0].FirstName,
-                    this.userProfileData.lastName = response.data[0].LastName,
-                    this.userProfileData.emailAddress = response.data[0].EmailAddress,
-                    this.userProfileData.contactNo = response.data[0].ContactNo,
-                    this.userProfileData.homeAddress = response.data[0].HomeAddress,
-                    this.userProfileData.postalCode = response.data[0].PostalCode,
-                    this.userProfileData.gender = response.data[0].Gender,
-                    this.userProfileData.dateOfBirth = response.data[0].DateOfBirth,
-                    this.userProfileData.displayPicture = response.data[0].DisplayPicture
+                        this.userProfileData.lastName = response.data[0].LastName,
+                        this.userProfileData.emailAddress = response.data[0].EmailAddress,
+                        this.userProfileData.contactNo = response.data[0].ContactNo,
+                        this.userProfileData.homeAddress = response.data[0].HomeAddress,
+                        this.userProfileData.postalCode = response.data[0].PostalCode,
+                        this.userProfileData.gender = response.data[0].Gender,
+                        this.userProfileData.dateOfBirth = response.data[0].DateOfBirth,
+                        this.userProfileData.displayPicture = response.data[0].DisplayPicture
                 }
             } catch (error) {
                 console.error("Error retrieving user info", error);
             }
         },
         async updateProfile() {
-            
-                if(this.validateRegistrationForm()){
-                    console.log('Valid Form')
-                }
-                else{
-                    console.log('Invalid Form')
-                    return
-                }
+
+            if (this.validateRegistrationForm()) {
+                console.log('Valid Form')
+            }
+            else {
+                console.log('Invalid Form')
+                return
+            }
 
             console.log(JSON.stringify({
                 firstName: this.userProfileData.firstName,
@@ -319,7 +321,7 @@ export default {
 
                 // uri to uploaded avatar
                 let tempUserId = this.userId
-                if (this.userId == null){
+                if (this.userId == null) {
                     tempUserId = this.userStore.userId
                 }
 
@@ -340,7 +342,7 @@ export default {
 
                         console.log(response.data);
 
-                        if(this.userId == null){
+                        if (this.userId == null) {
                             this.userStore.saveResponseToStore(response);
                             this.userStore.saveUserToLocalStorage();
                             this.modal.path = "/"
