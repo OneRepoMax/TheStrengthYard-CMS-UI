@@ -22,7 +22,7 @@ npm run build
 Preview build files after running npm running npm run build
 
 ```
-npm run  p
+npm run preview
 ```
 
 ### Lints and fixes files
