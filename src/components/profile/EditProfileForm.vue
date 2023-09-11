@@ -5,7 +5,8 @@
             <v-card-title class="text-center">
                 <v-card-title>Manage Account</v-card-title>
                 <v-avatar size="80" color="surface-variant" @click="openFileInput">
-                    <v-img v-if="selectedFile" :src="selectedFile" alt="Avatar" max-height="80px"></v-img>
+                    <v-img v-if="this.userProfileData.displayPicture" :src="this.userProfileData.displayPicture"
+                        alt="Avatar" max-height="80px"></v-img>
                     <v-icon v-else>mdi-camera</v-icon>
                 </v-avatar>
                 <input ref="fileInput" type="file" style="display: none" accept="image/*" @change="handleFileUpload" />
@@ -17,51 +18,59 @@
                     <v-row class="mb-3">
                         <v-col cols="12" md="6">
                             <v-text-field clearable hide-details="auto" class="mb-3" label="First Name"
-                                v-model="this.userStore.firstName" required :rules="nameRules" variant="outlined"></v-text-field>
+                                v-model="this.userProfileData.firstName" required :rules="nameRules"
+                                variant="outlined"></v-text-field>
                         </v-col>
                         <v-col cols="12" md="6">
                             <v-text-field clearable hide-details="auto" class="mb-3" label="Last Name"
-                                v-model="this.userStore.lastName" required :rules="nameRules" variant="outlined"></v-text-field>
+                                v-model="this.userProfileData.lastName" required :rules="nameRules"
+                                variant="outlined"></v-text-field>
                         </v-col>
 
                         <v-col cols="12" md="9">
                             <v-text-field hide-details="auto" class="mb-3" label="Date of Birth" type="date"
-                                v-model="formattedDob" required :rules="dobRules" variant="outlined" placeholder="YYYY-MM-DD"></v-text-field>
+                                v-model="formattedDob" required :rules="dobRules" variant="outlined"
+                                placeholder="YYYY-MM-DD"></v-text-field>
                         </v-col>
                         <v-col cols="12" md="3">
                             <v-select hide-details="auto" class="mb-3" label="Gender" v-model="formattedGender"
-                                :items="['Male', 'Female', 'Prefer not to say']" required :rules="genderRules" variant="outlined"></v-select>
+                                :items="['Male', 'Female', 'Prefer not to say']" required :rules="genderRules"
+                                variant="outlined"></v-select>
                         </v-col>
                         <v-col cols="12">
                             <v-text-field clearable hide-details="auto" class="mb-3" label="Email"
-                                v-model="this.userStore.emailAddress" required :rules="emailRules" variant="outlined"></v-text-field>
+                                v-model="this.userProfileData.emailAddress" required :rules="emailRules"
+                                variant="outlined"></v-text-field>
                         </v-col>
                         <v-col cols="12">
                             <v-text-field clearable hide-details="auto" class="mb-3" label="Address"
-                                v-model="this.userStore.homeAddress" required :rules="addressRules" variant="outlined"></v-text-field>
+                                v-model="this.userProfileData.homeAddress" required :rules="addressRules"
+                                variant="outlined"></v-text-field>
                         </v-col>
                         <v-col cols="6">
                             <v-text-field clearable hide-details="auto" class="mb-3" label="Postal Code"
-                                v-model="this.userStore.postalCode" required :rules="postalRules" variant="outlined"></v-text-field>
+                                v-model="this.userProfileData.postalCode" required :rules="postalRules"
+                                variant="outlined"></v-text-field>
                         </v-col>
                         <v-col cols="6">
                             <v-text-field clearable hide-details="auto" class="mb-3" label="Contact Number"
-                                v-model="this.userStore.contactNo" required :rules="contactRules" variant="outlined"></v-text-field>
+                                v-model="this.userProfileData.contactNo" required :rules="contactRules"
+                                variant="outlined"></v-text-field>
                         </v-col>
                     </v-row>
 
-                    <v-btn block color="teal" variant="outlined" class="mb-5" to="/profile/change-password"
-                        prepend-icon="mdi-key" density="default" size="large">Change Password</v-btn>
+                    <v-btn v-if="this.userId == null" block color="teal" variant="outlined" class="mb-5"
+                        to="/profile/change-password" prepend-icon="mdi-key" density="default" size="large">Change
+                        Password</v-btn>
 
-                    <v-btn color="teal"
-                     block type="submit" size="large">Update Profile</v-btn>
+                    <v-btn color="teal" block type="submit" size="large">Update Profile</v-btn>
                 </v-form>
             </v-card-text>
 
-            <v-template>
+            <template>
                 <Modal v-model="modal.show" :path="modal.path" :title="modal.title" :message="modal.message"
                     :icon="modal.icon" @closeModal="closeModal" />
-            </v-template>
+            </template>
 
         </v-card>
 
@@ -86,15 +95,49 @@ export default {
             userStore,
         }
     },
-    
+    watch: {
+        userId(newValue) {
+            try {
+                if (newValue != null) {
+                    this.getProfileData();
+                } else {
+                    console.log("test");
+                    this.userProfileData = this.userStore.$state
+                    console.log(this.userProfileData);
+                }
+
+            } catch (error) {
+                console.error("Error getting user by ID", error)
+            }
+
+        }
+    },
+    mounted() {
+        if (this.userId == null) {
+            this.userProfileData = this.userStore.$state
+        } else {
+            this.getProfileData();
+        }
+    },
     data() {
         return {
             selectedFile: this.userStore.displayPicture,
             displayPicture: this.userStore.displayPicture,
             profilePicture: null,
+            userProfileData: {
+                firstName: null,
+                lastName: null,
+                emailAddress: null,
+                contactNo: null,
+                homeAddress: null,
+                postalCode: null,
+                gender: null,
+                dateOfBirth: null,
+                displayPicture: null,
+            },
             nameRules: [
-            v => !!v || 'First Name is required',
-            v => (v && v.length >= 2) || 'First Name must be at least 2 characters',
+                v => !!v || 'First Name is required',
+                v => (v && v.length >= 2) || 'First Name must be at least 2 characters',
             ],
             emailRules: [
                 v => !!v || 'Email is required',
@@ -129,7 +172,7 @@ export default {
     computed: {
         formattedDob: {
             get() {
-                const date = new Date(this.userStore.dateOfBirth);
+                const date = new Date(this.userProfileData.dateOfBirth);
                 const year = date.getUTCFullYear();
                 const month = String(date.getUTCMonth() + 1).padStart(2, "0");
                 const day = String(date.getUTCDate()).padStart(2, "0");
@@ -140,12 +183,12 @@ export default {
                 const year = date.getUTCFullYear();
                 const month = String(date.getUTCMonth() + 1).padStart(2, "0");
                 const day = String(date.getUTCDate()).padStart(2, "0");
-                this.userStore.dateOfBirth = `${year}-${month}-${day}`
+                this.userProfileData.dateOfBirth = `${year}-${month}-${day}`
             }
         },
         formattedGender: {
             get() {
-                switch (this.userStore.gender) {
+                switch (this.userProfileData.gender) {
                     case 'M':
                         return 'Male'
                     case 'F':
@@ -157,49 +200,54 @@ export default {
             set(newValue) {
                 switch (newValue) {
                     case 'Male':
-                        this.userStore.gender = 'M';
+                        this.userProfileData.gender = 'M';
                         break;
                     case 'Female':
-                        this.userStore.gender = 'F';
+                        this.userProfileData.gender = 'F';
                         break;
                     case 'Prefer not to say':
-                        this.userStore.gender = 'O';
+                        this.userProfileData.gender = 'O';
                         break;
                 }
             }
-        }
+
+        },
+        userId() {
+            return this.$route.params.id || null;
+        },
     },
 
     methods: {
-        validateRegistrationForm(){
-        state.error = 0;
+        validateRegistrationForm() {
+            state.error = 0;
 
-        if (this.userStore.displayPicture == null) { state.error++; }
-        if (this.userStore.firstName == null) {state.error++;} 
-        else if (this.userStore.firstName.length < 2) { state.error++; }
-        if (this.userStore.lastName == null) {state.error++;} 
-        else if (this.userStore.lastName.length < 2) { state.error++; }
-        if (this.userStore.emailAddress == null) {state.error++;} 
-        else if (/.+@.+\..+/.test(this.userStore.emailAddress) == false) { state.error++; }
-        if (this.userStore.gender == null) { state.error++; }
-        if (this.userStore.dateOfBirth == null) { state.error++; }
-        if (this.userStore.homeAddress == null) { state.error++; }
-        if (this.userStore.postalCode == null) {state.error++;} 
-        else if (this.userStore.postalCode.length != 6) { state.error++; }
-        else if (/^\d+$/.test(this.userStore.postalCode) == false) { state.error++; }
-        if (this.userStore.contactNo == null) { state.error++; }
-        console.log("error: " + state.error)
-        if (state.error == 0) {
-            return true;
-        } else {
-            return false;
-        }
+            if (this.userStore.displayPicture == null) { state.error++; }
+            if (this.userStore.firstName == null) { state.error++; }
+            else if (this.userStore.firstName.length < 2) { state.error++; }
+            if (this.userStore.lastName == null) { state.error++; }
+            else if (this.userStore.lastName.length < 2) { state.error++; }
+            if (this.userStore.emailAddress == null) { state.error++; }
+            else if (/.+@.+\..+/.test(this.userStore.emailAddress) == false) { state.error++; }
+            if (this.userStore.gender == null) { state.error++; }
+            if (this.userStore.dateOfBirth == null) { state.error++; }
+            if (this.userStore.homeAddress == null) { state.error++; }
+            if (this.userStore.postalCode == null) { state.error++; }
+            else if (this.userStore.postalCode.length != 6) { state.error++; }
+            else if (/^\d+$/.test(this.userStore.postalCode) == false) { state.error++; }
+            if (this.userStore.contactNo == null) { state.error++; }
+            console.log("error: " + state.error)
+            if (state.error == 0) {
+                return true;
+            } else {
+                return false;
+            }
         },
 
         openFileInput() {
             // Trigger the click event of the hidden file input element when the avatar is clicked
             this.$refs.fileInput.click();
         },
+
         handleFileUpload(event) {
             const file = event.target.files[0];
 
@@ -213,7 +261,7 @@ export default {
                 reader.readAsDataURL(file);
 
                 reader.onload = () => {
-                    this.selectedFile = reader.result;
+                    this.userProfileData.displayPicture = reader.result;
                 };
 
                 this.profilePicture = file
@@ -222,50 +270,83 @@ export default {
         closeModal() {
             this.modal.show = false
         },
+        async getProfileData() {
+            try {
+                const response = await this.userStore.getUserById(this.userId)
+                if (response.status == 200) {
+                    this.userProfileData.firstName = response.data[0].FirstName,
+                        this.userProfileData.lastName = response.data[0].LastName,
+                        this.userProfileData.emailAddress = response.data[0].EmailAddress,
+                        this.userProfileData.contactNo = response.data[0].ContactNo,
+                        this.userProfileData.homeAddress = response.data[0].HomeAddress,
+                        this.userProfileData.postalCode = response.data[0].PostalCode,
+                        this.userProfileData.gender = response.data[0].Gender,
+                        this.userProfileData.dateOfBirth = response.data[0].DateOfBirth,
+                        this.userProfileData.displayPicture = response.data[0].DisplayPicture
+                }
+            } catch (error) {
+                console.error("Error retrieving user info", error);
+            }
+        },
         async updateProfile() {
 
+            if (this.validateRegistrationForm()) {
+                console.log('Valid Form')
+            }
+            else {
+                console.log('Invalid Form')
+                return
+            }
+
             console.log(JSON.stringify({
-                firstName: this.userStore.firstName,
-                lastName: this.userStore.lastName,
-                contactNo: this.userStore.contactNo,
-                homeAddress: this.userStore.homeAddress,
-                postalCode: this.userStore.postalCode,
-                gender: this.userStore.gender,
-                dateOfBirth: this.userStore.dateOfBirth,
-                displayPicture: this.displayPicture,
+                firstName: this.userProfileData.firstName,
+                lastName: this.userProfileData.lastName,
+                emailAddress: this.userProfileData.emailAddress,
+                contactNo: this.userProfileData.contactNo,
+                homeAddress: this.userProfileData.homeAddress,
+                postalCode: this.userProfileData.postalCode,
+                gender: this.userProfileData.gender,
+                dateOfBirth: this.userProfileData.dateOfBirth,
+                displayPicture: this.userProfileData.displayPicture,
             }))
             try {
-                if(this.validateRegistrationForm()){
-                    console.log('Valid Form')
-                }
-                else{
-                    console.log('Invalid Form')
-                    return
-                }
 
-                if (this.selectedFile != this.displayPicture) {
+                if (this.userProfileData.displayPicture != this.displayPicture) {
                     const uploadResponse = await this.userStore.uploadAvatar(this.profilePicture)
-                    this.displayPicture = uploadResponse.s3Uri
+                    this.userProfileData.displayPicture = uploadResponse.s3Uri
+                    console.log(this.userProfileData.displayPicture);
                 }
 
                 // uri to uploaded avatar
-                console.log(this.displayPicture);
+                let tempUserId = this.userId
+                if (this.userId == null) {
+                    tempUserId = this.userStore.userId
+                }
 
                 // trigger update profile form through this API and put in variables
                 // Edit the function below accordingly, e.g. update the parameters, etc
                 await this.userStore.updateProfile({
-                    firstName: this.userStore.firstName,
-                    lastName: this.userStore.lastName,
-                    contactNo: this.userStore.contactNo,
-                    homeAddress: this.userStore.homeAddress,
-                    postalCode: this.userStore.postalCode,
-                    gender: this.userStore.gender,
-                    dateOfBirth: this.userStore.dateOfBirth,
-                    displayPicture: this.displayPicture
-                }).then((response) => {
+                    firstName: this.userProfileData.firstName,
+                    lastName: this.userProfileData.lastName,
+                    emailAddress: this.userProfileData.emailAddress,
+                    contactNo: this.userProfileData.contactNo,
+                    homeAddress: this.userProfileData.homeAddress,
+                    postalCode: this.userProfileData.postalCode,
+                    gender: this.userProfileData.gender,
+                    dateOfBirth: this.userProfileData.dateOfBirth,
+                    displayPicture: this.userProfileData.displayPicture
+                }, tempUserId).then((response) => {
                     if (response.status == 200) {
 
                         console.log(response.data);
+
+                        if (this.userId == null) {
+                            this.userStore.saveResponseToStore(response);
+                            this.userStore.saveUserToLocalStorage();
+                            this.modal.path = "/"
+                        } else {
+                            this.modal.path = "/admin/account"
+                        }
 
                         // Show success modal
                         this.modal.show = true
@@ -277,6 +358,7 @@ export default {
             }
         }
     },
+
     components: { Modal }
 }
 

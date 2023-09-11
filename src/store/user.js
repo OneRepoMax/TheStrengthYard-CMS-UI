@@ -33,6 +33,7 @@ export const useUserStore = defineStore("user", {
     MedicalRemarks: "",
     AcknowledgementOpenGymRules: false,
     AcknowledgementTnC: false,
+    selectedUser: null,
   }),
   actions: {
     loadUserFromLocalStorage() {
@@ -69,7 +70,7 @@ export const useUserStore = defineStore("user", {
       const year = dob.getUTCFullYear();
       const month = String(dob.getUTCMonth() + 1).padStart(2, "0");
       const day = String(dob.getUTCDate()).padStart(2, "0");
-      const formattedDob = `${year}-${month}-${day}`
+      const formattedDob = `${year}-${month}-${day}`;
 
       this.userId = response.data.UserId;
       this.emailAddress = response.data.EmailAddress;
@@ -166,7 +167,6 @@ export const useUserStore = defineStore("user", {
 
     // Add the register action here in a similar manner
     async register(registerPayload) {
-
       try {
         let response = await axios.post(`${TSY_API}/register`, {
           EmailAddress: registerPayload.emailAddress,
@@ -200,26 +200,29 @@ export const useUserStore = defineStore("user", {
       }
     },
 
-    async resendVerificationEmail(emailAddress){
+    async resendVerificationEmail(emailAddress) {
       try {
-        let response = await axios.post(`${TSY_API}/verify/resend`,{
+        let response = await axios.post(`${TSY_API}/verify/resend`, {
           EmailAddress: emailAddress,
-        })
+        });
 
-        if (response.status === 200){
-          return response
+        if (response.status === 200) {
+          return response;
         }
       } catch (error) {
-        console.log("Resend verification error: ", error );
-        return
+        console.log("Resend verification error: ", error);
+        return;
       }
     },
 
-    async updateProfile(profileData) {
+    async updateProfile(profileData, userId) {
+
+
       try {
-        let response = await axios.put(`${TSY_API}/user/${this.userId}`, {
+        let response = await axios.put(`${TSY_API}/user/${userId}`, {
           FirstName: profileData.firstName,
           LastName: profileData.lastName,
+          EmailAddress: profileData.emailAddress,
           ContactNo: profileData.contactNo,
           HomeAddress: profileData.homeAddress,
           PostalCode: profileData.postalCode,
@@ -230,8 +233,6 @@ export const useUserStore = defineStore("user", {
 
         // Handle the response data here
         if (response.status === 200) {
-          this.saveResponseToStore(response);
-          this.saveUserToLocalStorage();
           return response;
         }
       } catch (error) {
@@ -240,10 +241,12 @@ export const useUserStore = defineStore("user", {
       }
     },
     async changePassword(userId, newPassword) {
+
       const apiUrl = `${TSY_API}/user/${userId}`;
       const data = {
         Password: newPassword,
       };
+
       try {
         const response = await axios.put(apiUrl, data);
 
@@ -277,6 +280,40 @@ export const useUserStore = defineStore("user", {
         return response;
       } catch (error) {
         console.error("An error occurred during the API request:", error);
+      }
+    },
+    async getAllUser() {
+      const apiUrl = `${TSY_API}/user`;
+
+      try {
+        const response = await axios.get(apiUrl);
+
+        if (response.status === 200) {
+          return response;
+        }
+        return response;
+      } catch (error) {
+        console.error(
+          "An error occurred during get all user API request:",
+          error
+        );
+      }
+    },
+    async getUserById(userId) {
+      const apiUrl = `${TSY_API}/user/${userId}`;
+
+      try {
+        const response = await axios.get(apiUrl);
+
+        if (response.status === 200) {
+          return response;
+        }
+        return response;
+      } catch (error) {
+        console.error(
+          "An error occurred during get all user by ID API request:",
+          error
+        );
       }
     },
   },
