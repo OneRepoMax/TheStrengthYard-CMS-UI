@@ -18,6 +18,13 @@ npm run dev
 npm run build
 ```
 
+### Preview build files
+Preview build files after running npm running npm run build
+
+```
+npm run  p
+```
+
 ### Lints and fixes files
 
 ```
