@@ -10,17 +10,31 @@ COPY . .
 # Install project dependencies
 RUN npm install
 
+# Set environment variable
+ARG VITE_S3_ACCESS_KEY
+ARG VITE_S3_SECRET_KEY
+ARG VITE_S3_BUCKET_NAME
+ARG VITE_AWS_REGION
+ARG VITE_TSY_API
+
+ENV VITE_S3_ACCESS_KEY=${VITE_S3_ACCESS_KEY}
+ENV VITE_S3_SECRET_KEY=${VITE_S3_SECRET_KEY}
+ENV VITE_S3_BUCKET_NAME=${VITE_S3_BUCKET_NAME}
+ENV VITE_AWS_REGION=${VITE_AWS_REGION}
+ENV VITE_TSY_API=${VITE_TSY_API}
+
 # Build the project
 RUN npm run build
 
-# Stage 2: Create a smaller production image
-FROM nginx:alpine
-
-# Copy the built app from the builder stage to the nginx web server
+# Bundle static assets with nginx
+FROM nginx:stable-alpine as production
+ENV NODE_ENV production
 COPY --from=builder /app/dist /usr/share/nginx/html
 
-# Expose port 8080
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# Expose port 80
 EXPOSE 80
 
-# Start Nginx
+# Start the app on port 80
 CMD ["nginx", "-g", "daemon off;"]
