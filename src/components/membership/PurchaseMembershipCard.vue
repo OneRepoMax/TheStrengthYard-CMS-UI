@@ -50,6 +50,7 @@ export default {
   },
   methods: {
     navigateToRoute(route) {
+        console.log(route);
       this.$router.push(route);
     },
   },

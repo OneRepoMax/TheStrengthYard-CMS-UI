@@ -327,6 +327,7 @@ export const useMembershipStore = defineStore("membership", {
              StartDate: payload.startDate,
              EndDate: payload.endDate,
              ActiveStatus: payload.status,
+             PayPalSubscriptionId: payload.subscriptionId,
         }
         try {
             const response = await axios.post(apiUrl, data);

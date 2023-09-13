@@ -20,7 +20,7 @@
                         <v-card-text class="py-0 text-wrap">
                             <p class="text-body-1">{{ membership.Description }}</p>
                         </v-card-text>
-                       
+
 
                     </div>
                 </template>
@@ -31,15 +31,23 @@
             </v-card>
 
         </v-container>
+
+        <Modal v-model="modal.show" :path="modal.path" :title="modal.title" :message="modal.message" :icon="modal.icon"
+            @closeModal="closeModal" />
+
     </v-main>
 </template>
 
 <script>
 import { useMembershipStore } from "@/store/membership";
+import Modal from "@/components/common/Modal.vue";
 import { useUserStore } from "@/store/user";
 
 
 export default {
+    components: {
+        Modal
+    },
     setup() {
         const membershipStore = useMembershipStore();
         const userStore = useUserStore();
@@ -54,11 +62,18 @@ export default {
                 paymentMode: null,
                 startDate: null
             },
+            modal: {
+                show: false,
+                type: "success",
+                icon: "mdi-check-circle",
+                title: "Purchase successful",
+                message: "You have successfully purchased the membership. You can view your membership details in your profile page.",
+                path: "/"
+            }
         }
     },
     async mounted() {
         this.getMembership();
-        await this.mountPaypalButton();
     },
     methods: {
         async getMembership() {
@@ -68,12 +83,19 @@ export default {
 
             if (response.status == 200) {
                 this.membership = response.data[0]
+                console.log(this.membership);
+
+                await this.mountPaypalButton(this.membership.PayPalPlanId);
             }
         },
         membershipId() {
             return this.$route.params.id || null;
         },
-        mountPaypalButton() {
+        closeModal() {
+            this.modal.show = false
+        },
+        async mountPaypalButton(planId) {
+            const vm = this;
             // eslint-disable-next-line no-undef
             paypal
                 .Buttons({
@@ -85,15 +107,17 @@ export default {
                         size: "small",
                         height: 40
                     },
-                    // createSubscription: async function (data, actions) {
-                    //     // 1. get the selected package
+                    //2. Create a subscription
+                    createSubscription: async function (data, actions) {
 
-                    //     // insert user plan id
-                    //     // 2. Create a subscription
-                    //     return actions.subscription.create({
-                    //         plan_id: plan_ID
-                    //     });
-                    // },
+                        // 1. get the selected package
+
+                        // insert user plan id
+
+                        return actions.subscription.create({
+                            plan_id: planId
+                        });
+                    },
                     // eslint-disable-next-line no-unused-vars
                     onApprove: async function (data, actions) {
                         /**
@@ -104,11 +128,53 @@ export default {
                          * - to make payment
                          */
 
-                        // 2. Save payment subscription id
-                        //let subscrption_id = data.subscriptionID;
+                        // Save payment subscription id
+                        let subscriptionId = data.subscriptionID;
 
-                        // 4. Remove the selected package from the local storage
+                        console.log(data);
+                        console.log(actions);
 
+                        // Post the subscription id and payment details to the backend
+
+                        // Process endDate based on membership Type in "YYYY-MM-DD" without the time stamp format
+                        let endDate = new Date();
+                        if (vm.membership.Type.toUpperCase() == "MONTHLY") {
+                            endDate.setMonth(endDate.getMonth() + 1);
+                        } else if (vm.membership.Type.toUpperCase() == "YEARLY") {
+                            endDate.setFullYear(endDate.getFullYear() + 1);
+                        }
+
+                        const payload = {
+                            userId: vm.userStore.userId,
+                            membershipTypeId: vm.membership.MembershipTypeId,
+                            startDate: new Date(),
+                            endDate: endDate,
+                            subscriptionId: subscriptionId
+                        }
+
+                        try {
+
+                            const response = await vm.membershipStore.addMembershipRecord(payload)
+
+                            if (response.status == 200) {
+                                vm.modal.show = true;
+                                vm.modal.type = "success";
+                                vm.modal.icon = "mdi-check-circle";
+                                vm.modal.title = "Purchase successful";
+                                vm.modal.message = "You have successfully purchased the membership. You can view your membership details in your profile page.";
+                                vm.modal.path = "/";
+                            }
+
+                        } catch (error) {
+
+                            vm.modal.show = true;
+                            vm.modal.type = "error";
+                            vm.modal.icon = "mdi-alert-circle";
+                            vm.modal.title = "Purchase failed";
+                            vm.modal.message = "There was an error processing your payment. Please contact admin.";
+                            vm.modal.path = "/membership/";
+
+                        }
 
                         console.log(
                             "Success"
