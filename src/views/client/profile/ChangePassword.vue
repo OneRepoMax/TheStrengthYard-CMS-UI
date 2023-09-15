@@ -34,8 +34,7 @@
                         </v-btn>
                     </v-form>
                 </v-card-text>
-            </v-card>
-            <v-card v-if="passwordAlert">
+                <v-card v-if="passwordAlert">
                 <v-alert :type="passwordAlertType" :title="passwordAlertMessage">
 
                     <v-card-actions v-if="passwordAlertType == 'success'">
@@ -45,7 +44,8 @@
                     </v-card-actions>
                 </v-alert>
             </v-card>
-
+            </v-card>
+            
             <v-template>
                 <Modal v-model="modal.show" :path="modal.path" :title="modal.title" :message="modal.message"
                     :icon="modal.icon" @closeModal="closeModal" />
@@ -91,7 +91,7 @@ export default {
             ],
             confirmPasswordRules: [
                 (v) => !!v || "Confirmation Password is required",
-                (v) => v === this.confirmPassword || "Passwords do not match",
+                (v) => v === this.newPassword || "Passwords do not match",
             ],
             passwordAlert: false,
             passwordAlertMessage: null,
@@ -124,7 +124,7 @@ export default {
                         this.passwordAlertType = "error";
                         this.passwordAlert = true;
                         throw new Error("Two Password not the same")
-                        return
+                        // return
                     }
 
                     else{
@@ -142,13 +142,13 @@ export default {
                     }
                 } 
                 else {
+                    this.passwordAlertMessage = "Invalid Current Password";
+                    this.passwordAlertType = "error";
+                    this.passwordAlert = true;
                     throw new Error("Invalid Current Password");
                 }
             } catch (error) {
                 console.error(error);
-                this.passwordAlertMessage = "Invalid Current Password";
-                this.passwordAlertType = "error";
-                this.passwordAlert = true;
             }
         },
         closeModal() {
