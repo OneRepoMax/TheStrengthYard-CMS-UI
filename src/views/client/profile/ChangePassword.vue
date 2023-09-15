@@ -6,7 +6,7 @@
                     <v-card-title>Change Password</v-card-title>
                 </v-card-title>
                 <v-card-text>
-                    <v-form @submit.prevent="changePassword">
+                    <v-form @submit.prevent="changePassword" ref="form" validate-on="submit">
                         <!-- <v-text-field v-model="emailAddress" label="Email Address" required></v-text-field> -->
                         <v-text-field v-model="password" label="Current Password" required :rules="passwordRules"
                             class="mb-3" :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
@@ -142,17 +142,30 @@ export default {
                     }
                 } 
                 else {
-                    this.passwordAlertMessage = "Invalid Current Password";
-                    this.passwordAlertType = "error";
-                    this.passwordAlert = true;
                     throw new Error("Invalid Current Password");
                 }
             } catch (error) {
                 console.error(error);
+                this.passwordAlertMessage = "Invalid Current Password";
+                this.passwordAlertType = "error";
+                this.passwordAlert = true;
             }
         },
         closeModal() {
             this.modal.show = false
+        },
+        async submitForm() {
+            await this.$refs.form.validate();
+
+            const isValid = this.$refs.form.isValid
+
+            if (!isValid) {
+                // Form has validation errors, do not submit
+                console.log('Form has validation errors');
+            } else {
+                // Form is valid, submit the data
+                this.changePassword();
+            }
         },
     },
     computed: {
