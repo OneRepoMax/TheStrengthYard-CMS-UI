@@ -299,6 +299,23 @@ export const useMembershipStore = defineStore("membership", {
         }
       },
 
+      async getAllMembershipRecords(){
+        const apiUrl = `${TSY_API}/membershiprecord`;
+        try {
+          const response = await axios.get(apiUrl);
+  
+          if (response.status === 200) {
+            return response;
+          }
+          return response;
+        } catch (error) {
+          console.error(
+            "An error occurred during get membership Record:",
+            error
+          );
+        }
+      },
+
       async getMembershipRecordsByFilter(status){
         const apiUrl = `${TSY_API}/membershiprecord/filter`;
         const data = {
