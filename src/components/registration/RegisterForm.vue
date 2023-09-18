@@ -25,12 +25,12 @@
             <v-row>
                 <!-- First Name -->
                 <v-col cols="12" md="6" class="py-0">
-                    <v-text-field v-model="userStore.firstName" label="First Name" required :rules="nameRules"
+                    <v-text-field v-model="userStore.firstName" label="First Name" required :rules="firstNameRules"
                         class="mt-3"></v-text-field>
                 </v-col>
                 <v-col cols="12" md="6" class="py-0">
                     <!-- Last Name -->
-                    <v-text-field v-model="userStore.lastName" label="Last Name" required :rules="nameRules"
+                    <v-text-field v-model="userStore.lastName" label="Last Name" required :rules="lastNameRules"
                         class="mt-3"></v-text-field>
                 </v-col>
             </v-row>
@@ -142,9 +142,13 @@ export default {
             show1: false,
             show2: false,
             picError: false,
-            nameRules: [
+            firstNameRules: [
                 v => !!v || 'First Name is required',
-                v => (v && v.length >= 2) || 'First Name must be at least 2 characters',
+                v => (v && /^[A-Za-z\s\-']+$/.test(v)) || 'Please enter a valid first name',
+            ],
+            lastNameRules: [
+                v => !!v || 'Last Name is required',
+                v => (v && /^[A-Za-z\s\-']+$/.test(v)) || 'Please enter a valid last name',
             ],
             emailRules: [
                 v => !!v || 'Email is required',
@@ -161,10 +165,11 @@ export default {
             ],
             postalRules: [
                 v => !!v || 'Postal Code is required',
-                v => (v && v.length == 6 && /^\d+$/.test(v)) || 'Postal Code must be 6 digits',
+                v => (v && v.toString().length == 6 && /^\d+$/.test(v)) || 'Postal Code must be 6 digits',
             ],
             contactRules: [
                 v => !!v || 'Contact Number is required',
+                v => (v && v.toString().length == 8 && /^\d+$/.test(v)) ||'Contact Number must be 8 digits',
             ],
             passwordRules: [
                 v => !!v || 'Password is required',
