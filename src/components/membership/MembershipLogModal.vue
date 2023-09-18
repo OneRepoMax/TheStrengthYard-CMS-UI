@@ -122,7 +122,6 @@ export default {
         const userStore = useUserStore();
         const membershipStore = useMembershipStore();
 
-
         return { userStore, membershipStore }
     },
     props: {
@@ -180,7 +179,8 @@ export default {
             this.logForm.loading = false;
 
             if (response.status == 200) {
-                this.membershipLogData.push(response.data.log);
+                console.log(response.data);
+                this.membershipLogData.push(response.data);
                 this.modal.show = true;
             }
         },
