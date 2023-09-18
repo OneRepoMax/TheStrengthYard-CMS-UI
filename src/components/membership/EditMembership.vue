@@ -18,7 +18,7 @@
                         </v-col>
                         <v-col cols="12" md="12">
                             <v-text-field clearable hide-details="auto" class="mb-3" label="PayPal Plan ID"
-                                v-model="this.membershipData.paypalPlanId" disabled required :rules="rules"
+                                v-model="this.membershipData.paypalPlanId" disabled 
                                 variant="outlined"></v-text-field>
                         </v-col>
                         <v-col cols="12" md="12">
@@ -197,11 +197,11 @@ export default {
             try {
                 const response = await this.membershipStore.getMembershipById(this.membershipId)
                 if (response.status == 200) {
-                    this.membershipData.title = response.data[0].Title,
-                        this.membershipData.description = response.data[0].Description,
-                        this.membershipData.type = response.data[0].Type,
-                        this.membershipData.basefee = response.data[0].BaseFee,
-                        this.membershipData.picture = response.data[0].Picture
+                    this.membershipData.title = response.data[0].Title
+                    this.membershipData.description = response.data[0].Description
+                    this.membershipData.type = response.data[0].Type
+                    this.membershipData.basefee = response.data[0].BaseFee
+                    this.membershipData.picture = response.data[0].Picture
                     this.membershipData.paypalPlanId = response.data[0].PayPalPlanId
                 }
             } catch (error) {
