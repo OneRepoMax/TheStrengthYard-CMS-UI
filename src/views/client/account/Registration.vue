@@ -116,30 +116,34 @@ const validateRegistrationForm = () => {
     state.error = 0;
 
     if (userStore.displayPicture == null) { state.error++; }
-    if (userStore.firstName == null) {
-        state.error++;
-    } else if (userStore.firstName.length < 2) { state.error++; }
-    if (userStore.lastName == null) {
-        state.error++;
-    } else if (userStore.lastName.length < 2) { state.error++; }
-    if (userStore.emailAddress == null) {
-        state.error++;
-    } else if (/.+@.+\..+/.test(userStore.emailAddress) == false) { state.error++; }
+    if (userStore.firstName == null) {state.error++;}
+    else if (/^[A-Za-z\s\-']+$/.test(userStore.firstName) == false) { state.error++; }
+    
+    if (userStore.lastName == null) {state.error++;} 
+    else if (/^[A-Za-z\s\-']+$/.test(userStore.lastName) == false) { state.error++; }
+    
+    if (userStore.emailAddress == null) {state.error++;} 
+    else if (/.+@.+\..+/.test(userStore.emailAddress) == false) { state.error++; }
+    
     if (userStore.gender == null) { state.error++; }
     if (userStore.dateOfBirth == null) { state.error++; }
     if (userStore.homeAddress == null) { state.error++; }
-    if (userStore.postalCode == null) {
-        state.error++;
-    } else if (userStore.postalCode.length != 6) { state.error++; }
+    
+    if (userStore.postalCode == null) {state.error++;} 
+    else if (userStore.postalCode.toString().length != 6) { state.error++; }
     else if (/^\d+$/.test(userStore.postalCode) == false) { state.error++; }
+    
     if (userStore.contactNo == null) { state.error++; }
-    if (userStore.password == null) {
-        state.error++;
-    } else if (userStore.password.length < 8) { state.error++; }
+    else if (userStore.contactNo.toString().length != 8) { state.error++; }
+    else if (/^\d+$/.test(userStore.contactNo) == false) { state.error++; }
+    
+    if (userStore.password == null) {state.error++;} 
+    else if (userStore.password.length < 8) { state.error++; }
     else if (/[a-z]/.test(userStore.password) == false) { state.error++; }
     else if (/[A-Z]/.test(userStore.password) == false) { state.error++; }
     else if (/\d/.test(userStore.password) == false) { state.error++; }
     else if (/[!@#$%^&*]/.test(userStore.password) == false) { state.error++; }
+    
     if (userStore.password != userStore.confirmPassword) { state.error++; }
 
     console.log("error: " + state.error)

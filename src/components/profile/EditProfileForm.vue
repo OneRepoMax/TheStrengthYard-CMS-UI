@@ -14,16 +14,16 @@
 
             </v-card-title>
             <v-card-text>
-                <v-form ref="form" @submit.prevent="updateProfile" validate-on="submit">
+                <v-form ref="form" @submit.prevent="validateRegistrationForm" validate-on="submit">
                     <v-row class="mb-3">
                         <v-col cols="12" md="6">
                             <v-text-field clearable hide-details="auto" class="mb-3" label="First Name"
-                                v-model="this.userProfileData.firstName" required :rules="nameRules"
+                                v-model="this.userProfileData.firstName" required :rules="firstNameRules"
                                 variant="outlined"></v-text-field>
                         </v-col>
                         <v-col cols="12" md="6">
                             <v-text-field clearable hide-details="auto" class="mb-3" label="Last Name"
-                                v-model="this.userProfileData.lastName" required :rules="nameRules"
+                                v-model="this.userProfileData.lastName" required :rules="lastNameRules"
                                 variant="outlined"></v-text-field>
                         </v-col>
 
@@ -80,12 +80,6 @@
 <script>
 import { useUserStore } from '@/store/user';
 import Modal from '@/components/common/Modal.vue';
-import { reactive } from 'vue'
-
-const state = reactive({
-    error: 0,
-    loading: false,
-})
 
 export default {
     setup() {
@@ -135,9 +129,13 @@ export default {
                 dateOfBirth: null,
                 displayPicture: null,
             },
-            nameRules: [
+            firstNameRules: [
                 v => !!v || 'First Name is required',
-                v => (v && v.length >= 2) || 'First Name must be at least 2 characters',
+                v => (v && /^[A-Za-z\s\-']+$/.test(v)) || 'Please enter a valid first name',
+            ],
+            lastNameRules: [
+                v => !!v || 'Last Name is required',
+                v => (v && /^[A-Za-z\s\-']+$/.test(v)) || 'Please enter a valid last name',
             ],
             emailRules: [
                 v => !!v || 'Email is required',
@@ -154,10 +152,11 @@ export default {
             ],
             postalRules: [
                 v => !!v || 'Postal Code is required',
-                v => (v && v.length == 6 && /^\d+$/.test(v)) || 'Postal Code must be 6 digits',
+                v => (v && v.toString().length == 6 && /^\d+$/.test(v)) || 'Postal Code must be 6 digits',
             ],
             contactRules: [
                 v => !!v || 'Contact Number is required',
+                v => (v && v.toString().length == 8 && /^\d+$/.test(v)) ||'Contact Number must be 8 digits',
             ],
             modal: {
                 show: false,
@@ -218,29 +217,19 @@ export default {
     },
 
     methods: {
-        validateRegistrationForm() {
-            state.error = 0;
+        async validateRegistrationForm() {
 
-            if (this.userStore.displayPicture == null) { state.error++; }
-            if (this.userStore.firstName == null) { state.error++; }
-            else if (this.userStore.firstName.length < 2) { state.error++; }
-            if (this.userStore.lastName == null) { state.error++; }
-            else if (this.userStore.lastName.length < 2) { state.error++; }
-            if (this.userStore.emailAddress == null) { state.error++; }
-            else if (/.+@.+\..+/.test(this.userStore.emailAddress) == false) { state.error++; }
-            if (this.userStore.gender == null) { state.error++; }
-            if (this.userStore.dateOfBirth == null) { state.error++; }
-            if (this.userStore.homeAddress == null) { state.error++; }
-            if (this.userStore.postalCode == null) { state.error++; }
-            else if (this.userStore.postalCode.length != 6) { state.error++; }
-            else if (/^\d+$/.test(this.userStore.postalCode) == false) { state.error++; }
-            if (this.userStore.contactNo == null) { state.error++; }
-            console.log("error: " + state.error)
-            if (state.error == 0) {
-                return true;
+            await this.$refs.form.validate();
+
+            const isValid = this.$refs.form.isValid
+
+            if (!isValid) {
+                // Form has validation errors, do not submit
+                console.log('Form has validation errors');
             } else {
-                return false;
-            }
+                // Form is valid, submit the data
+                this.updateProfile();
+            } 
         },
 
         openFileInput() {
@@ -289,14 +278,6 @@ export default {
             }
         },
         async updateProfile() {
-
-            if (this.validateRegistrationForm()) {
-                console.log('Valid Form')
-            }
-            else {
-                console.log('Invalid Form')
-                return
-            }
 
             console.log(JSON.stringify({
                 firstName: this.userProfileData.firstName,
