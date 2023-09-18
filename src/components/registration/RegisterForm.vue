@@ -21,6 +21,7 @@
                 <input ref="fileInput" type="file" style="display: none" accept="image/*" @change="handleFileUpload" />
             </div>
             <p class="d-flex justify-center mb-5">Profile Picture</p>
+            <p class="d-flex justify-center mt-n5 mb-5 text-caption" v-if="picError" style="color: #B71C1C;">Profile picture is required.</p>
             <v-row>
                 <!-- First Name -->
                 <v-col cols="12" md="6" class="py-0">
@@ -140,6 +141,7 @@ export default {
             fileObject: null,
             show1: false,
             show2: false,
+            picError: false,
             nameRules: [
                 v => !!v || 'First Name is required',
                 v => (v && v.length >= 2) || 'First Name must be at least 2 characters',
@@ -246,6 +248,9 @@ export default {
     methods: {
         register() {
             // console.log("run validate step");
+            if (!this.selectedFile){
+                this.picError = true;
+            }
             this.$emit('validate-step');
         },
 
@@ -271,6 +276,7 @@ export default {
                 };
 
                 this.userStore.displayPicture = file
+                this.picError = false;
             }
         },
     },

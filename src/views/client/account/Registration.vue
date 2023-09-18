@@ -30,7 +30,7 @@
                 <v-card class="px-5 py-0" v-if="state.error > 0" align="start">
                     <v-card-text>
                         <v-alert type="error" title="Oops, please check your details"
-                            text="Please verify your registration details." closable>
+                            :text="state.errorText" closable>
                         </v-alert>
                     </v-card-text>
 
@@ -71,7 +71,8 @@ const state = reactive({
         title: "Registration successful",
         message: `Thank you ${userStore.firstName} ${userStore.lastName} for registering with The Strength Yard! Please check your email to verify your account.`,
         path: "/account/login"
-    }
+    },
+    errorText: "Please verify your registration details.",
 })
 
 const nextStep = (step) => {
@@ -183,9 +184,12 @@ const validateAcknowledgementForm = () => {
     // Return true if the form is valid, false otherwise
     // Example: Check if a checkbox is checked
     if (userStore.AcknowledgementTnC != false && userStore.AcknowledgementOpenGymRules != false) {
+        state.error = false;
         return true;
     } else {
         // Show an error message or provide feedback to the user
+        state.error = true;
+        state.errorText = "Please verify your registration details."
         return false;
     }
 };
@@ -245,7 +249,17 @@ async function submitForm() {
             const registerResponse = await userStore.register(registerPayload)
             console.log(registerResponse);
 
+            if (!registerResponse){
+                console.log("Potential Existing User")
+                state.error = true;
+                state.errorText = "This email address is already in use."
+            }
+
             if (registerResponse.status == 200) {
+
+                // reset error
+                state.error = false;
+                state.errorText = "Please verify your registration details."
 
                 // Show success modal
                 state.modal.show = true;
