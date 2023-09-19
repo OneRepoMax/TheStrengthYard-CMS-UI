@@ -3,15 +3,15 @@
     :continuous="false"
     v-model="page"
     hide-delimiter-background
-    :show-arrows="membershipRecord.length > 3 ? 'hover' : false"
+    :show-arrows="membershipRecord.length > 2 ? 'hover' : false"
     height="420px"
-    :hide-delimiters="membershipRecord.length > 3 ? false : true"
+    :hide-delimiters="membershipRecord.length > 2 ? false : true"
   >
     <v-carousel-item
       v-for="(slice, index) in slicedMembershipRecords"
       :key="index"
     >
-      <v-row class="cardSpace">
+      <v-row>
         <v-col
           v-for="membership in slice"
           :key="membership.MembershipTypeId"
@@ -136,7 +136,7 @@ export default {
         show: false,
         data: [],
       },
-      isMobile: window.innerWidth < 600,
+      isMobile: window.innerWidth < 800,
     };
   },
   created() {
@@ -186,7 +186,7 @@ export default {
     },
     getColumnsCount() {
       // Determine the number of columns based on screen width
-      return window.innerWidth < 600 ? 1 : 3; // Show 1 card on mobile, 3 cards on larger screens
+      return window.innerWidth < 800 ? 1 : 3; // Show 1 card on mobile, 3 cards on larger screens
     },
     handleResize() {
       const isMobileNow = window.innerWidth < 600;
@@ -212,9 +212,7 @@ export default {
 </script>
 
 <style scoped>
-.cardSpace {
-  justify-content: space-between;
-}
+
 .v-card {
   transition: opacity 0.2s ease-in-out;
 }
