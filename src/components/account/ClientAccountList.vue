@@ -28,6 +28,7 @@
             <v-expansion-panel-text>
                 <v-card-text>
                     <v-icon class="me-3">mdi-home</v-icon>Home Address: {{ account.HomeAddress }}
+                    {{ account }}
                 </v-card-text>
                 <v-card-text>
                     <!-- Skeleton loaders -->

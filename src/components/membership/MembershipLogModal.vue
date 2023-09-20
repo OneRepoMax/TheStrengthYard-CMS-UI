@@ -34,72 +34,94 @@
                 <v-chip class="me-3 mb-3">
                     Membership Record ID: {{ membership.MembershipRecordId }}
                 </v-chip>
-                <v-chip>
-                    <v-icon icon="mdi-calendar" size="18" color="error" class="me-1 pb-1"></v-icon>
+                <v-chip class="me-3 mb-3" color="primary" v-if="membership.PayPalSubscriptionId!=null">
+                    PayPal Subscription ID: {{ membership.PayPalSubscriptionId }}
+                </v-chip>
+                <v-chip class="me-3 mb-3">
+                    <v-icon icon="mdi-calendar" size="18" color="error" class="me-1 pb-1"></v-icon> Effective Date:
                     {{ formattedDate(membership.StartDate) }} to {{ formattedDate(membership.EndDate) }}
                 </v-chip>
             </v-card-subtitle>
             <div>
-                <v-card-text>
-                    <div class="font-weight-bold ms-1 mb-2">
-                        Membership Log
-                    </div>
-                    <v-card color="grey-lighten-4" title="Add membership log" v-if="logForm.show">
-                        <template v-slot:append>
-                            <v-btn icon="$close" variant="text" @click="logForm.show = false"></v-btn>
-                        </template>
+                <v-tabs v-model="tab" color="deep-purple-accent-4">
+                    <v-tab :value="1">Membership Log</v-tab>
+                    <v-tab :value="2">Payment History</v-tab>
+                </v-tabs>
+                <v-window v-model="tab">
+                    <v-window-item :value="1">
                         <v-card-text>
-                            <v-row class="d-flex d-cols" dense>
-                                <v-col cols="12" sm="3">
-                                    <v-select :items="logForm.actionTypes" v-model="logFormData.actionType"
-                                        label="Action Type" hide-details="auto" density="compact" class="p-0"
-                                        variant="solo">
-                                    </v-select>
-                                </v-col>
-                                <v-col cols="12" sm="3">
-                                    <v-text-field type="date" density="compact" label="Date" hide-details="auto"
-                                        v-model="logFormData.date" variant="solo">
-                                    </v-text-field>
-                                </v-col>
-                                <v-col cols="12" sm="6">
-                                    <v-text-field label="Description" placeholder="Enter description here..." type="text"
-                                        hide-details="auto" density="compact" variant="solo"
-                                        v-model="logFormData.description">
-                                        <template v-slot:append-inner>
-                                            <v-btn size="small" color="black" @click.prevent="addMembershipLog()"
-                                                :loading="logForm.loading">
-                                                Submit
-                                            </v-btn>
-                                        </template>
-                                    </v-text-field>
-                                </v-col>
-                            </v-row>
-                        </v-card-text>
-                    </v-card>
-
-                    <v-timeline align="start" density="compact">
-                        <template v-if="this.userStore.userType == 'A'">
-                            <v-timeline-item fill-dot class="mb-12" dot-color="orange" size="large" v-if="!logForm.show">
-                                <template v-slot:icon>
-                                    <v-icon>mdi-plus</v-icon>
-                                </template>
-                                <v-btn class="mx-0" color="orange" block @click.prevent="logForm.show = !logForm.show">
-                                    New log
-                                </v-btn>
-                            </v-timeline-item>
-                        </template>
-
-                        <v-timeline-item v-for="log in sortedMembershipLog" :key="log.MembershipLogId" dot-color="black"
-                            size="x-small">
-                            <div class="mb-4">
-                                <div class="font-weight-normal">
-                                    <strong>{{ log.ActionType }}</strong> @ {{ formattedDate(log.Date) }}
-                                </div>
-                                <div>{{ log.Description }}</div>
+                            <div class="font-weight-bold ms-1 mb-2">
+                                Membership Log
                             </div>
-                        </v-timeline-item>
-                    </v-timeline>
-                </v-card-text>
+                            <v-card color="grey-lighten-4" title="Add membership log" v-if="logForm.show">
+                                <template v-slot:append>
+                                    <v-btn icon="$close" variant="text" @click="logForm.show = false"></v-btn>
+                                </template>
+                                <v-card-text>
+                                    <v-row class="d-flex d-cols" dense>
+                                        <v-col cols="12" sm="3">
+                                            <v-select :items="logForm.actionTypes" v-model="logFormData.actionType"
+                                                label="Action Type" hide-details="auto" density="compact" class="p-0"
+                                                variant="solo">
+                                            </v-select>
+                                        </v-col>
+                                        <v-col cols="12" sm="3">
+                                            <v-text-field type="date" density="compact" label="Date" hide-details="auto"
+                                                v-model="logFormData.date" variant="solo">
+                                            </v-text-field>
+                                        </v-col>
+                                        <v-col cols="12" sm="6">
+                                            <v-text-field label="Description" placeholder="Enter description here..."
+                                                type="text" hide-details="auto" density="compact" variant="solo"
+                                                v-model="logFormData.description">
+                                                <template v-slot:append-inner>
+                                                    <v-btn size="small" color="black" @click.prevent="addMembershipLog()"
+                                                        :loading="logForm.loading">
+                                                        Submit
+                                                    </v-btn>
+                                                </template>
+                                            </v-text-field>
+                                        </v-col>
+                                    </v-row>
+                                </v-card-text>
+                            </v-card>
+
+                            <v-timeline align="start" density="compact">
+                                <template v-if="this.userStore.userType == 'A'">
+                                    <v-timeline-item fill-dot class="mb-12" dot-color="orange" size="large"
+                                        v-if="!logForm.show">
+                                        <template v-slot:icon>
+                                            <v-icon>mdi-plus</v-icon>
+                                        </template>
+                                        <v-btn class="mx-0" color="orange" block
+                                            @click.prevent="logForm.show = !logForm.show">
+                                            New log
+                                        </v-btn>
+                                    </v-timeline-item>
+                                </template>
+
+                                <v-timeline-item v-for="log in sortedMembershipLog" :key="log.MembershipLogId"
+                                    dot-color="black" size="x-small">
+                                    <div class="mb-4">
+                                        <div class="font-weight-normal">
+                                            <strong>{{ log.ActionType }}</strong> @ {{ formattedDate(log.Date) }}
+                                        </div>
+                                        <div>{{ log.Description }}</div>
+                                    </div>
+                                </v-timeline-item>
+                            </v-timeline>
+                        </v-card-text>
+                    </v-window-item>
+                </v-window>
+                <v-window v-model="tab">
+                    <v-window-item :value="2">
+
+                    </v-window-item>
+                </v-window>
+
+
+
+
             </div>
         </v-card>
         <template>
@@ -133,6 +155,7 @@ export default {
     },
     data() {
         return {
+            tab: null,
             logFormData: {
                 actionType: null,
                 description: null,
