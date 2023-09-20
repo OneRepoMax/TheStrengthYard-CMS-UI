@@ -89,6 +89,18 @@ const routes = [
     ],
   },
   {
+    path: "/payment-history/",
+    component: () => import("@/layouts/default/LoginDefault.vue"),
+    children: [
+      {
+        path: "",
+        name: "Payment History",
+        component: () =>
+          import(/* webpackChunkName: "Book" */ "@/views/client/payment/PaymentHistory.vue"),
+      },
+    ],
+  },
+  {
     path: "/schedule/",
     component: () => import("@/layouts/default/LoginDefault.vue"),
     children: [
