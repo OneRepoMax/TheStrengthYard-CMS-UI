@@ -71,7 +71,7 @@
 
         <v-card-title class="my-2">Owned Memberships</v-card-title>
 
-        <v-card-text>
+        <v-card-text class="px-2">
           <div class="d-flex flex-wrap">
             <MembershipRecordCard :membershipRecord="this.membershipRecord" />
           </div>

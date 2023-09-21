@@ -14,7 +14,7 @@
         </v-card-text>
         <v-card-text class="py-0">
             <v-carousel :continuous="false" v-model="page" hide-delimiter-background cycle show-arrows hide-delimiters
-                height="420px">
+                height="450px" class="px-2">
                 <v-carousel-item v-for="(slice, index) in slicedMemberships" :key="index">
                     <v-row dense>
                         <v-col v-for="membership in slice" :key="membership.MembershipTypeId"
