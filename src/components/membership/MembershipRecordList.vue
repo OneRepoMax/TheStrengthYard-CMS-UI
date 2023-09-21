@@ -84,20 +84,7 @@
                                 hide-details="auto" v-model="membershipRecordForm.status" density="compact"></v-select>
                         </template>
                         <template v-else>
-                            <v-chip v-if="membershipData.ActiveStatus.toUpperCase() == 'ACTIVE'" color="primary"
-                                prepend-icon="mdi-check">
-                                {{ membershipData.ActiveStatus }}
-                            </v-chip>
-                            <v-chip v-if="membershipData.ActiveStatus.toUpperCase() == 'INACTIVE'
-                                || membershipData.ActiveStatus.toUpperCase() == 'EXPIRED'
-                                || membershipData.ActiveStatus.toUpperCase() == 'PENDING PAYMENT'" color="secondary"
-                                prepend-icon="mdi-close">
-                                {{ membershipData.ActiveStatus }}
-                            </v-chip>
-                            <v-chip v-if="membershipData.ActiveStatus.toUpperCase() == 'PAUSED'" color="orange"
-                                prepend-icon="mdi-pause">
-                                {{ membershipData.ActiveStatus }}
-                            </v-chip>
+                            <StatusChip :status="membershipData.ActiveStatus"/>
                         </template>
                     </td>
                     <td v-if="!membershipRecordForm.show"><v-btn size="x-small" icon="mdi-open-in-new" variant="text"
@@ -152,6 +139,7 @@ import MembershipLogModal from '@/components/membership/MembershipLogModal.vue'
 import MembershipRecordForm from '@/components/membership/AddMembershipRecordForm.vue'
 import Modal from '@/components/common/Modal.vue'
 import ModalWarning from '@/components/common/ModalWarning.vue'
+import StatusChip from '@/components/common/StatusChip.vue'
 
 export default {
     setup() {
@@ -168,6 +156,7 @@ export default {
         MembershipRecordForm,
         Modal,
         ModalWarning,
+        StatusChip
     },
     data() {
         return {

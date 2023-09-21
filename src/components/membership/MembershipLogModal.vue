@@ -11,20 +11,7 @@
             <v-img :src="membership.Membership.Picture" cover max-height="130px"></v-img>
             <v-card-title>{{ membership.Membership.Title }}</v-card-title>
             <v-card-subtitle class="d-flex d-cols flex-wrap">
-                <v-chip v-if="membership.ActiveStatus.toUpperCase() == 'INACTIVE'
-                    || membership.ActiveStatus.toUpperCase() == 'EXPIRED'
-                    || membership.ActiveStatus.toUpperCase() == 'PENDING PAYMENT'" color="secondary"
-                    prepend-icon="mdi-close" class="me-3 mb-3">
-                    {{ membership.ActiveStatus }}
-                </v-chip>
-                <v-chip v-if="membership.ActiveStatus.toUpperCase() == 'ACTIVE'" color="primary" prepend-icon="mdi-check"
-                    class="me-3 mb-3">
-                    {{ membership.ActiveStatus }}
-                </v-chip>
-                <v-chip v-if="membership.ActiveStatus.toUpperCase() == 'PAUSED'" color="orange" prepend-icon="mdi-pause"
-                    class="me-3 mb-3">
-                    {{ membership.ActiveStatus }}
-                </v-chip>
+                <StatusChip :status="membership.ActiveStatus"/>
                 <v-chip class="me-3 mb-3">
                     {{ membership.Membership.Type }}
                 </v-chip>
@@ -160,6 +147,7 @@ import { useMembershipStore } from '@/store/membership'
 import { useUserStore } from '@/store/user';
 import { usePaymentStore } from '@/store/payment'
 import Modal from '@/components/common/Modal.vue'
+import StatusChip from '@/components/common/StatusChip.vue'
 
 
 export default {
@@ -176,7 +164,8 @@ export default {
         membership: Object
     },
     components: {
-        Modal
+        Modal,
+        StatusChip
     },
     data() {
         return {
@@ -283,7 +272,7 @@ export default {
             });
         },
     },
-    emits: ['closeModal', 'addMembershipLog']
+    emits: ['closeModal', 'addMembershipLog',]
 }
 </script>
 
