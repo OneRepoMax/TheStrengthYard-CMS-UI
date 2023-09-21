@@ -222,7 +222,7 @@ export default {
         }
     },
     mounted() {
-        // this.getPaymentData(this.membership.MembershipRecordId)
+        this.getPaymentData(this.membership.MembershipRecordId)
     },
     methods: {
         formattedDate(dateInput) {
@@ -258,6 +258,7 @@ export default {
         },
         async getPaymentData(membershipRecordId) {
             const response = await this.paymentStore.getPaymentsByMembershipRecordId(membershipRecordId);
+            console.log(response.data);
             if (response.status == 200) {
                 this.paymentData = response.data;
             }
