@@ -29,8 +29,8 @@ export const usePaymentStore = defineStore("payment", {
         return error.response;
       }
     },
-    async getPaymentsByMembershipRecordId(MembershipRecordId) {
-      const apiUrl = `${TSY_API}/payments/history/membershiprecord/${MembershipRecordId}`;
+    async getPaymentsByMembershipRecordId(membershipRecordId) {
+      const apiUrl = `${TSY_API}/payments/history/membershiprecord/${membershipRecordId}`;
 
       try {
         const response = await axios.get(apiUrl);

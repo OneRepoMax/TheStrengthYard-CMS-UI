@@ -34,7 +34,7 @@
                 <v-chip class="me-3 mb-3">
                     Membership Record ID: {{ membership.MembershipRecordId }}
                 </v-chip>
-                <v-chip class="me-3 mb-3" color="primary" v-if="membership.PayPalSubscriptionId!=null">
+                <v-chip class="me-3 mb-3" color="primary" v-if="membership.PayPalSubscriptionId != null">
                     PayPal Subscription ID: {{ membership.PayPalSubscriptionId }}
                 </v-chip>
                 <v-chip class="me-3 mb-3">
@@ -43,7 +43,7 @@
                 </v-chip>
             </v-card-subtitle>
             <div>
-                <v-tabs v-model="tab" color="deep-purple-accent-4">
+                <v-tabs v-model="tab" >
                     <v-tab :value="1">Membership Log</v-tab>
                     <v-tab :value="2">Payment History</v-tab>
                 </v-tabs>
@@ -114,14 +114,37 @@
                     </v-window-item>
                 </v-window>
                 <v-window v-model="tab">
-                    <v-window-item :value="2">
-
+                    <v-window-item :value="2" class="pa-3">
+                        <template v-if="paymentData.length == 0">
+                            <v-alert type="info" title="No payment history found"
+                                text="There's no payment history found for this membership record. Please allow the system to process your payment and check back later."></v-alert>
+                        </template>
+                        <template v-else>
+                            <v-table>
+                                <thead>
+                                    <tr>
+                                        <th class="text-left font-weight-bold">Transaction Date</th>
+                                        <th class="text-left font-weight-bold">Payment ID</th>
+                                        <th class="text-left font-weight-bold">Amount</th>
+                                        <th class="text-left font-weight-bold">Discount</th>
+                                        <th class="text-left font-weight-bold">Payment Mode</th>
+                                        <th class="text-left font-weight-bold">Transaction ID</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="payment in paymentData" :key="payment.PaymentId">
+                                        <td>{{ formattedDate(payment.TransactionDate) }}</td>
+                                        <td>{{ payment.PaymentId }}</td>
+                                        <td>{{ payment.Amount }}</td>
+                                        <td>{{ payment.Discount }}</td>
+                                        <td>{{ payment.PaymentMode }}</td>
+                                        <td>{{ payment.PayPalTransactionId }}</td>
+                                    </tr>
+                                </tbody>
+                            </v-table>
+                        </template>
                     </v-window-item>
                 </v-window>
-
-
-
-
             </div>
         </v-card>
         <template>
@@ -135,6 +158,7 @@
 
 import { useMembershipStore } from '@/store/membership'
 import { useUserStore } from '@/store/user';
+import { usePaymentStore } from '@/store/payment'
 import Modal from '@/components/common/Modal.vue'
 
 
@@ -143,8 +167,9 @@ export default {
 
         const userStore = useUserStore();
         const membershipStore = useMembershipStore();
+        const paymentStore = usePaymentStore()
 
-        return { userStore, membershipStore }
+        return { userStore, membershipStore, paymentStore }
     },
     props: {
         membershipLog: Array,
@@ -155,7 +180,7 @@ export default {
     },
     data() {
         return {
-            tab: null,
+            tab: 1,
             logFormData: {
                 actionType: null,
                 description: null,
@@ -176,7 +201,39 @@ export default {
                 path: "/admin/account"
             },
             membershipLogData: [...this.membershipLog],
+            paymentData: [
+                {
+                    Amount: 90,
+                    Discount: 0,
+                    MembershipRecordId: 1,
+                    PayPalTransactionId: "5R580284D01408702",
+                    PaymentId: 7000,
+                    PaymentMode: "PayPal",
+                    TransactionDate: "Sun, 17 Sep 2023 00:00:00 GMT"
+                },
+                {
+                    Amount: 250,
+                    Discount: 0,
+                    MembershipRecordId: 2,
+                    PayPalTransactionId: "48185841BJ220500G",
+                    PaymentId: 7001,
+                    PaymentMode: "PayPal",
+                    TransactionDate: "Wed, 13 Sep 2023 00:00:00 GMT"
+                },
+                {
+                    "Amount": 90,
+                    "Discount": 0,
+                    "MembershipRecordId": 3,
+                    "PayPalTransactionId": "57M12318994098505",
+                    "PaymentId": 7002,
+                    "PaymentMode": "PayPal",
+                    "TransactionDate": "Tue, 19 Sep 2023 00:00:00 GMT"
+                }
+            ]
         }
+    },
+    mounted() {
+        // this.getPaymentData(this.membership.MembershipRecordId)
     },
     methods: {
         formattedDate(dateInput) {
@@ -210,6 +267,12 @@ export default {
         closeModal() {
             this.modal.show = false
         },
+        async getPaymentData(membershipRecordId) {
+            const response = await this.paymentStore.getPaymentsByMembershipRecordId(membershipRecordId);
+            if (response.status == 200) {
+                this.paymentData = response.data;
+            }
+        }
     },
     computed: {
         sortedMembershipLog() {
