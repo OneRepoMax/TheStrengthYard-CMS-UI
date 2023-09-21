@@ -2,7 +2,7 @@
     <v-card elevation="3" class="mb-3">
         <v-carousel hide-delimiters show-arrows="hover" continuous cycle height="230px">
             <template v-for="(ads, index) in adsList" :key="index">
-                <v-carousel-item :src="ads.src" @click.prevent="openNewTab(ads.path)"></v-carousel-item>
+                <v-carousel-item :src="ads.src" @click.prevent="openNewTab(ads.path)" cover></v-carousel-item>
             </template>
         </v-carousel>
         <v-card-subtitle class="text-subtitle-5 font-weight-semi-bold">{{ title }}</v-card-subtitle>
