@@ -149,36 +149,35 @@ import { usePaymentStore } from '@/store/payment'
 import Modal from '@/components/common/Modal.vue'
 import StatusChip from '@/components/common/StatusChip.vue'
 
-```
-Sample payment data
-[{
-    Amount: 90,
-    Discount: 0,
-    MembershipRecordId: 1,
-    PayPalTransactionId: "5R580284D01408702",
-    PaymentId: 7000,
-    PaymentMode: "PayPal",
-    TransactionDate: "Sun, 17 Sep 2023 00:00:00 GMT"
-},
-{
-    Amount: 250,
-    Discount: 0,
-    MembershipRecordId: 2,
-    PayPalTransactionId: "48185841BJ220500G",
-    PaymentId: 7001,
-    PaymentMode: "PayPal",
-    TransactionDate: "Wed, 13 Sep 2023 00:00:00 GMT"
-},
-{
-    "Amount": 90,
-    "Discount": 0,
-    "MembershipRecordId": 3,
-    "PayPalTransactionId": "57M12318994098505",
-    "PaymentId": 7002,
-    "PaymentMode": "PayPal",
-    "TransactionDate": "Tue, 19 Sep 2023 00:00:00 GMT"
-}]
-```
+// Sample payment data
+// [{
+//     Amount: 90,
+//     Discount: 0,
+//     MembershipRecordId: 1,
+//     PayPalTransactionId: "5R580284D01408702",
+//     PaymentId: 7000,
+//     PaymentMode: "PayPal",
+//     TransactionDate: "Sun, 17 Sep 2023 00:00:00 GMT"
+// },
+// {
+//     Amount: 250,
+//     Discount: 0,
+//     MembershipRecordId: 2,
+//     PayPalTransactionId: "48185841BJ220500G",
+//     PaymentId: 7001,
+//     PaymentMode: "PayPal",
+//     TransactionDate: "Wed, 13 Sep 2023 00:00:00 GMT"
+// },
+//     {
+//         "Amount": 90,
+//         "Discount": 0,
+//         "MembershipRecordId": 3,
+//         "PayPalTransactionId": "57M12318994098505",
+//         "PaymentId": 7002,
+//         "PaymentMode": "PayPal",
+//         "TransactionDate": "Tue, 19 Sep 2023 00:00:00 GMT"
+//     }]
+
 export default {
     setup() {
 
@@ -223,7 +222,7 @@ export default {
         }
     },
     mounted() {
-        this.getPaymentData(this.membership.MembershipRecordId)
+        // this.getPaymentData(this.membership.MembershipRecordId)
     },
     methods: {
         formattedDate(dateInput) {

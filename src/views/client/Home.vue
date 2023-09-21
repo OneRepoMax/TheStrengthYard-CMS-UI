@@ -8,7 +8,7 @@
                     email</v-chip> to verify email address
             </v-alert>
         </v-col>
-        <v-col cols="12" lg="8">
+        <v-col cols="12" md="8">
 
             <!-- Skeleton loaders -->
             <v-skeleton-loader class="mb-3" elevation="3" v-if="loading"
@@ -29,7 +29,7 @@
 
         </v-col>
 
-        <v-col cols="12" lg="4">
+        <v-col cols="12" md="4">
 
 
             <!-- Sekelton loaders -->
@@ -41,13 +41,18 @@
 
             <template v-if="!loading">
                 <org-profile-card />
-                <membership-log />
+                <AdsCard />
             </template>
 
         </v-col>
 
     </v-row>
 
+    <!-- Modal -->
+    <template>
+        <Modal v-model="modal.show" :path="modal.path" :title="modal.title" :message="modal.message" :icon="modal.icon"
+            @closeModal="closeModal" />
+    </template>
 </template>
 
 <script>
@@ -55,15 +60,14 @@
 import { useUserStore } from '@/store/user'
 import { useMembershipStore } from '@/store/membership'
 import ProfileCard from '@/components/home/ProfileCard.vue'
-import MembershipLog from '@/components/home/MembershipLog.vue'
 import Classes from '@/components/home/Classes.vue'
 import OrgProfileCard from '@/components/home/OrgProfileCard.vue'
 import Modal from '@/components/common/Modal.vue'
 import PurchaseMembershipSlider from "@/components/membership/PurchaseMembershipSlider.vue";
+import AdsCard from "@/components/home/AdsCard.vue";
 
 
 export default {
-    name: 'LoginForm',
     setup() {
         const userStore = useUserStore()
         const membershipStore = useMembershipStore()
@@ -116,15 +120,21 @@ export default {
                 this.membershipRecord = response.data
             }
         },
-        async getMembership(){
+        async getMembership() {
 
         },
         closeModal() {
             this.modal.show = false
         },
     },
-
-    components: { ProfileCard, MembershipLog, Classes, OrgProfileCard, Modal, PurchaseMembershipSlider }
+    components: {
+        ProfileCard,
+        Classes,
+        OrgProfileCard,
+        Modal,
+        PurchaseMembershipSlider,
+        AdsCard,
+    }
 
 }
 

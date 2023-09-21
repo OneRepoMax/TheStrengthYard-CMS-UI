@@ -47,7 +47,7 @@ import { VDataTableServer } from 'vuetify/labs/VDataTable'
 
   export default {
     components: {
-        VDataTableServer,
+        VDataTableServer
     },
     setup () {
         const membershipStore = useMembershipStore();
