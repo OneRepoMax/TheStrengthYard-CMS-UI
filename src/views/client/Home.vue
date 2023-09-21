@@ -41,7 +41,9 @@
 
             <template v-if="!loading">
                 <org-profile-card />
-                <AdsCard />
+                <template v-for="data, index in ads" :key="index">
+                    <AdsCard :adsList="data.adsList" :title="data.title"/>
+                </template>
             </template>
 
         </v-col>
@@ -87,7 +89,40 @@ export default {
                 icon: "",
                 path: "/",
             },
-            membershipRecord: []
+            membershipRecord: [],
+            ads: [
+                {
+                    title: "SBD Singapore",
+                    adsList: [
+                        {
+                            src: "https://sbd.sg/cdn/shop/files/SBD_BELT_MAIN_UPDATE_1296x.jpg?v=1637286913",
+                            path: "https://sbd.sg/products/13mm-lever-belt-2020?variant=33208204460114"
+                        },
+                        {
+                            src: "https://sbd.sg/cdn/shop/files/SBDSG_7MM_POWERLIFTING_KNEE_SLEEVES_BANNER_1_1280x.jpg?v=1685530323",
+                            path: "https://sbd.sg/blogs/news-1/7mm-powerlifting-knee-sleeves"
+                        },
+                        {
+                            src: "https://cdn.shopify.com/s/files/1/2782/7592/files/SBDSG_IPF_WORLD_MALTA_20234_TEAM_SINGAPORE_600x600.jpg?v=1685368701",
+                            path: "https://sbd.sg/blogs/news-1/ipf-world-malta-2023-team-singapore"
+                        }
+                    ]
+                },
+                {
+                    title: "TSY Official Merchandise",
+                    adsList: [
+                        {
+                            src: "https://www.thestrengthyard.com/wp-content/uploads/the-strength-yard-t-shirt-black.jpg",
+                            path: "https://www.thestrengthyard.com/merchandise/"
+                        },
+                        {
+                            src: "https://www.thestrengthyard.com/wp-content/uploads/the-strength-yard-t-shirt-green.jpg",
+                            path: "https://www.thestrengthyard.com/merchandise/"
+                        },
+                    ]
+                }
+            ]
+
         }
     },
     mounted() {
