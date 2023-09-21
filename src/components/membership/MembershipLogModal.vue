@@ -11,7 +11,7 @@
             <v-img :src="membership.Membership.Picture" cover max-height="130px"></v-img>
             <v-card-title>{{ membership.Membership.Title }}</v-card-title>
             <v-card-subtitle class="d-flex d-cols flex-wrap">
-                <StatusChip :status="membership.ActiveStatus"/>
+                <StatusChip :status="membership.ActiveStatus" />
                 <v-chip class="me-3 mb-3">
                     {{ membership.Membership.Type }}
                 </v-chip>
@@ -30,7 +30,7 @@
                 </v-chip>
             </v-card-subtitle>
             <div>
-                <v-tabs v-model="tab" >
+                <v-tabs v-model="tab">
                     <v-tab :value="1">Membership Log</v-tab>
                     <v-tab :value="2">Payment History</v-tab>
                 </v-tabs>
@@ -149,7 +149,36 @@ import { usePaymentStore } from '@/store/payment'
 import Modal from '@/components/common/Modal.vue'
 import StatusChip from '@/components/common/StatusChip.vue'
 
-
+```
+Sample payment data
+[{
+    Amount: 90,
+    Discount: 0,
+    MembershipRecordId: 1,
+    PayPalTransactionId: "5R580284D01408702",
+    PaymentId: 7000,
+    PaymentMode: "PayPal",
+    TransactionDate: "Sun, 17 Sep 2023 00:00:00 GMT"
+},
+{
+    Amount: 250,
+    Discount: 0,
+    MembershipRecordId: 2,
+    PayPalTransactionId: "48185841BJ220500G",
+    PaymentId: 7001,
+    PaymentMode: "PayPal",
+    TransactionDate: "Wed, 13 Sep 2023 00:00:00 GMT"
+},
+{
+    "Amount": 90,
+    "Discount": 0,
+    "MembershipRecordId": 3,
+    "PayPalTransactionId": "57M12318994098505",
+    "PaymentId": 7002,
+    "PaymentMode": "PayPal",
+    "TransactionDate": "Tue, 19 Sep 2023 00:00:00 GMT"
+}]
+```
 export default {
     setup() {
 
@@ -190,39 +219,11 @@ export default {
                 path: "/admin/account"
             },
             membershipLogData: [...this.membershipLog],
-            paymentData: [
-                {
-                    Amount: 90,
-                    Discount: 0,
-                    MembershipRecordId: 1,
-                    PayPalTransactionId: "5R580284D01408702",
-                    PaymentId: 7000,
-                    PaymentMode: "PayPal",
-                    TransactionDate: "Sun, 17 Sep 2023 00:00:00 GMT"
-                },
-                {
-                    Amount: 250,
-                    Discount: 0,
-                    MembershipRecordId: 2,
-                    PayPalTransactionId: "48185841BJ220500G",
-                    PaymentId: 7001,
-                    PaymentMode: "PayPal",
-                    TransactionDate: "Wed, 13 Sep 2023 00:00:00 GMT"
-                },
-                {
-                    "Amount": 90,
-                    "Discount": 0,
-                    "MembershipRecordId": 3,
-                    "PayPalTransactionId": "57M12318994098505",
-                    "PaymentId": 7002,
-                    "PaymentMode": "PayPal",
-                    "TransactionDate": "Tue, 19 Sep 2023 00:00:00 GMT"
-                }
-            ]
+            paymentData: []
         }
     },
     mounted() {
-        // this.getPaymentData(this.membership.MembershipRecordId)
+        this.getPaymentData(this.membership.MembershipRecordId)
     },
     methods: {
         formattedDate(dateInput) {
