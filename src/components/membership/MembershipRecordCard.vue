@@ -4,7 +4,7 @@
     v-model="page"
     hide-delimiter-background
     :show-arrows="membershipRecord.length > 2 ? 'hover' : false"
-    height="420px"
+    height="450px"
     :hide-delimiters="membershipRecord.length > 2 ? false : true"
   >
     <v-carousel-item
@@ -26,7 +26,7 @@
               v-bind="props"
               @click.prevent="showMembershipLog(membership)"
               :loading="loading"
-              height="400px"
+              height="450px"
               min-width="250px"
             >
               <template v-slot:loader="{ isActive }">
@@ -70,6 +70,11 @@
                 {{ formattedDate(membership.StartDate) }} to
                 {{ formattedDate(membership.EndDate) }}
               </v-card-subtitle>
+              <v-card-actions v-if="membership.ActiveStatus.toLowerCase()=='pending payment'">
+                <v-btn color="primary" variant="tonal" @click.prevent="$router.push(`/membership/${membership.MembershipTypeId}/checkout`)">
+                    Make Payment
+                </v-btn>
+              </v-card-actions>
             </v-card>
           </v-hover>
         </v-col>

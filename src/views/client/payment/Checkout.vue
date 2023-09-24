@@ -52,7 +52,6 @@ export default {
         const membershipStore = useMembershipStore();
         const userStore = useUserStore();
 
-
         return { membershipStore, userStore }
     },
     data() {
