@@ -231,6 +231,8 @@ export const useMembershipStore = defineStore("membership", {
             Description: membershipData.description,
             Type: membershipData.type,
             BaseFee: membershipData.basefee,
+            SetupFee: membershipData.setupfee,
+            PayPalPlanId: membershipData.paypalPlanId,
             Picture: membershipData.picture
           });
   

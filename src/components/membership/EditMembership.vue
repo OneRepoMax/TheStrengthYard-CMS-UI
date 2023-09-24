@@ -161,6 +161,7 @@ export default {
                 basefee: null,
                 setupfee: null,
                 picture: null,
+                paypalPlanId: null,
             },
             modal: {
                 show: false,
