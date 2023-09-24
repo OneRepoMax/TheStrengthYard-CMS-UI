@@ -12,7 +12,7 @@
 
   <v-divider></v-divider>
   <v-card-text v-if="this.displayedPaymentHistory.length == 0" class="text-center">
-    <v-btn v-if="!this.loading" type="info" color="info"
+    <v-btn block v-if="!this.loading" type="info" color="info"
             prepend-icon="mdi-information-outline" to="membership/purchase-membership">
             You have not made any payment, click to purchase membership
     </v-btn>

@@ -79,6 +79,25 @@ export const useMembershipStore = defineStore("membership", {
         return error.response;
       }
     },
+    async getAllPublicMembership() {
+        const apiUrl = `${TSY_API}/memberships/public`;
+  
+        try {
+          const response = await axios.get(apiUrl);
+  
+          if (response.status === 200) {
+            return response;
+          }
+          return response;
+        } catch (error) {
+          console.error(
+            "An error occurred during get all membership API request:",
+            error
+          );
+  
+          return error.response;
+        }
+      },
     async getMembershipById(membershipId) {
       const apiUrl = `${TSY_API}/memberships/${membershipId}`;
 

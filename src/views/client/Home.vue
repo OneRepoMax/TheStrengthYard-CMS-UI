@@ -23,9 +23,9 @@
                 :emailAddress="userStore.emailAddress" :homeAddress="userStore.homeAddress"
                 :membershipRecord="membershipRecord" :displayPicture="userStore.displayPicture" />
 
-            <PurchaseMembershipSlider />
+            <PurchaseMembershipSlider v-if="!loading"/>
 
-            <Classes />
+            <Classes v-if="!loading"/>
 
         </v-col>
 

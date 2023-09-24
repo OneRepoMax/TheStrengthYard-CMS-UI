@@ -77,7 +77,7 @@ export default {
         async getMembershipList() {
 
             this.loading = true;
-            const response = await this.membershipStore.getAllMembership();
+            const response = await this.membershipStore.getAllPublicMembership();
             this.loading = false;
 
             if (response.status == 200) {
