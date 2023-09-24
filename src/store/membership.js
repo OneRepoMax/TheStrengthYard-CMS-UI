@@ -18,7 +18,9 @@ export const useMembershipStore = defineStore("membership", {
     type: null,
     basefee: null,
     setupfee: null,
+    visibility: null,
     picture: null,
+    membershipRecord: null,
   }),
   actions: {
     async uploadPicture(file) {
@@ -285,13 +287,17 @@ export const useMembershipStore = defineStore("membership", {
 
       async createMembership(membershipData) {
 
+        console.log(membershipData);
+
         try {
           let response = await axios.post(`${TSY_API}/memberships`, {
             Title: membershipData.title,
             Description: membershipData.description,
             Type: membershipData.type,
             BaseFee: membershipData.basefee,
-            Picture: membershipData.picture
+            SetupFee: membershipData.setupfee,
+            Picture: membershipData.picture,
+            Visibility: membershipData.visibility,
           });
   
           // Handle the response data here

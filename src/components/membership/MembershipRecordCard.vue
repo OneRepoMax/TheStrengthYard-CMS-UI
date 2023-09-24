@@ -71,7 +71,7 @@
                 {{ formattedDate(membership.EndDate) }}
               </v-card-subtitle>
               <v-card-actions v-if="membership.ActiveStatus.toLowerCase()=='pending payment'">
-                <v-btn color="primary" variant="tonal" @click.prevent="$router.push(`/membership/${membership.MembershipTypeId}/checkout`)">
+                <v-btn color="primary" variant="tonal" @click.prevent="makePayment(membership)">
                     Make Payment
                 </v-btn>
               </v-card-actions>
@@ -173,6 +173,11 @@ export default {
         // Screen size has changed, trigger a page reload
         location.reload();
       }
+    },
+    makePayment(membershipRecord){
+        this.membershipStore.membershipRecord = membershipRecord
+        console.log(membershipRecord);
+        this.$router.push(`/membership/checkout`)
     }
   },
   computed: {

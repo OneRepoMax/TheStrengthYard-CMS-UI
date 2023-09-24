@@ -220,6 +220,7 @@ export default {
                     this.membershipData.setupfee = response.data[0].SetupFee
                     this.membershipData.picture = response.data[0].Picture
                     this.membershipData.paypalPlanId = response.data[0].PayPalPlanId
+                    this.membershipData.visibility = response.data[0].Visibility
                 }
             } catch (error) {
                 console.error("Error retrieving user info", error);
@@ -272,13 +273,7 @@ export default {
                     console.log("creating: new membership")
                     // trigger update profile form through this API and put in variables
                     // Edit the function below accordingly, e.g. update the parameters, etc
-                    await this.membershipStore.createMembership({
-                        title: this.membershipData.title,
-                        description: this.membershipData.description,
-                        type: this.membershipData.type,
-                        basefee: this.membershipData.basefee,
-                        picture: this.membershipData.picture
-                    }).then((response) => {
+                    await this.membershipStore.createMembership(this.membershipData).then((response) => {
                         if (response.status == 200) {
 
                             console.log(response.data);
@@ -294,6 +289,8 @@ export default {
                                 type: null,
                                 basefee: null,
                                 picture: null,
+                                setupfee: null,
+                                validity: null,
                             }
 
                         }

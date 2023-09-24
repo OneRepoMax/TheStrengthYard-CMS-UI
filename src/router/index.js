@@ -80,7 +80,7 @@ const routes = [
           import(/* webpackChunkName: "PurchaseMembership" */ "@/views/client/membership/PurchaseMembership.vue"),
       },
       {
-        path: ":id/checkout",
+        path: "checkout",
         name: "Checkout Membership",
         props: true,
         component: () =>
