@@ -20,9 +20,11 @@
                         }}</v-chip>
                     </v-col>
                     <v-spacer></v-spacer>
-                    <v-col class="hidden-xs-only text-left " cols="12" md="2">
-                        <v-btn class="me-5" prepend-icon="mdi-square-edit-outline" color="amber" size="small" block
-                            @click.prevent="editProfile(account.UserId)">Edit Profile</v-btn>
+                    <v-col cols="12" md="1" class="d-flex ms-auto me-5">
+                        <v-btn  variant="text" icon="mdi-square-edit-outline" size="small" class="me-2"
+                            @click.prevent="editProfile(account.UserId)"></v-btn>
+                        <v-btn variant="text" icon="mdi-delete" color="red" size="small"
+                            @click.prevent="showModal(account.UserId)"></v-btn>
                     </v-col>
                 </v-row>
             </v-expansion-panel-title>
@@ -32,7 +34,7 @@
                     {{ account.HomeAddress }}<br>
                     Singapore {{ account.PostalCode }}
                 </v-card-text>
-                <v-card-text class="pb-1">
+                <v-card-text class="pb-1" v-if="indemnityRecord.MedicalRemarks!=null">
                     <p class="text-h6 mb-2"><v-icon class="me-3" size="small">mdi-note-text-outline</v-icon>Medical Remarks</p>
                     {{ indemnityRecord.MedicalRemarks }}
                 </v-card-text>
@@ -59,11 +61,18 @@
             </v-expansion-panel-text>
         </v-expansion-panel>
     </v-expansion-panels>
+
+    <template>
+        <ModalWarning v-model="modal.show" :title="modal.title" :message="modal.message" :icon="modal.icon"
+            @closeModal="closeModal" @action="actionModal" :color="modal.color" />
+    </template>
+
 </template>
 
 <script>
 
 import MembershipRecordList from '@/components/membership/MembershipRecordList.vue'
+import ModalWarning from '@/components/common/ModalWarning.vue';
 import { useMembershipStore } from '@/store/membership'
 import { useUserStore } from '@/store/user';
 
@@ -78,7 +87,8 @@ export default {
         clientAccounts: Object,
     },
     components: {
-        MembershipRecordList
+        MembershipRecordList,
+        ModalWarning
     },
 
     data() {
@@ -86,7 +96,16 @@ export default {
             selectedUserId: null,
             membershipRecord: [],
             indemnityRecord: [],
-            loading: true,
+            loading: false,
+            modal: {
+                show: false,
+                type: "success",
+                icon: "mdi-alert",
+                title: "Confirm deletion?",
+                message: "This action cannot be undone",
+                path: "/admin/account",
+                color: "red"
+            }
         }
     },
     watch: {
@@ -127,6 +146,16 @@ export default {
         phoneCall(contactNo) {
             window.open(`tel:${contactNo}`)
         },
+        showModal(id) {
+            this.modal.show = true
+            this.selectedUserId = id
+        },
+        closeModal() {
+            this.modal.show = false
+        },
+        async actionModal() {
+            await this.userStore.deleteUser(this.selectedUserId)
+        }
     },
 
 

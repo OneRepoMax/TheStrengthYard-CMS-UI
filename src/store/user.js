@@ -335,5 +335,27 @@ export const useUserStore = defineStore("user", {
         }
         
     },
+    async deleteUser(userId) {
+
+        const apiUrl = `${TSY_API}/user/${userId}`;
+
+        try {
+            const response = await axios.delete(apiUrl);
+
+            if (response.status === 200) {
+            return response;
+            }
+            return response;
+        } catch (error) {
+            console.error(
+                "An error occurred during delete user API request:",
+            error
+            );
+        }
+
+    }
+
+
+
   },
 });

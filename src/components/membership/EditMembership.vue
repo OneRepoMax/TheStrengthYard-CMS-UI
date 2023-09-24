@@ -11,27 +11,31 @@
 
                 <v-card-text>
                     <v-row>
-                        <v-col cols="12" md="12">
+                        <v-col cols="12" md="8">
                             <v-text-field clearable hide-details="auto" class="mb-3" label="Title"
                                 v-model="this.membershipData.title" required :rules="rules"
                                 variant="outlined"></v-text-field>
                         </v-col>
-                        <v-col cols="12" md="12">
+                        <v-col cols="12" md="4">
+                            <v-select hide-details="auto" class="mb-3" label="Visibility" v-model="this.membershipData.visibility"
+                                :items="['Public', 'Private']" required :rules="rules"
+                                variant="outlined"></v-select>
+                        </v-col>
+                        <v-col cols="12" md="12" v-if="this.membershipData.paypalPlanId">
                             <v-text-field clearable hide-details="auto" class="mb-3" label="PayPal Plan ID"
-                                v-model="this.membershipData.paypalPlanId" disabled 
-                                variant="outlined"></v-text-field>
+                                v-model="this.membershipData.paypalPlanId" disabled variant="outlined"></v-text-field>
                         </v-col>
                         <v-col cols="12" md="12">
                             <v-textarea clearable hide-details="auto" class="mb-3" label="Description"
                                 v-model="this.membershipData.description" required :rules="rules"
                                 variant="outlined"></v-textarea>
                         </v-col>
-                        <v-col cols="12" md="6">
+                        <v-col cols="12" md="4">
                             <v-select hide-details="auto" class="mb-3" label="Type" v-model="this.membershipData.type"
                                 :items="['One-Time', 'Monthly', 'Yearly']" required :rules="rules"
                                 variant="outlined"></v-select>
                         </v-col>
-                        <v-col cols="12" md="6">
+                        <v-col cols="12" md="4">
                             <v-text-field v-if="this.membershipId == 'create'" clearable hide-details="auto" class="mb-3"
                                 label="Base Fee ($)" v-model="this.membershipData.basefee" type="number" required
                                 :rules="feeRules" variant="outlined"></v-text-field>
@@ -39,7 +43,15 @@
                                 v-model="this.membershipData.basefee" type="number" required :rules="feeRules"
                                 variant="outlined"></v-text-field>
                         </v-col>
-                        <v-col cols="12" md="12">
+                        <v-col cols="12" md="4">
+                            <v-text-field v-if="this.membershipId == 'create'" clearable hide-details="auto" class="mb-3"
+                                label="Set Up Fee ($)" v-model="this.membershipData.setupfee" type="number" required
+                                :rules="feeRules" variant="outlined"></v-text-field>
+                            <v-text-field v-else disabled hide-details="auto" class="mb-3" label="Set Up Fee ($)"
+                                v-model="this.membershipData.setupfee" type="number" required :rules="feeRules"
+                                variant="outlined"></v-text-field>
+                        </v-col>
+                        <v-col cols="12" md="12" v-if="this.membershipData.picture">
                             <v-card>
                                 <v-img :src="this.membershipData.picture" height="300" cover></v-img>
                             </v-card>
@@ -138,14 +150,16 @@ export default {
             pictureRules: [v => (v == null) || 'This field is required'],
             feeRules: [
                 v => (!!v) || 'This field is required',
-                v => (v > 0) || 'Base fee have to be more than 0',
+                v => (v >= 0) || 'Base fee have to be more than or equal to 0',
             ],
             picture: this.membershipStore.Picture,
             membershipData: {
                 title: null,
+                visibility: null,
                 description: null,
                 type: null,
                 basefee: null,
+                setupfee: null,
                 picture: null,
             },
             modal: {
@@ -198,9 +212,11 @@ export default {
                 const response = await this.membershipStore.getMembershipById(this.membershipId)
                 if (response.status == 200) {
                     this.membershipData.title = response.data[0].Title
+                    this.membershipData.visibility = response.data[0].Visibility
                     this.membershipData.description = response.data[0].Description
                     this.membershipData.type = response.data[0].Type
                     this.membershipData.basefee = response.data[0].BaseFee
+                    this.membershipData.setupfee = response.data[0].SetupFee
                     this.membershipData.picture = response.data[0].Picture
                     this.membershipData.paypalPlanId = response.data[0].PayPalPlanId
                 }
@@ -211,9 +227,6 @@ export default {
 
         validateForm() {
             state.error = 0;
-            console.log(this.membershipData.title)
-            console.log(this.membershipData.description)
-            console.log(this.membershipData.basefee)
 
             if (this.membershipData.title == "" || this.membershipData.title == null) { state.error++; }
             if (this.membershipData.description == "" || this.membershipData.description == null) { state.error++; }

@@ -14,7 +14,7 @@
         class="align-end text-white"
         height="200"
         :src="membership.Picture"
-        cover
+        h
       >
         <v-card-title>{{ membership.Type }}</v-card-title>
       </v-img>

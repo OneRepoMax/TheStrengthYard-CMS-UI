@@ -17,6 +17,7 @@ export const useMembershipStore = defineStore("membership", {
     description: null,
     type: null,
     basefee: null,
+    setupfee: null,
     picture: null,
   }),
   actions: {
