@@ -25,8 +25,8 @@
                     </div>
                 </template>
 
-                <v-card-text max-width="300px">
-                    <div id="paypal-button-container"></div>
+                <v-card-text class="w-100">
+                    <div id="paypal-button-container" class="mx-auto"></div>
                 </v-card-text>
             </v-card>
 
@@ -51,7 +51,6 @@ export default {
     setup() {
         const membershipStore = useMembershipStore();
         const userStore = useUserStore();
-
 
         return { membershipStore, userStore }
     },
@@ -78,14 +77,20 @@ export default {
     methods: {
         async getMembership() {
             this.loading = true;
-            const response = await this.membershipStore.getMembershipById(this.membershipId())
             this.loading = false;
 
-            if (response.status == 200) {
-                this.membership = response.data[0]
-                console.log(this.membership);
+            if (this.membershipStore.membershipRecord != null) {
+                this.membership = this.membershipStore.membershipRecord.Membership
+                console.log(this.membershipRecord);
 
-                await this.mountPaypalButton(this.membership.PayPalPlanId);
+                // Check for one time or subscription type
+
+                if (this.membership.Type.toUpperCase() == "ONE-TIME") {
+                    await this.mountPaypalOrderButton(this.membership.PayPalPlanId);
+                } else {
+                    await this.mountPaypalSubscriptionButton(this.membership.PayPalPlanId);
+                }
+
             }
         },
         membershipId() {
@@ -94,7 +99,7 @@ export default {
         closeModal() {
             this.modal.show = false
         },
-        async mountPaypalButton(planId) {
+        async mountPaypalSubscriptionButton(planId) {
             const vm = this;
             // eslint-disable-next-line no-undef
             paypal
@@ -179,6 +184,74 @@ export default {
                         console.log(
                             "Success"
                         );
+                    },
+                    onCancel(data) {
+                        console.log(data);
+                    }
+                }).render("#paypal-button-container");
+        },
+        async mountPaypalOrderButton(orderId) {
+            const vm = this;
+            // eslint-disable-next-line no-undef
+            paypal
+                .Buttons({
+                    style: {
+                        shape: "rect",
+                        color: "gold",
+                        layout: "vertical",
+                        label: "paypal",
+                        size: "small",
+                        height: 40
+                    },
+                    //2. Create order
+                    createOrder: async function (data, actions) {
+
+                        console.log(actions);
+
+                        return actions.order.create({
+                            purchase_units: [{
+                                amount: {
+                                    currency_code: 'SGD',
+                                    value: vm.membership.BaseFee,
+                                }
+                            }],
+                        });
+                    },
+                    // eslint-disable-next-line no-unused-vars
+                    onApprove: async function (data, actions) {
+                        /**
+                         * NOTE
+                         * - Save the order id in Database
+                         * - This is important to ensure you can always
+                         * - Check on the status when user logs in or wants
+                         * - to make payment
+                         */
+
+                        try {
+
+                            return actions.order.capture().then(details => {
+                                console.log(details);
+                            });
+                            
+                        } catch (error) {
+
+                            // Three cases to handle:
+                            //   (1) Recoverable INSTRUMENT_DECLINED -> call actions.restart()
+                            //   (2) Other non-recoverable errors -> Show a failure message
+                            //   (3) Successful transaction -> Show confirmation or thank you message
+
+                            const errorDetail = error?.details?.[0];
+
+                            if (errorDetail?.issue === 'INSTRUMENT_DECLINED') {
+                                // Recoverable state, see: "Handle Funding Failures"
+                                return actions.restart();
+                            }
+
+                            // Show an error message here, when an error occurs
+                            console.error(error);
+
+
+                        }
                     },
                     onCancel(data) {
                         console.log(data);

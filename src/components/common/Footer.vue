@@ -19,9 +19,6 @@
                             <a class="text-white" href="https://www.thestrengthyard.com/privacy-policy-strength-yard/">Privacy
                             Policy</a>
                     </v-col>
-                    
-                        
-                    
                 </v-row>
 
             </v-container>

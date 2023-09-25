@@ -4,7 +4,7 @@
     v-model="page"
     hide-delimiter-background
     :show-arrows="membershipRecord.length > 2 ? 'hover' : false"
-    height="420px"
+    height="450px"
     :hide-delimiters="membershipRecord.length > 2 ? false : true"
   >
     <v-carousel-item
@@ -26,7 +26,7 @@
               v-bind="props"
               @click.prevent="showMembershipLog(membership)"
               :loading="loading"
-              height="400px"
+              height="450px"
               min-width="250px"
             >
               <template v-slot:loader="{ isActive }">
@@ -47,36 +47,9 @@
                 <p class="text-wrap">{{ membership.Membership.Title }}</p>
               </v-card-title>
               <v-card-subtitle>
-                <v-chip
-                  v-if="
-                    membership.ActiveStatus.toUpperCase() === 'INACTIVE' ||
-                    membership.ActiveStatus.toUpperCase() === 'EXPIRED' ||
-                    membership.ActiveStatus.toUpperCase() === 'PENDING PAYMENT'
-                  "
-                  color="secondary"
-                  prepend-icon="mdi-close"
-                  class="me-3 mb-3"
-                >
-                  {{ membership.ActiveStatus }}
-                </v-chip>
-                <v-chip
-                  v-else-if="membership.ActiveStatus.toUpperCase() === 'ACTIVE'"
-                  color="primary"
-                  prepend-icon="mdi-check"
-                  class="me-3 mb-3"
-                >
-                  {{ membership.ActiveStatus }}
-                </v-chip>
-                <v-chip
-                  v-else-if="membership.ActiveStatus.toUpperCase() === 'PAUSED'"
-                  color="orange"
-                  prepend-icon="mdi-pause"
-                  class="me-3 mb-3"
-                >
-                  {{ membership.ActiveStatus }}
-                </v-chip>
+                <StatusChip :status="membership.ActiveStatus"/>
               </v-card-subtitle>
-              <v-card-subtitle class="mb-2">
+              <v-card-subtitle class="my-2">
                 <v-icon color="error" icon="mdi-refresh" size="small"></v-icon>
                 <span class="mx-1">{{ membership.Membership.Type }}</span>
               </v-card-subtitle>
@@ -97,6 +70,11 @@
                 {{ formattedDate(membership.StartDate) }} to
                 {{ formattedDate(membership.EndDate) }}
               </v-card-subtitle>
+              <v-card-actions v-if="membership.ActiveStatus.toLowerCase()=='pending payment'">
+                <v-btn color="primary" variant="tonal" @click.prevent="makePayment(membership)">
+                    Make Payment
+                </v-btn>
+              </v-card-actions>
             </v-card>
           </v-hover>
         </v-col>
@@ -118,6 +96,7 @@
 <script>
 import { useMembershipStore } from "@/store/membership";
 import MembershipLogModal from "@/components/membership/MembershipLogModal.vue";
+import StatusChip from '@/components/common/StatusChip.vue'
 
 export default {
   props: {
@@ -194,6 +173,11 @@ export default {
         // Screen size has changed, trigger a page reload
         location.reload();
       }
+    },
+    makePayment(membershipRecord){
+        this.membershipStore.membershipRecord = membershipRecord
+        console.log(membershipRecord);
+        this.$router.push(`/membership/checkout`)
     }
   },
   computed: {
@@ -207,7 +191,7 @@ export default {
       return sliced;
     },
   },
-  components: { MembershipLogModal },
+  components: { MembershipLogModal, StatusChip },
 };
 </script>
 

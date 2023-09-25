@@ -4,22 +4,29 @@
             :value="membership.MembershipTypeId">
             <v-expansion-panel-title>
                 <v-row align="center" class="spacer" dense>
-                    <v-col cols="12" md="6">
+                    <v-col cols="12" md="4">
                         <strong>{{ membership.Title }}</strong>
                     </v-col>
                     <v-col cols="12" md="1">
                         <p>{{ membership.Type }}</p>
                     </v-col>
-                    <v-col cols="12" md="1">
-                        <p>${{ membership.BaseFee }}</p>
+                    <v-col cols="12" md="2">
+                        <p>Base Fee ${{ membership.BaseFee }}</p>
                     </v-col>
                     <v-col cols="12" md="2">
-                        <v-btn block prepend-icon="mdi-square-edit-outline" color="amber" size="small"
-                            @click.prevent="editMembership(membership.MembershipTypeId)">Edit</v-btn>
+                        <p>Setup Fee ${{ membership.SetupFee }}</p>
                     </v-col>
-                    <v-col cols="12" md="2" align="right">
-                        <v-btn block prepend-icon="mdi-delete" color="red" size="small"
-                            @click.prevent="showModal(membership.MembershipTypeId)">Delete</v-btn>
+                   
+                    <v-col cols="12" md="1">
+                        <v-chip class="font-weight-medium" size="small">
+                            {{ membership.Visibility }}
+                        </v-chip>
+                    </v-col>
+                    <v-col cols="12" md="1" class="d-flex ms-auto me-5">
+                        <v-btn  variant="text" icon="mdi-square-edit-outline" size="small" class="me-2"
+                            @click.prevent="editMembership(membership.MembershipTypeId)"></v-btn>
+                        <v-btn variant="text" icon="mdi-delete" color="red" size="small"
+                            @click.prevent="showModal(membership.MembershipTypeId)"></v-btn>
                     </v-col>
                 </v-row>
             </v-expansion-panel-title>

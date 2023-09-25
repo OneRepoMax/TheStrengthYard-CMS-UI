@@ -17,7 +17,10 @@ export const useMembershipStore = defineStore("membership", {
     description: null,
     type: null,
     basefee: null,
+    setupfee: null,
+    visibility: null,
     picture: null,
+    membershipRecord: null,
   }),
   actions: {
     async uploadPicture(file) {
@@ -78,6 +81,25 @@ export const useMembershipStore = defineStore("membership", {
         return error.response;
       }
     },
+    async getAllPublicMembership() {
+        const apiUrl = `${TSY_API}/memberships/public`;
+  
+        try {
+          const response = await axios.get(apiUrl);
+  
+          if (response.status === 200) {
+            return response;
+          }
+          return response;
+        } catch (error) {
+          console.error(
+            "An error occurred during get all membership API request:",
+            error
+          );
+  
+          return error.response;
+        }
+      },
     async getMembershipById(membershipId) {
       const apiUrl = `${TSY_API}/memberships/${membershipId}`;
 
@@ -230,6 +252,8 @@ export const useMembershipStore = defineStore("membership", {
             Description: membershipData.description,
             Type: membershipData.type,
             BaseFee: membershipData.basefee,
+            SetupFee: membershipData.setupfee,
+            PayPalPlanId: membershipData.paypalPlanId,
             Picture: membershipData.picture
           });
   
@@ -263,13 +287,17 @@ export const useMembershipStore = defineStore("membership", {
 
       async createMembership(membershipData) {
 
+        console.log(membershipData);
+
         try {
           let response = await axios.post(`${TSY_API}/memberships`, {
             Title: membershipData.title,
             Description: membershipData.description,
             Type: membershipData.type,
             BaseFee: membershipData.basefee,
-            Picture: membershipData.picture
+            SetupFee: membershipData.setupfee,
+            Picture: membershipData.picture,
+            Visibility: membershipData.visibility,
           });
   
           // Handle the response data here

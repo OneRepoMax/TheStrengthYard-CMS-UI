@@ -45,6 +45,7 @@
       </v-card-subtitle>
 
       <v-card-text>
+        <!-- Purchase Membership Button -->
         <v-btn
           class="me-3 mb-3 text-capitalize"
           x-large
@@ -54,13 +55,23 @@
         >
           Purchase Membership
         </v-btn>
+        <!-- Payment History Button -->
+        <v-btn
+          class="me-3 mb-3 text-capitalize"
+          x-large
+          rounded
+          variant="outlined"
+          to="payment-history"
+        >
+          Payment History
+        </v-btn>
       </v-card-text>
       <div v-if="membershipRecord.length > 0">
         <v-divider></v-divider>
 
         <v-card-title class="my-2">Owned Memberships</v-card-title>
 
-        <v-card-text>
+        <v-card-text class="px-2">
           <div class="d-flex flex-wrap">
             <MembershipRecordCard :membershipRecord="this.membershipRecord" />
           </div>
@@ -86,6 +97,7 @@ export default {
       loading: false,
     };
   },
+
   computed: {
     displayedMembership() {
       const startIndex = (this.page - 1) * this.membershipPerPage;

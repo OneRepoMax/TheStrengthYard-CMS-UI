@@ -53,7 +53,7 @@ export default {
     methods: {
         async getMembershipList() {
             try {
-                const response = await this.membershipStore.getAllMembership();
+                const response = await this.membershipStore.getAllPublicMembership();
                 if (response.status == 200) {
                     this.membershipList = response.data;
                     this.groupMemberships(); // Call the grouping function after getting the list

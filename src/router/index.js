@@ -80,11 +80,23 @@ const routes = [
           import(/* webpackChunkName: "PurchaseMembership" */ "@/views/client/membership/PurchaseMembership.vue"),
       },
       {
-        path: ":id/checkout",
+        path: "checkout",
         name: "Checkout Membership",
         props: true,
         component: () =>
           import(/* webpackChunkName: "Checkout" */ "@/views/client/payment/Checkout.vue"),
+      },
+    ],
+  },
+  {
+    path: "/payment-history/",
+    component: () => import("@/layouts/default/LoginDefault.vue"),
+    children: [
+      {
+        path: "",
+        name: "Payment History",
+        component: () =>
+          import(/* webpackChunkName: "Book" */ "@/views/client/payment/PaymentHistory.vue"),
       },
     ],
   },
