@@ -63,7 +63,6 @@ export default {
     },
     data() {
         return {
-            membershipId: null,
             loading: false,
             membershipList: [],
             page: 1,
@@ -86,7 +85,6 @@ export default {
         },
         showModal() {
             this.modal.show = true;
-            // this.membershipId = id
         },
         closeModal() {
             this.modal.show = false;

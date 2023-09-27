@@ -18,7 +18,7 @@
       >
         <v-card-title>{{ membership.Type }}</v-card-title>
       </v-img>
-      <v-card-title class="text-subtitle-1">
+      <v-card-title class="text-subtitle-1 mb-1">
         <p class="text-wrap">{{ membership.Title }}</p>
       </v-card-title>
       <v-card-subtitle class="text-wrap">{{

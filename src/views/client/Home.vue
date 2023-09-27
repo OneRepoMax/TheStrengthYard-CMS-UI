@@ -8,7 +8,7 @@
                     email</v-chip> to verify email address
             </v-alert>
         </v-col>
-        <v-col cols="12" md="8">
+        <v-col cols="12" md="8" class="pa-0 pa-md-3">
 
             <!-- Skeleton loaders -->
             <v-skeleton-loader class="mb-3" elevation="3" v-if="loading"
@@ -23,13 +23,15 @@
                 :emailAddress="userStore.emailAddress" :homeAddress="userStore.homeAddress"
                 :membershipRecord="membershipRecord" :displayPicture="userStore.displayPicture" />
 
-            <PurchaseMembershipSlider v-if="!loading"/>
+            <PurchaseMembershipSlider class="d-none d-md-block" v-if="!loading"/>
 
-            <Classes v-if="!loading"/>
+            <Classes v-if="!loading" class="d-none"/>
+
+            <PurchaseMembershipSlideGroup class="d-md-none"/>
 
         </v-col>
 
-        <v-col cols="12" md="4">
+        <v-col cols="12" md="4" class="pa-0 pa-md-3">
 
 
             <!-- Sekelton loaders -->
@@ -67,6 +69,7 @@ import OrgProfileCard from '@/components/home/OrgProfileCard.vue'
 import Modal from '@/components/common/Modal.vue'
 import PurchaseMembershipSlider from "@/components/membership/PurchaseMembershipSlider.vue";
 import AdsCard from "@/components/home/AdsCard.vue";
+import PurchaseMembershipSlideGroup from "@/components/membership/PurchaseMembershipSlideGroup.vue";
 
 
 export default {
@@ -169,6 +172,7 @@ export default {
         Modal,
         PurchaseMembershipSlider,
         AdsCard,
+        PurchaseMembershipSlideGroup
     }
 
 }

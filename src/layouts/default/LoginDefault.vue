@@ -1,7 +1,7 @@
 <template>
     <v-app>
         <default-bar :menuItems = this.menuItems />
-        <v-container fluid class="py-8 px-0 w-100 " min-height="87.5vh" align-content="center">
+        <v-container fluid class="py-3 py-md-8 px-0 w-100 " min-height="87.5vh" align-content="center">
             <default-view />
         </v-container>
         <default-footer />

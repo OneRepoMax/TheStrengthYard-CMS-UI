@@ -1,5 +1,5 @@
 <template>
-    <v-card elevation="3" class="pa-5 text-start mb-3">
+    <v-card elevation="3" class="pa-5 text-start mb-md-3 mb-1 rounded-0-sm">
         <v-card-text class="mb-3">
             <v-row>
                 <v-col cols="3">
