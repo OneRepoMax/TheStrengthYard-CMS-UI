@@ -8,7 +8,7 @@
       :class="{ 'on-hover': isHovering }"
       v-bind="props"
       variant="flat"
-      @click="navigateToRoute('/membership/' + membership.MembershipTypeId + '/checkout')"
+      @click="makePayment(membership)"
     >
       <v-img
         class="align-end text-white"
@@ -38,11 +38,18 @@
 </template>
 
 <script>
+import { useMembershipStore } from "@/store/membership";
+
 export default {
   props: {
     membership: Object,
     membershipRecord: Array,
   },
+  setup() {
+        const membershipStore = useMembershipStore();
+
+        return { membershipStore }
+    },
   data() {
     return {
       loading: false,
@@ -53,6 +60,11 @@ export default {
         console.log(route);
       this.$router.push(route);
     },
+    makePayment(membership) {
+            console.log(membership);
+            this.membershipStore.selectedMembership = membership
+            this.$router.push(`/membership/checkout`)
+        }
   },
 };
 </script>
