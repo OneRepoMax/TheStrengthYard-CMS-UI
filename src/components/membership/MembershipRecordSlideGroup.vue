@@ -3,7 +3,7 @@
     <v-card-subtitle class="pt-0">Manage your registered membership</v-card-subtitle>
     <v-slide-group v-model="model" class="pa-4" selected-class="bg-success">
         <v-slide-group-item v-for="membership, index in membershipRecord" :key="index">
-            <v-card variant="flat" class="me-2" height="240" width="200" @click="showMembershipLog(membership)">
+            <v-card variant="flat" class="me-2" height="290" width="200" @click="showMembershipLog(membership)">
                 <v-img class="align-end text-white" max-height="130px" :src="membership.Membership.Picture" cover>
                 </v-img>
                 <v-card-item class="pt-2 ps-1 pb-0 text-subtitle-2 card-title mb-1">
