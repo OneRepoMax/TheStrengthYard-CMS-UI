@@ -176,7 +176,7 @@ export default {
     },
     makePayment(membershipRecord){
         this.membershipStore.membershipRecord = membershipRecord
-        console.log(membershipRecord);
+        this.membershipStore.selectedMembership = membershipRecord.Membership
         this.$router.push(`/membership/checkout`)
     }
   },

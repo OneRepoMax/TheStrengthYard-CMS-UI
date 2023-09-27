@@ -77,21 +77,19 @@ export default {
     methods: {
         async getMembership() {
             this.loading = true;
+
+            this.membership = this.membershipStore.selectedMembership;
+
+            // Check for one time or subscription type
+            if (this.membership.Type.toUpperCase() == "ONE-TIME") {
+                await this.mountPaypalOrderButton();
+            } else {
+                await this.mountPaypalSubscriptionButton(this.membership.PayPalPlanId);
+            }
+
+
             this.loading = false;
 
-            if (this.membershipStore.membershipRecord != null) {
-                this.membership = this.membershipStore.membershipRecord.Membership
-                console.log(this.membershipRecord);
-
-                // Check for one time or subscription type
-
-                if (this.membership.Type.toUpperCase() == "ONE-TIME") {
-                    await this.mountPaypalOrderButton(this.membership.PayPalPlanId);
-                } else {
-                    await this.mountPaypalSubscriptionButton(this.membership.PayPalPlanId);
-                }
-
-            }
         },
         membershipId() {
             return this.$route.params.id || null;
@@ -115,10 +113,7 @@ export default {
                     //2. Create a subscription
                     createSubscription: async function (data, actions) {
 
-                        // 1. get the selected package
-
-                        // insert user plan id
-
+                        // 1. get the selected package from paypal based on Plan ID
                         return actions.subscription.create({
                             plan_id: planId
                         });
@@ -154,12 +149,19 @@ export default {
                             membershipTypeId: vm.membership.MembershipTypeId,
                             startDate: new Date(),
                             endDate: endDate,
-                            subscriptionId: subscriptionId
+                            subscriptionId: subscriptionId.id
                         }
 
                         try {
 
-                            const response = await vm.membershipStore.addMembershipRecord(payload)
+                            let response = null;
+
+                            if (vm.membershipStore.membershipRecord == null) {
+                                response = await vm.membershipStore.addMembershipRecord(payload)
+                            } else {
+                                payload["membershipRecordId"] = vm.membershipStore.membershipRecord.MembershipRecordId,
+                                    response = await vm.membershipStore.updateMembershipRecord(payload)
+                            }
 
                             if (response.status == 200) {
                                 vm.modal.show = true;
@@ -190,7 +192,7 @@ export default {
                     }
                 }).render("#paypal-button-container");
         },
-        async mountPaypalOrderButton(orderId) {
+        async mountPaypalOrderButton() {
             const vm = this;
             // eslint-disable-next-line no-undef
             paypal
@@ -229,10 +231,44 @@ export default {
 
                         try {
 
-                            return actions.order.capture().then(details => {
-                                console.log(details);
-                            });
-                            
+                            const payment_details = await actions.order.capture()
+
+                            console.log(payment_details);
+
+                            let endDate = new Date();
+                            if (vm.membership.Type.toUpperCase() == "MONTHLY") {
+                                endDate.setMonth(endDate.getMonth() + 1);
+                            } else if (vm.membership.Type.toUpperCase() == "YEARLY") {
+                                endDate.setFullYear(endDate.getFullYear() + 1);
+                            }
+
+                            const payload = {
+                                userId: vm.userStore.userId,
+                                membershipTypeId: vm.membership.MembershipTypeId,
+                                subscriptionId: payment_details.id,
+                                startDate: new Date(),
+                                endDate: endDate,
+                                status: "Active"
+                            }
+
+                            let response = null;
+
+                            if (vm.membershipStore.membershipRecord == null) {
+                                response = await vm.membershipStore.addMembershipRecord(payload)
+                            } else {
+                                payload["membershipRecordId"] = vm.membershipStore.membershipRecord.MembershipRecordId,
+                                    response = await vm.membershipStore.updateMembershipRecord(payload)
+                            }
+
+                            if (response.status == 200) {
+                                vm.modal.show = true;
+                                vm.modal.type = "success";
+                                vm.modal.icon = "mdi-check-circle";
+                                vm.modal.title = "Purchase successful";
+                                vm.modal.message = "You have successfully purchased the membership. You can view your membership details in your profile page.";
+                                vm.modal.path = "/";
+                            }
+
                         } catch (error) {
 
                             // Three cases to handle:
@@ -249,6 +285,13 @@ export default {
 
                             // Show an error message here, when an error occurs
                             console.error(error);
+
+                            vm.modal.show = true;
+                            vm.modal.type = "error";
+                            vm.modal.icon = "mdi-alert-circle";
+                            vm.modal.title = "Purchase failed";
+                            vm.modal.message = "There was an error processing your payment. Please contact admin.";
+                            vm.modal.path = "/membership/";
 
 
                         }

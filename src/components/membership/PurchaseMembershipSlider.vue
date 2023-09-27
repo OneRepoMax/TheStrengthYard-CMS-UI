@@ -18,11 +18,10 @@
                 <v-carousel-item v-for="(slice, index) in slicedMemberships" :key="index">
                     <v-row dense>
                         <v-col v-for="membership in slice" :key="membership.MembershipTypeId"
-                            :value="membership.MembershipTypeId"  cols="12" md="6" lg="6">
+                            :value="membership.MembershipTypeId" cols="12" md="6" lg="6">
                             <v-hover v-slot="{ isHovering, props }">
                                 <v-card class=" my-2" :class="{ 'on-hover': isHovering }" variant="flat"
-                                    @click="navigateToRoute('/membership/' + membership.MembershipTypeId + '/checkout')" v-bind="props"
-                                    height="400px">
+                                    @click="makePayment(membership)" v-bind="props" height="400px">
                                     <v-img class="align-end text-white" max-height="150px" :src="membership.Picture" cover>
                                     </v-img>
                                     <v-card-title class="text-subtitle-1">
@@ -104,6 +103,11 @@ export default {
             }
             return false; // Return false if membershipRecord is undefined or empty
         },
+        makePayment(membership) {
+            console.log(membership);
+            this.membershipStore.selectedMembership = membership
+            this.$router.push(`/membership/checkout`)
+        }
     },
     computed: {
         slicedMemberships() {
