@@ -3,7 +3,7 @@
     <v-card-subtitle class="pt-0">Manage your registered membership</v-card-subtitle>
     <v-slide-group v-model="model" class="pa-4" selected-class="bg-success">
         <v-slide-group-item v-for="membership, index in membershipRecord" :key="index">
-            <v-card variant="flat" class="me-2" height="290" width="200" @click="showMembershipLog(membership)">
+            <v-card variant="flat" class="me-2" max-height="300" width="200" @click="showMembershipLog(membership)">
                 <v-img class="align-end text-white" max-height="130px" :src="membership.Membership.Picture" cover>
                 </v-img>
                 <v-card-item class="pt-2 ps-1 pb-0 text-subtitle-2 card-title mb-1">
@@ -15,10 +15,15 @@
                     {{ formattedDate(membership.EndDate) }}
                 </v-card-subtitle>
                 <v-card-subtitle class="text-caption ps-1 text-wrap">
-                    <StatusChip :status="membership.ActiveStatus" :mobile="true" /> •
+                    <StatusChip :status="membership.ActiveStatus" :mobile="true" />•
                     <v-icon color="error" icon="mdi-refresh" size="small"></v-icon>
                     <span class="mx-1">{{ membership.Membership.Type }}</span>
                 </v-card-subtitle>
+                <v-card-actions v-if="membership.ActiveStatus.toLowerCase()=='pending payment'">
+                <v-btn color="primary" variant="tonal" @click.prevent="makePayment(membership)" size="small" block>
+                    Make Payment
+                </v-btn>
+              </v-card-actions>
             </v-card>
         </v-slide-group-item>
     </v-slide-group>
