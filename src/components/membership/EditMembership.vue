@@ -3,58 +3,88 @@
 
         <v-card elevation="3" class="pa-5" width="700px">
             <v-card-title class="text-center">
-                <v-card-title v-if="this.membershipId 
-                == 'create'">Create Membership</v-card-title>
+                <v-card-title v-if="this.membershipId
+                    == 'create'">Create Membership</v-card-title>
                 <v-card-title v-else>Manage Membership</v-card-title>
             </v-card-title>
             <v-form ref="form" @submit.prevent="validateForm" validate-on="submit">
 
-            <v-card-text>
-                <v-row>
-                    <v-col cols="12" md="12">
-                        <v-text-field clearable hide-details="auto" class="mb-3" label="Title"
-                            v-model="this.membershipData.title" required :rules="rules"
-                            variant="outlined"></v-text-field>
-                    </v-col>
-                    <v-col cols="12" md="12">
-                        <v-textarea clearable hide-details="auto" class="mb-3" label="Description"
-                            v-model="this.membershipData.description" required :rules="rules"
-                            variant="outlined"></v-textarea>
-                    </v-col>
-                    <v-col cols="12" md="6">
-                        <v-select hide-details="auto" class="mb-3" label="Type" v-model="this.membershipData.type"
-                            :items="['One-Time', 'Monthly', 'Yearly']" required :rules="rules"
-                            variant="outlined"></v-select>
-                    </v-col>
-                    <v-col cols="12" md="6">
-                        <v-text-field v-if="this.membershipId == 'create'" clearable hide-details="auto" class="mb-3" label="Base Fee ($)" v-model="this.membershipData.basefee" type="number" required :rules="feeRules" variant="outlined"></v-text-field>
-                        <v-text-field v-else disabled hide-details="auto" class="mb-3" label="Base Fee ($)" v-model="this.membershipData.basefee" type="number" required :rules="feeRules" variant="outlined"></v-text-field>
-                    </v-col>
-                    <v-col cols="12" md="12">
-                            <v-file-input v-if="this.membershipId == 'create'" label="Upload Picture" prepend-icon="" append-inner-icon="mdi-paperclip" variant="outlined" :rules="pictureRules" accept="image/*" @change="handleFileUpload"></v-file-input>
-                            <v-file-input v-else label="Upload Picture" prepend-icon="" append-inner-icon="mdi-paperclip" variant="outlined" accept="image/*" @change="handleFileUpload"></v-file-input>
-                    </v-col>
-                </v-row>
-            </v-card-text>
-                        
-            <v-divider></v-divider>
-            <v-card-text>
-                <v-row>
-                    <v-col cols="12" md="6">
-                        <v-btn color="teal" block variant="outlined" to="/admin/membership" size="large">back</v-btn>
-                    </v-col>
-                    <v-col cols="12" md="6">
-                        <v-btn v-if="this.membershipId == 'create'" color="teal" block type="submit" size="large">Create</v-btn>
-                        <v-btn v-else color="teal" block type="submit" size="large">Update</v-btn>
-                    </v-col>
-                    <v-col cols="12" v-if="showError">
-                        <v-alert type="error" title="Oops, please check your details"
-                            text="Please verify your membership details" closable>
-                        </v-alert>
-                    </v-col>
-                </v-row>
-            </v-card-text>
-                    
+                <v-card-text>
+                    <v-row>
+                        <v-col cols="12" md="8">
+                            <v-text-field clearable hide-details="auto" class="mb-3" label="Title"
+                                v-model="this.membershipData.title" required :rules="rules"
+                                variant="outlined"></v-text-field>
+                        </v-col>
+                        <v-col cols="12" md="4">
+                            <v-select hide-details="auto" class="mb-3" label="Visibility" v-model="this.membershipData.visibility"
+                                :items="['Public', 'Private']" required :rules="rules"
+                                variant="outlined"></v-select>
+                        </v-col>
+                        <v-col cols="12" md="12" v-if="this.membershipData.paypalPlanId">
+                            <v-text-field clearable hide-details="auto" class="mb-3" label="PayPal Plan ID"
+                                v-model="this.membershipData.paypalPlanId" disabled variant="outlined"></v-text-field>
+                        </v-col>
+                        <v-col cols="12" md="12">
+                            <v-textarea clearable hide-details="auto" class="mb-3" label="Description"
+                                v-model="this.membershipData.description" required :rules="rules"
+                                variant="outlined"></v-textarea>
+                        </v-col>
+                        <v-col cols="12" md="4">
+                            <v-select hide-details="auto" class="mb-3" label="Type" v-model="this.membershipData.type"
+                                :items="['One-Time', 'Monthly', 'Yearly']" required :rules="rules"
+                                variant="outlined"></v-select>
+                        </v-col>
+                        <v-col cols="12" md="4">
+                            <v-text-field v-if="this.membershipId == 'create'" clearable hide-details="auto" class="mb-3"
+                                label="Base Fee ($)" v-model="this.membershipData.basefee" type="number" required
+                                :rules="feeRules" variant="outlined"></v-text-field>
+                            <v-text-field v-else disabled hide-details="auto" class="mb-3" label="Base Fee ($)"
+                                v-model="this.membershipData.basefee" type="number" required :rules="feeRules"
+                                variant="outlined"></v-text-field>
+                        </v-col>
+                        <v-col cols="12" md="4">
+                            <v-text-field v-if="this.membershipId == 'create'" clearable hide-details="auto" class="mb-3"
+                                label="Set Up Fee ($)" v-model="this.membershipData.setupfee" type="number" required
+                                :rules="feeRules" variant="outlined"></v-text-field>
+                            <v-text-field v-else disabled hide-details="auto" class="mb-3" label="Set Up Fee ($)"
+                                v-model="this.membershipData.setupfee" type="number" required :rules="feeRules"
+                                variant="outlined"></v-text-field>
+                        </v-col>
+                        <v-col cols="12" md="12" v-if="this.membershipData.picture">
+                            <v-card>
+                                <v-img :src="this.membershipData.picture" height="300" cover></v-img>
+                            </v-card>
+                        </v-col>
+                        <v-col cols="12" md="12">
+                            <v-file-input v-if="this.membershipId == 'create'" label="Upload Picture" prepend-icon=""
+                                append-inner-icon="mdi-paperclip" variant="outlined" :rules="pictureRules" accept="image/*"
+                                @change="handleFileUpload"></v-file-input>
+                            <v-file-input v-else label="Change picture" prepend-icon="" append-inner-icon="mdi-paperclip"
+                                variant="outlined" accept="image/*" @change="handleFileUpload"></v-file-input>
+                        </v-col>
+                    </v-row>
+                </v-card-text>
+
+                <v-divider></v-divider>
+                <v-card-text>
+                    <v-row>
+                        <v-col cols="12" md="6">
+                            <v-btn color="teal" block variant="outlined" to="/admin/membership" size="large">back</v-btn>
+                        </v-col>
+                        <v-col cols="12" md="6">
+                            <v-btn v-if="this.membershipId == 'create'" color="teal" block type="submit"
+                                size="large">Create</v-btn>
+                            <v-btn v-else color="teal" block type="submit" size="large">Update</v-btn>
+                        </v-col>
+                        <v-col cols="12" v-if="showError">
+                            <v-alert type="error" title="Oops, please check your details"
+                                text="Please verify your membership details" closable>
+                            </v-alert>
+                        </v-col>
+                    </v-row>
+                </v-card-text>
+
             </v-form>
 
             <template>
@@ -111,6 +141,8 @@ export default {
         } else {
             this.getMembershipData();
         }
+
+        console.log(this.membershipData)
     },
     data() {
         return {
@@ -118,15 +150,18 @@ export default {
             pictureRules: [v => (v == null) || 'This field is required'],
             feeRules: [
                 v => (!!v) || 'This field is required',
-                v => (v > 0) || 'Base fee have to be more than 0',
+                v => (v >= 0) || 'Base fee have to be more than or equal to 0',
             ],
             picture: this.membershipStore.Picture,
             membershipData: {
                 title: null,
+                visibility: null,
                 description: null,
                 type: null,
                 basefee: null,
+                setupfee: null,
                 picture: null,
+                paypalPlanId: null,
             },
             modal: {
                 show: false,
@@ -177,31 +212,32 @@ export default {
             try {
                 const response = await this.membershipStore.getMembershipById(this.membershipId)
                 if (response.status == 200) {
-                    this.membershipData.title = response.data[0].Title,
-                    this.membershipData.description = response.data[0].Description,
-                    this.membershipData.type = response.data[0].Type,
-                    this.membershipData.basefee = response.data[0].BaseFee,
+                    this.membershipData.title = response.data[0].Title
+                    this.membershipData.visibility = response.data[0].Visibility
+                    this.membershipData.description = response.data[0].Description
+                    this.membershipData.type = response.data[0].Type
+                    this.membershipData.basefee = response.data[0].BaseFee
+                    this.membershipData.setupfee = response.data[0].SetupFee
                     this.membershipData.picture = response.data[0].Picture
+                    this.membershipData.paypalPlanId = response.data[0].PayPalPlanId
+                    this.membershipData.visibility = response.data[0].Visibility
                 }
             } catch (error) {
                 console.error("Error retrieving user info", error);
             }
         },
 
-        validateForm(){
+        validateForm() {
             state.error = 0;
-            console.log(this.membershipData.title)
-            console.log(this.membershipData.description)
-            console.log(this.membershipData.basefee)
 
-            if (this.membershipData.title == "" || this.membershipData.title == null){state.error++;}
-            if (this.membershipData.description == "" || this.membershipData.description == null){state.error++;}
-            if (this.membershipData.type == "" || this.membershipData.type == null){state.error++;}
-            if (this.membershipData.basefee == null || this.membershipData.basefee <= 0){state.error++;}
-            if (this.membershipData.picture == null){state.error++;}
-            if (this.membershipData.picture != null){this.pictureRules = [];}
+            if (this.membershipData.title == "" || this.membershipData.title == null) { state.error++; }
+            if (this.membershipData.description == "" || this.membershipData.description == null) { state.error++; }
+            if (this.membershipData.type == "" || this.membershipData.type == null) { state.error++; }
+            if (this.membershipData.basefee == null || this.membershipData.basefee <= 0) { state.error++; }
+            if (this.membershipData.picture == null) { state.error++; }
+            if (this.membershipData.picture != null) { this.pictureRules = []; }
 
-            if (state.error == 0){
+            if (state.error == 0) {
                 this.showError = false
                 this.updateMembership();
             } else {
@@ -209,7 +245,7 @@ export default {
                 console.log("Number of errors: " + state.error)
                 this.showError = true
             }
-            
+
         },
 
         async updateMembership() {
@@ -222,32 +258,26 @@ export default {
                 Picture: this.membershipData.picture
             }))
             try {
-                
+
                 // uri to uploaded picture
-                if (this.picture != this.membershipStore.Picture){
+                if (this.picture != this.membershipStore.Picture) {
                     const uploadResponse = await this.membershipStore.uploadPicture(this.picture)
                     this.membershipData.picture = uploadResponse.s3Uri
                     console.log(this.membershipData.picture);
                 }
-                
-                
+
+
                 let tempmembershipId = this.membershipId
-                if (this.membershipId == "create"){
+                if (this.membershipId == "create") {
                     tempmembershipId = this.membershipStore.membershipId
                     console.log("creating: new membership")
                     // trigger update profile form through this API and put in variables
                     // Edit the function below accordingly, e.g. update the parameters, etc
-                    await this.membershipStore.createMembership({
-                        title: this.membershipData.title,
-                        description: this.membershipData.description,
-                        type: this.membershipData.type,
-                        basefee: this.membershipData.basefee,
-                        picture: this.membershipData.picture
-                    }).then((response) => {
+                    await this.membershipStore.createMembership(this.membershipData).then((response) => {
                         if (response.status == 200) {
 
                             console.log(response.data);
-                            
+
                             // Show success modal
                             this.modal.show = true
                             this.modal.message = "Your membership has been successfully updated!"
@@ -259,6 +289,8 @@ export default {
                                 type: null,
                                 basefee: null,
                                 picture: null,
+                                setupfee: null,
+                                validity: null,
                             }
 
                         }

@@ -316,5 +316,46 @@ export const useUserStore = defineStore("user", {
         );
       }
     },
+    async getIndemnityForm(userId) {
+
+        const apiUrl = `${TSY_API}/indemnityform/${userId}`;
+    
+        try {
+            const response = await axios.get(apiUrl);
+    
+            if (response.status === 200) {
+            return response;
+            }
+            return response;
+        } catch (error) {
+            console.error(
+            "An error occurred during get indemnity form API request:",
+            error
+            );
+        }
+        
+    },
+    async deleteUser(userId) {
+
+        const apiUrl = `${TSY_API}/user/${userId}`;
+
+        try {
+            const response = await axios.delete(apiUrl);
+
+            if (response.status === 200) {
+            return response;
+            }
+            return response;
+        } catch (error) {
+            console.error(
+                "An error occurred during delete user API request:",
+            error
+            );
+        }
+
+    }
+
+
+
   },
 });

@@ -14,15 +14,14 @@
         </v-card-text>
         <v-card-text class="py-0">
             <v-carousel :continuous="false" v-model="page" hide-delimiter-background cycle show-arrows hide-delimiters
-                height="420px">
+                height="450px" class="px-2">
                 <v-carousel-item v-for="(slice, index) in slicedMemberships" :key="index">
                     <v-row dense>
                         <v-col v-for="membership in slice" :key="membership.MembershipTypeId"
-                            :value="membership.MembershipTypeId"  cols="12" md="6" lg="6">
+                            :value="membership.MembershipTypeId" cols="12" md="6" lg="6">
                             <v-hover v-slot="{ isHovering, props }">
                                 <v-card class=" my-2" :class="{ 'on-hover': isHovering }" variant="flat"
-                                    @click="navigateToRoute('/membership/' + membership.MembershipTypeId + '/checkout')" v-bind="props"
-                                    height="400px">
+                                    @click="makePayment(membership)" v-bind="props" height="400px">
                                     <v-img class="align-end text-white" max-height="150px" :src="membership.Picture" cover>
                                     </v-img>
                                     <v-card-title class="text-subtitle-1">
@@ -64,7 +63,6 @@ export default {
     },
     data() {
         return {
-            membershipId: null,
             loading: false,
             membershipList: [],
             page: 1,
@@ -77,7 +75,7 @@ export default {
         async getMembershipList() {
 
             this.loading = true;
-            const response = await this.membershipStore.getAllMembership();
+            const response = await this.membershipStore.getAllPublicMembership();
             this.loading = false;
 
             if (response.status == 200) {
@@ -87,7 +85,6 @@ export default {
         },
         showModal() {
             this.modal.show = true;
-            // this.membershipId = id
         },
         closeModal() {
             this.modal.show = false;
@@ -104,6 +101,11 @@ export default {
             }
             return false; // Return false if membershipRecord is undefined or empty
         },
+        makePayment(membership) {
+            console.log(membership);
+            this.membershipStore.selectedMembership = membership
+            this.$router.push(`/membership/checkout`)
+        }
     },
     computed: {
         slicedMemberships() {

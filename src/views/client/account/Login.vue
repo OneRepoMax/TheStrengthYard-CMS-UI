@@ -1,6 +1,6 @@
 <template>
-  <v-main>
-    <v-container fluid class="login-bg" justify="center">
+  <v-main class="h-screen">
+    <v-container fluid justify="center" class="h-100">
       <v-row justify="center" class="h-100" align="center">
         <v-expand-transition>
           <v-card class="pa-3 w-100" max-width="400px">
@@ -39,15 +39,6 @@
     </v-container>
   </v-main>
 </template>
-  
-<style scoped>
-.login-bg {
-  width: 100vw;
-  height: 100vh;
-  background-image: url("/src/assets/login_splash.jpg");
-  background-size: cover;
-}
-</style>
   
 <script>
 import { useUserStore } from "@/store/user";

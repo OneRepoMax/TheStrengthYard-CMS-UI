@@ -21,8 +21,6 @@
             </v-list-item>
         </v-list>
 
-
-
         <v-divider class="my-3"></v-divider>
 
         <v-list-item>

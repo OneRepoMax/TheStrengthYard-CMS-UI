@@ -6,9 +6,9 @@
                     <v-card-title>Change Password</v-card-title>
                 </v-card-title>
                 <v-card-text>
-                    <v-form @submit.prevent="changePassword">
+                    <v-form ref="form" @submit.prevent="validatePassword">
                         <!-- <v-text-field v-model="emailAddress" label="Email Address" required></v-text-field> -->
-                        <v-text-field v-model="password" label="Current Password" required :rules="passwordRules"
+                        <v-text-field v-model="password" label="Current Password" required
                             class="mb-3" :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
                             @click:append-inner="showPassword = !showPassword"
                             :type="showPassword ? 'text' : 'password'"></v-text-field>
@@ -34,23 +34,21 @@
                         </v-btn>
                     </v-form>
                 </v-card-text>
-            </v-card>
-            <v-card v-if="passwordAlert">
-                <v-alert :type="passwordAlertType" :title="passwordAlertMessage">
 
-                    <v-card-actions v-if="passwordAlertType == 'success'">
-                        <v-spacer></v-spacer>
-                        <v-btn variant="outlined" text="Ok" to="/">
-                        </v-btn>
-                    </v-card-actions>
-                </v-alert>
+                <v-card-text v-if="error">
+                    <v-alert type="error" title="Oops, please check your details" :text="passwordAlertMessage">
+                    </v-alert>
+                </v-card-text>
             </v-card>
-
-            <v-template>
-                <Modal v-model="modal.show" :path="modal.path" :title="modal.title" :message="modal.message"
-                    :icon="modal.icon" @closeModal="closeModal" />
-            </v-template>
         </v-row>
+
+        
+
+        <v-template>
+            <Modal v-model="modal.show" :path="modal.path" :title="modal.title" :message="modal.message"
+                :icon="modal.icon" @closeModal="closeModal" />
+        </v-template>
+
     </v-container>
 </template>
 
@@ -91,11 +89,10 @@ export default {
             ],
             confirmPasswordRules: [
                 (v) => !!v || "Confirmation Password is required",
-                (v) => v === this.confirmPassword || "Passwords do not match",
+                (v) => v === this.newPassword || "Passwords do not match",
             ],
-            passwordAlert: false,
+            error: false,
             passwordAlertMessage: null,
-            passwordAlertType: null,
             showPassword: false,
             showNewPassword: false,
             showConfirmPassword: false,
@@ -103,13 +100,33 @@ export default {
                 show: false,
                 type: "success",
                 icon: "mdi-check-circle",
-                title: "Password Changed successfully",
+                title: "Change Password",
                 message: "Success! Your password has been successfully changed.",
                 path: "/"
             }
         };
     },
     methods: {
+        async validatePassword() {
+            await this.$refs.form.validate();
+
+            const isValid = this.$refs.form.isValid
+
+            if (!isValid) {
+                // Form has validation errors, do not submit
+                console.log('Form has validation errors');
+                this.passwordAlertMessage = "New password does not fulfil requirement";
+                this.error = true;
+                if(this.newPassword !== this.confirmPassword){
+                    this.passwordAlertMessage = "New/confirm password does not match";
+                }
+            } else {
+                // Form is valid, submit the data
+                this.error = false;
+                this.changePassword();
+            } 
+        },
+
         async changePassword() {
             try {
 
@@ -118,11 +135,10 @@ export default {
                     this.password
                 );
 
+                this.passwordAlertMessage = "Invalid Current Password";
+
                 if (LoginResponse.status === 200) {
                     if(this.newPassword !== this.confirmPassword){
-                        this.passwordAlertMessage = "New/confirm password does not match";
-                        this.passwordAlertType = "error";
-                        this.passwordAlert = true;
                         throw new Error("Two Password not the same")
                         return
                     }
@@ -130,6 +146,7 @@ export default {
                     else{
                         const response = await this.userStore.changePassword(this.userStore.userId,this.confirmPassword);
                         if(response.status == 200){
+                            this.error = false;
                             this.modal.show = true;
                             this.modal.message = "Success! Your password has been changed.";
                             this.modal.type = "success";
@@ -146,9 +163,7 @@ export default {
                 }
             } catch (error) {
                 console.error(error);
-                this.passwordAlertMessage = "Invalid Current Password";
-                this.passwordAlertType = "error";
-                this.passwordAlert = true;
+                this.error = true;
             }
         },
         closeModal() {

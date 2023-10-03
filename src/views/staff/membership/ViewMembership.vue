@@ -14,7 +14,6 @@
                     <v-col>
                         <v-btn class="d-none d-md-block" variant="outlined" @click="createMembership('create')">Create membership</v-btn>
                         <v-btn block class="d-block d-sm-none" variant="outlined" @click="createMembership('create')">Create membership</v-btn>
-                        
                     </v-col>
                 </v-row>
             </v-card-text>

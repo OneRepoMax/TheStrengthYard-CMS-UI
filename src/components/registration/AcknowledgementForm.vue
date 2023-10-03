@@ -1,13 +1,19 @@
 <template>
     <v-form class="text-left" @submit.prevent="acknowledgement">
         <!-- Gym Layout Image-->
-        <v-container>
-            <h3>Gym Layout</h3>
-            <img style="max-width: 100%;" src="/src/assets/gym-layout.jpg" />
+        <v-container class="text-center">
+            <template class="d-flex align-center">
+                <v-icon class="mr-2">mdi-floor-plan</v-icon> 
+                <h3 class="text-left">Gym Layout</h3>
+            </template>
+            <img style="max-width: 100%; height:500px;" src="/src/assets/gym-layout.jpg" />
         </v-container>
         <!-- Equipment Care -->
         <v-container>
-            <h3>Equipment Care</h3>
+            <template class="d-flex align-center">
+                <v-icon class="mr-2">mdi-dumbbell</v-icon> 
+                <h3>Equipment Care</h3>
+            </template>
             <p>Please refrain from excessive slamming or throwing of equipment.</p><br>
             <p>
                 Dropping of weights during Deadlifts or Olympic Weightlifting Movements such as Clean and Jerks and Snatches
@@ -26,7 +32,10 @@
 
         <!-- Aircon and Lights -->
         <v-container>
-            <h3>Aircon and Lights</h3>
+            <template class="d-flex align-center">
+                <v-icon class="mr-2">mdi-lightbulb-on-outline</v-icon> 
+                <h3>Aircon and Lights</h3>
+            </template>
             <p>
                 If you're the first to arrive the gym or the last to leave the gym (regardless of timing, as long as there's
                 no one else around),
@@ -38,7 +47,10 @@
 
         <!-- Music -->
         <v-container>
-            <h3>Music</h3>
+            <template class="d-flex align-center">
+                <v-icon class="mr-2">mdi-music</v-icon> 
+                <h3>Music</h3>
+            </template>
             <p>
                 The music
                 <span style="font-weight: bold;">will auto on and off by itself</span>,
@@ -49,7 +61,10 @@
 
         <!-- Barbell Safety -->
         <v-container>
-            <h3>Barbell Safety</h3>
+            <template class="d-flex align-center">
+                <v-icon class="mr-2">mdi-weight-lifter</v-icon> 
+                <h3>Barbell Safety</h3>
+            </template>
             <p>
                 If you do not have a spotter to assist you while performing a bench press,
                 <span style="font-weight: bold;">please attach the spotting bars onto the rig</span>
@@ -62,7 +77,10 @@
 
         <!-- Placing Back Of Used Equipment -->
         <v-container>
-            <h3>Placing Back Of Used Equipment</h3>
+            <template class="d-flex align-center">
+                <v-icon class="mr-2">mdi-dumbbell</v-icon> 
+                <h3>Placing Back Of Used Equipment</h3>
+            </template>
             <p>
                 <span style="font-weight: bold;">Please place back all used equipment to their original position</span>
                 so that the gym will remain as a safe environment for everyone to train.
@@ -71,7 +89,10 @@
 
         <!-- Chalk Usage -->
         <v-container>
-            <h3>Chalk Usage</h3>
+            <template class="d-flex align-center">
+                <v-icon class="mr-2">mdi-alpha-c-box-outline</v-icon> 
+                <h3>Chalk Usage</h3>
+            </template>
             <p>
                 Due to Covid-19, the gym doesn't provide a communal chalk bucket for sharing. If you would need to use,
                 <span style="font-weight: bold;">please bring your own chalk and chalk up at the back area instead</span>
@@ -83,14 +104,20 @@
 
         <!-- Hygiene -->
         <v-container>
-            <h3>Hygiene</h3>
+            <template class="d-flex align-center">
+                <v-icon class="mr-2">mdi-lotion-plus-outline</v-icon> 
+                <h3>Hygiene</h3>
+            </template>
             <p>Please bring your own towel.
             </p>
         </v-container>
 
         <!-- Booking System -->
         <v-container>
-            <h3>Booking System</h3>
+            <template class="d-flex align-center">
+                <v-icon class="mr-2">mdi-laptop</v-icon> 
+                <h3>Booking System</h3>
+            </template>
             <p>The booking system now mainly serves to inform members of the slots that are blocked off for classes or
                 events.
             </p><br>

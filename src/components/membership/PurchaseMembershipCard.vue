@@ -8,17 +8,17 @@
       :class="{ 'on-hover': isHovering }"
       v-bind="props"
       variant="flat"
-      @click="navigateToRoute('/membership/' + membership.MembershipTypeId + '/checkout')"
+      @click="makePayment(membership)"
     >
       <v-img
         class="align-end text-white"
         height="200"
         :src="membership.Picture"
-        cover
+        h
       >
         <v-card-title>{{ membership.Type }}</v-card-title>
       </v-img>
-      <v-card-title class="text-subtitle-1">
+      <v-card-title class="text-subtitle-1 mb-1">
         <p class="text-wrap">{{ membership.Title }}</p>
       </v-card-title>
       <v-card-subtitle class="text-wrap">{{
@@ -38,11 +38,18 @@
 </template>
 
 <script>
+import { useMembershipStore } from "@/store/membership";
+
 export default {
   props: {
     membership: Object,
     membershipRecord: Array,
   },
+  setup() {
+        const membershipStore = useMembershipStore();
+
+        return { membershipStore }
+    },
   data() {
     return {
       loading: false,
@@ -50,8 +57,14 @@ export default {
   },
   methods: {
     navigateToRoute(route) {
+        console.log(route);
       this.$router.push(route);
     },
+    makePayment(membership) {
+            console.log(membership);
+            this.membershipStore.selectedMembership = membership
+            this.$router.push(`/membership/checkout`)
+        }
   },
 };
 </script>

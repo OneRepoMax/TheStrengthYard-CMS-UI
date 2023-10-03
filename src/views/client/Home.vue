@@ -8,7 +8,7 @@
                     email</v-chip> to verify email address
             </v-alert>
         </v-col>
-        <v-col cols="12" lg="8">
+        <v-col cols="12" md="8" class="pa-0 pa-md-3">
 
             <!-- Skeleton loaders -->
             <v-skeleton-loader class="mb-3" elevation="3" v-if="loading"
@@ -23,13 +23,15 @@
                 :emailAddress="userStore.emailAddress" :homeAddress="userStore.homeAddress"
                 :membershipRecord="membershipRecord" :displayPicture="userStore.displayPicture" />
 
-            <PurchaseMembershipSlider />
+            <PurchaseMembershipSlider class="d-none d-md-block" v-if="!loading"/>
 
-            <Classes />
+            <Classes v-if="!loading" class="d-none"/>
+
+            <PurchaseMembershipSlideGroup class="d-md-none"/>
 
         </v-col>
 
-        <v-col cols="12" lg="4">
+        <v-col cols="12" md="4" class="pa-0 pa-md-3">
 
 
             <!-- Sekelton loaders -->
@@ -41,13 +43,20 @@
 
             <template v-if="!loading">
                 <org-profile-card />
-                <membership-log />
+                <template v-for="data, index in ads" :key="index">
+                    <AdsCard :adsList="data.adsList" :title="data.title"/>
+                </template>
             </template>
 
         </v-col>
 
     </v-row>
 
+    <!-- Modal -->
+    <template>
+        <Modal v-model="modal.show" :path="modal.path" :title="modal.title" :message="modal.message" :icon="modal.icon"
+            @closeModal="closeModal" />
+    </template>
 </template>
 
 <script>
@@ -55,15 +64,15 @@
 import { useUserStore } from '@/store/user'
 import { useMembershipStore } from '@/store/membership'
 import ProfileCard from '@/components/home/ProfileCard.vue'
-import MembershipLog from '@/components/home/MembershipLog.vue'
 import Classes from '@/components/home/Classes.vue'
 import OrgProfileCard from '@/components/home/OrgProfileCard.vue'
 import Modal from '@/components/common/Modal.vue'
 import PurchaseMembershipSlider from "@/components/membership/PurchaseMembershipSlider.vue";
+import AdsCard from "@/components/home/AdsCard.vue";
+import PurchaseMembershipSlideGroup from "@/components/membership/PurchaseMembershipSlideGroup.vue";
 
 
 export default {
-    name: 'LoginForm',
     setup() {
         const userStore = useUserStore()
         const membershipStore = useMembershipStore()
@@ -83,7 +92,40 @@ export default {
                 icon: "",
                 path: "/",
             },
-            membershipRecord: []
+            membershipRecord: [],
+            ads: [
+                {
+                    title: "SBD Singapore",
+                    adsList: [
+                        {
+                            src: "https://sbd.sg/cdn/shop/files/SBD_BELT_MAIN_UPDATE_1296x.jpg?v=1637286913",
+                            path: "https://sbd.sg/products/13mm-lever-belt-2020?variant=33208204460114"
+                        },
+                        {
+                            src: "https://sbd.sg/cdn/shop/files/SBDSG_7MM_POWERLIFTING_KNEE_SLEEVES_BANNER_1_1280x.jpg?v=1685530323",
+                            path: "https://sbd.sg/blogs/news-1/7mm-powerlifting-knee-sleeves"
+                        },
+                        {
+                            src: "https://cdn.shopify.com/s/files/1/2782/7592/files/SBDSG_IPF_WORLD_MALTA_20234_TEAM_SINGAPORE_600x600.jpg?v=1685368701",
+                            path: "https://sbd.sg/blogs/news-1/ipf-world-malta-2023-team-singapore"
+                        }
+                    ]
+                },
+                {
+                    title: "TSY Official Merchandise",
+                    adsList: [
+                        {
+                            src: "https://www.thestrengthyard.com/wp-content/uploads/the-strength-yard-t-shirt-black.jpg",
+                            path: "https://www.thestrengthyard.com/merchandise/"
+                        },
+                        {
+                            src: "https://www.thestrengthyard.com/wp-content/uploads/the-strength-yard-t-shirt-green.jpg",
+                            path: "https://www.thestrengthyard.com/merchandise/"
+                        },
+                    ]
+                }
+            ]
+
         }
     },
     mounted() {
@@ -116,15 +158,22 @@ export default {
                 this.membershipRecord = response.data
             }
         },
-        async getMembership(){
+        async getMembership() {
 
         },
         closeModal() {
             this.modal.show = false
         },
     },
-
-    components: { ProfileCard, MembershipLog, Classes, OrgProfileCard, Modal, PurchaseMembershipSlider }
+    components: {
+        ProfileCard,
+        Classes,
+        OrgProfileCard,
+        Modal,
+        PurchaseMembershipSlider,
+        AdsCard,
+        PurchaseMembershipSlideGroup
+    }
 
 }
 

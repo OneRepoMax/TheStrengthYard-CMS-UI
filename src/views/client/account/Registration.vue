@@ -30,7 +30,7 @@
                 <v-card class="px-5 py-0" v-if="state.error > 0" align="start">
                     <v-card-text>
                         <v-alert type="error" title="Oops, please check your details"
-                            text="Please verify your registration details." closable>
+                            :text="state.errorText" closable>
                         </v-alert>
                     </v-card-text>
 
@@ -71,7 +71,8 @@ const state = reactive({
         title: "Registration successful",
         message: `Thank you ${userStore.firstName} ${userStore.lastName} for registering with The Strength Yard! Please check your email to verify your account.`,
         path: "/account/login"
-    }
+    },
+    errorText: "Please verify your registration details.",
 })
 
 const nextStep = (step) => {
@@ -115,30 +116,34 @@ const validateRegistrationForm = () => {
     state.error = 0;
 
     if (userStore.displayPicture == null) { state.error++; }
-    if (userStore.firstName == null) {
-        state.error++;
-    } else if (userStore.firstName.length < 2) { state.error++; }
-    if (userStore.lastName == null) {
-        state.error++;
-    } else if (userStore.lastName.length < 2) { state.error++; }
-    if (userStore.emailAddress == null) {
-        state.error++;
-    } else if (/.+@.+\..+/.test(userStore.emailAddress) == false) { state.error++; }
+    if (userStore.firstName == null) {state.error++;}
+    else if (/^[A-Za-z\s\-']+$/.test(userStore.firstName) == false) { state.error++; }
+    
+    if (userStore.lastName == null) {state.error++;} 
+    else if (/^[A-Za-z\s\-']+$/.test(userStore.lastName) == false) { state.error++; }
+    
+    if (userStore.emailAddress == null) {state.error++;} 
+    else if (/.+@.+\..+/.test(userStore.emailAddress) == false) { state.error++; }
+    
     if (userStore.gender == null) { state.error++; }
     if (userStore.dateOfBirth == null) { state.error++; }
     if (userStore.homeAddress == null) { state.error++; }
-    if (userStore.postalCode == null) {
-        state.error++;
-    } else if (userStore.postalCode.length != 6) { state.error++; }
+    
+    if (userStore.postalCode == null) {state.error++;} 
+    else if (userStore.postalCode.toString().length != 6) { state.error++; }
     else if (/^\d+$/.test(userStore.postalCode) == false) { state.error++; }
+    
     if (userStore.contactNo == null) { state.error++; }
-    if (userStore.password == null) {
-        state.error++;
-    } else if (userStore.password.length < 8) { state.error++; }
+    else if (userStore.contactNo.toString().length != 8) { state.error++; }
+    else if (/^\d+$/.test(userStore.contactNo) == false) { state.error++; }
+    
+    if (userStore.password == null) {state.error++;} 
+    else if (userStore.password.length < 8) { state.error++; }
     else if (/[a-z]/.test(userStore.password) == false) { state.error++; }
     else if (/[A-Z]/.test(userStore.password) == false) { state.error++; }
     else if (/\d/.test(userStore.password) == false) { state.error++; }
     else if (/[!@#$%^&*]/.test(userStore.password) == false) { state.error++; }
+    
     if (userStore.password != userStore.confirmPassword) { state.error++; }
 
     console.log("error: " + state.error)
@@ -183,9 +188,12 @@ const validateAcknowledgementForm = () => {
     // Return true if the form is valid, false otherwise
     // Example: Check if a checkbox is checked
     if (userStore.AcknowledgementTnC != false && userStore.AcknowledgementOpenGymRules != false) {
+        state.error = false;
         return true;
     } else {
         // Show an error message or provide feedback to the user
+        state.error = true;
+        state.errorText = "Please verify your registration details."
         return false;
     }
 };
@@ -245,7 +253,17 @@ async function submitForm() {
             const registerResponse = await userStore.register(registerPayload)
             console.log(registerResponse);
 
+            if (!registerResponse){
+                console.log("Potential Existing User")
+                state.error = true;
+                state.errorText = "This email address is already in use."
+            }
+
             if (registerResponse.status == 200) {
+
+                // reset error
+                state.error = false;
+                state.errorText = "Please verify your registration details."
 
                 // Show success modal
                 state.modal.show = true;
