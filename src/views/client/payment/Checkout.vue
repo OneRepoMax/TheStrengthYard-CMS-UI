@@ -149,7 +149,8 @@ export default {
                             membershipTypeId: vm.membership.MembershipTypeId,
                             startDate: new Date(),
                             endDate: endDate,
-                            subscriptionId: subscriptionId.id
+                            subscriptionId: subscriptionId.id,
+                            status: "Active"
                         }
 
                         try {

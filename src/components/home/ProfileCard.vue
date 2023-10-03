@@ -58,7 +58,7 @@
             </v-btn>
 
             <!-- Payment History Button -->
-            <v-btn class="me-3 text-capitalize d-flex" x-large rounded variant="outlined" to="payment-history">
+            <v-btn class="me-3 text-capitalize d-flex mb-5 mb-md-0" x-large rounded variant="outlined" to="payment-history">
                 Payment History
             </v-btn>
         </v-card-text>
@@ -78,7 +78,7 @@
 
             </template>
 
-            <template class="d-block d-md-none">
+            <template class="d-block d-md-none mb-5">
                 <MembershipRecordSlideGroup :membershipRecord="this.membershipRecord" />
             </template>
 

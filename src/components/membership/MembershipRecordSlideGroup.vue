@@ -1,5 +1,5 @@
 <template>
-    <v-card-title class="pt-5 pb-1">Registered Membership</v-card-title>
+    <v-card-title class="pb-1">Registered Membership</v-card-title>
     <v-card-subtitle class="pt-0">Manage your registered membership</v-card-subtitle>
     <v-slide-group v-model="model" class="pa-4" selected-class="bg-success">
         <v-slide-group-item v-for="membership, index in membershipRecord" :key="index">
