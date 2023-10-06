@@ -1,7 +1,7 @@
 <template>
     <v-card elevation="3" class="mb-md-3 rounded-0">
 
-        <v-img class="align-end text-white d-none d-md-flex" height="200" src="@/assets/home-cover-photo.jpg" cover></v-img>
+        <v-img class="align-end text-white d-none d-md-flex" height="200" src="../../assets/home-cover-photo.jpg" cover></v-img>
         <v-card-title class="mb-10 d-none d-md-flex">
             <v-avatar color="info" size="120" class="profile-avatar" :image="displayPicture" v-if="displayPicture">
             </v-avatar>
