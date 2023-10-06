@@ -149,7 +149,7 @@ export default {
                             membershipTypeId: vm.membership.MembershipTypeId,
                             startDate: new Date(),
                             endDate: endDate,
-                            subscriptionId: subscriptionId.id,
+                            subscriptionId: subscriptionId,
                             status: "Active"
                         }
 
@@ -160,8 +160,8 @@ export default {
                             if (vm.membershipStore.membershipRecord == null) {
                                 response = await vm.membershipStore.addMembershipRecord(payload)
                             } else {
-                                payload["membershipRecordId"] = vm.membershipStore.membershipRecord.MembershipRecordId,
-                                    response = await vm.membershipStore.updateMembershipRecord(payload)
+                                payload["membershipRecordId"] = vm.membershipStore.membershipRecord.MembershipRecordId;
+                                response = await vm.membershipStore.updateMembershipRecord(payload)
                             }
 
                             if (response.status == 200) {
