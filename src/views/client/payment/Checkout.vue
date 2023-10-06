@@ -72,7 +72,14 @@ export default {
         }
     },
     async mounted() {
-        this.getMembership();
+        try {
+            await this.getMembership()
+        } catch (error) {
+            if (this.membership == null) {
+                this.$router.push("/")
+            }
+        }
+
     },
     methods: {
         async getMembership() {
@@ -87,8 +94,8 @@ export default {
                 await this.mountPaypalSubscriptionButton(this.membership.PayPalPlanId);
             }
 
-
             this.loading = false;
+
 
         },
         membershipId() {
@@ -257,8 +264,8 @@ export default {
                             if (vm.membershipStore.membershipRecord == null) {
                                 response = await vm.membershipStore.addMembershipRecord(payload)
                             } else {
-                                payload["membershipRecordId"] = vm.membershipStore.membershipRecord.MembershipRecordId,
-                                    response = await vm.membershipStore.updateMembershipRecord(payload)
+                                payload["membershipRecordId"] = vm.membershipStore.membershipRecord.MembershipRecordId
+                                response = await vm.membershipStore.updateMembershipRecord(payload)
                             }
 
                             if (response.status == 200) {
