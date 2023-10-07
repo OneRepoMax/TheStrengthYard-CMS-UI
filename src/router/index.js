@@ -148,6 +148,19 @@ const routes = [
         component: () =>
           import(/* webpackChunkName: "EditMembership" */ "@/views/staff/membership/EditMembership.vue"),
       },
+      {
+        path: "class",
+        name: "Manage Class",
+        component: () =>
+          import(/* webpackChunkName: "ViewMembership" */ "@/views/staff/class/ViewClass.vue"),
+      },
+      {
+        path: "class/:id",
+        name: "Edit Class",
+        props: true,
+        component: () =>
+          import(/* webpackChunkName: "EditMembership" */ "@/views/staff/membership/EditClass.vue"),
+      },
     ],
   },
 ];

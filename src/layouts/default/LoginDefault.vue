@@ -39,6 +39,8 @@ export default {
                 { title: 'Dashboard', path: '/admin/home', icon: "mdi-home", color: 'transparent' },
                 { title: 'Account', icon: "mdi-account", path: '/admin/account', color: 'transparent' },
                 { title: 'Membership', icon: "mdi-list-box", path: '/admin/membership', color: 'transparent' },
+                { title: 'Class', icon: "mdi-google-classroom", path: '/admin/class', color: 'transparent' },
+
             ]
         }
 
