@@ -159,7 +159,7 @@ const routes = [
         name: "Edit Class",
         props: true,
         component: () =>
-          import(/* webpackChunkName: "EditMembership" */ "@/views/staff/membership/EditClass.vue"),
+          import(/* webpackChunkName: "EditMembership" */ "@/views/staff/class/EditClass.vue"),
       },
     ],
   },
