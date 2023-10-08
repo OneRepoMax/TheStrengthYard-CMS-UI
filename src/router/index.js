@@ -108,7 +108,7 @@ const routes = [
         path: "",
         name: "Schedule",
         component: () =>
-          import(/* webpackChunkName: "Schedule" */ "@/views/client/classes/Schedule.vue"),
+          import(/* webpackChunkName: "Schedule" */ "@/views/client/schedule/Schedule.vue"),
       },
     ],
   },
