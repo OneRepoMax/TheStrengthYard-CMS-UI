@@ -9,7 +9,7 @@
                     <v-spacer></v-spacer>
                     <v-col cols="12" md="3" >
                         <v-autocomplete density="compact" variant="outlined" clearable prepend-inner-icon="mdi-magnify"
-                        v-model="searchValue" :items="titles" hide-details="auto" class="me-3 w-100" label="Search class"></v-autocomplete>
+                        v-model="searchValue" :items="names" hide-details="auto" class="me-3 w-100" label="Search class"></v-autocomplete>
                     </v-col>
                     <v-col>
                         <v-btn class="d-none d-md-block" variant="outlined" @click="createClass('create')">Create class</v-btn>
@@ -90,7 +90,7 @@ export default {
             if (this.searchValue != null) {
 
                 const filteredClass = this.ClassList.filter(classDetails =>
-                    `${classDetails.name}`
+                    `${classDetails.ClassName}`
                         .toLowerCase()
                         .includes(this.searchValue.toLowerCase())
                 );
@@ -123,9 +123,11 @@ export default {
                         this.ClassList = response.data
                         console.log(this.ClassList)
                         for (const classDetails of this.ClassList) {
-                            const name = `${classDetails.name}`;
-                            if (this.titles.indexOf(name) === -1) {
-                                this.titles.push(name);
+                            // console.log(ClassDetails.name)
+                            const name = `${classDetails.ClassName}`;
+                            // console.log(name)
+                            if (this.names.indexOf(name) === -1) {
+                                this.names.push(name);
                             }
                         }
                     }
@@ -142,7 +144,6 @@ export default {
         },
 
         createClass(classId) {
-            // console.log(membershipId)
             this.$router.push(`/admin/class/${classId}`)
         },
     }

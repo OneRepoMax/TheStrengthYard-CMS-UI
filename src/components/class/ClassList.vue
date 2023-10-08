@@ -1,32 +1,23 @@
 <template>
     <v-expansion-panels variant="popout" class="pa-4">
-        <v-expansion-panel v-for="classDetails in this.classList" :key="classDetails.classId"
-            :value="classDetails.classId">
+        <v-expansion-panel v-for="classDetails in this.classList" :key="classDetails.ClassId"
+            :value="classDetails.ClassId">
             <v-expansion-panel-title>
                 <v-row align="center" dense>
                     <v-col cols="12" md="3">
-                        <strong>{{ classDetails.Name }}</strong>
+                        <strong>{{ classDetails.ClassName }}</strong>
                     </v-col>
                     <v-col cols="12" md="3">
-                        <p>{{ classDetails.Description }}</p>
+                        <p>Description: {{ classDetails.Description }}</p>
                     </v-col>
                     <v-col cols="12" md="4">
-                        <p>{{ classDetails.MaximumCapacity }}</p>
+                        <p>Capacity: {{ classDetails.MaximumCapacity }}</p>
                     </v-col>
-                    <!-- <v-col cols="12" md="2">
-                        <p>Setup Fee ${{ membership.SetupFee }}</p>
-                    </v-col> -->
-                   
-                    <!-- <v-col cols="12" md="1">
-                        <v-chip class="font-weight-medium" size="small">
-                            {{ classDetails.Visibility }}
-                        </v-chip>
-                    </v-col> -->
                     <v-col cols="12" md="1" class="d-flex ms-auto me-5">
                         <v-btn  variant="text" icon="mdi-square-edit-outline" size="small" class="me-2"
-                            @click.prevent="editClass(classDetails.classId)"></v-btn>
+                            @click.prevent="editClass(classDetails.ClassId)"></v-btn>
                         <v-btn variant="text" icon="mdi-delete" color="red" size="small"
-                            @click.prevent="showModal(classDetails.classId)"></v-btn>
+                            @click.prevent="showModal(classDetails.ClassId)"></v-btn>
                     </v-col>
                 </v-row>
             </v-expansion-panel-title>
@@ -37,23 +28,7 @@
                         <v-skeleton-loader type="list-item-three-line" :loading="loading"></v-skeleton-loader>
                     </v-card-text>
                 </template>
-                <!-- <v-card-text>
-                    <v-row>
-                        <v-col cols="12" md="3">
-                            <v-img :src="membership.Picture" height="200px" cover></v-img>
-                        </v-col>
-                        <v-col cols="12" md="9">
-                            <strong>Description </strong><br>
-                            <p>{{ membership.Description }} </p><br>
-                            <template v-if="membership.PayPalPlanId != null">
-                                <strong>PayPal Plan Id </strong><br>
-                                <p>{{ membership.PayPalPlanId }} </p>
-                            </template>
-                        </v-col>
-
-                    </v-row>
-
-                </v-card-text> -->
+                <!-- Add the expansion to see who are in the class   -->
             </v-expansion-panel-text>
         </v-expansion-panel>
     </v-expansion-panels>
@@ -103,7 +78,7 @@ export default {
     },
     methods: {
         editClass(classId) {
-            console.log(classId)
+            console.log('this is the classId' + classId)
             this.$router.push(`/admin/class/${classId}`)
         },
 
@@ -118,7 +93,7 @@ export default {
                     }
                 })
             } catch (error) {
-                console.error("Error deleting membership", error);
+                console.error("Error deleting class", error);
             }
         },
         showModal(id) {
