@@ -1,20 +1,20 @@
 <template>
-    <v-expansion-panels variant="popout" class="pa-4">
+    <v-expansion-panels variant="popout" class="pa-1">
         <v-expansion-panel v-for="classDetails in this.classList" :key="classDetails.ClassId"
             :value="classDetails.ClassId">
             <v-expansion-panel-title>
                 <v-row align="center" dense>
-                    <v-col cols="12" md="3">
-                        <strong>{{ classDetails.ClassName }}</strong>
+                    <v-col cols="12" md="6">
+                        <p class="lh-lg">{{ classDetails.ClassName }}</p>
                     </v-col>
-                    <v-col cols="12" md="3">
+                    <!-- <v-col cols="12" md="3">
                         <p>Description: {{ classDetails.Description }}</p>
-                    </v-col>
-                    <v-col cols="12" md="4">
+                    </v-col> -->
+                    <v-col cols="12" md="3">
                         <p>Capacity: {{ classDetails.MaximumCapacity }}</p>
                     </v-col>
                     <v-col cols="12" md="1" class="d-flex ms-auto me-5">
-                        <v-btn  variant="text" icon="mdi-square-edit-outline" size="small" class="me-2"
+                        <v-btn  variant="text" icon="mdi-square-edit-outline" size="small" class="me-1"
                             @click.prevent="editClass(classDetails.ClassId)"></v-btn>
                         <v-btn variant="text" icon="mdi-delete" color="red" size="small"
                             @click.prevent="showModal(classDetails.ClassId)"></v-btn>
@@ -28,10 +28,16 @@
                         <v-skeleton-loader type="list-item-three-line" :loading="loading"></v-skeleton-loader>
                     </v-card-text>
                 </template>
+                <v-card-text>
+                    <v-row>
+                        <p>{{ classDetails.Description }} </p><br>
+                    </v-row>
 
+                </v-card-text>
             </v-expansion-panel-text>
         </v-expansion-panel>
     </v-expansion-panels>
+
     <!-- Add the expansion to see who are in the class   -->
     <template>
         <Modal v-model="modal.show" :title="modal.title" :message="modal.message" :icon="modal.icon"
