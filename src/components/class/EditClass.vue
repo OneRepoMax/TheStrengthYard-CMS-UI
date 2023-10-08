@@ -21,7 +21,7 @@
                                 v-model="this.classData.capacity" required :rules="rules"
                                 variant="outlined"></v-text-field>
                         </v-col>
-                        <v-col cols="12" md="4">
+                        <v-col cols="12" md="12">
                             <v-textarea clearable hide-details="auto" class="mb-3" label="Description"
                                 v-model="this.classData.description" required :rules="rules"
                                 variant="outlined"></v-textarea>
