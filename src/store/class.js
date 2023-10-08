@@ -10,7 +10,7 @@ const TSY_API = import.meta.env.VITE_TSY_API;
 // const bucket = import.meta.env.VITE_S3_BUCKET_ADMIN_NAME; // Bucket name
 // const region = import.meta.env.VITE_AWS_REGION; // Region
 
-export const useClassStore = defineStore("classDetails", {
+export const useClassStore = defineStore("class", {
   state: () => ({
     classId: null,
     name: null,
@@ -43,7 +43,7 @@ export const useClassStore = defineStore("classDetails", {
         return error.response;
       }
     },
-    async getClassById(classId) {
+    async getclassById(classId) {
       const apiUrl = `${TSY_API}/class/${classId}`;
 
       try {
@@ -62,14 +62,32 @@ export const useClassStore = defineStore("classDetails", {
         return error.response;
       }
     },
+    async getMembershipLogByMembershipRecordId(membershipRecordId) {
+      const apiUrl = `${TSY_API}/membershiplog/${membershipRecordId}`;
+
+      try {
+        const response = await axios.get(apiUrl);
+
+        if (response.status === 200) {
+          return response;
+        }
+        return response;
+      } catch (error) {
+        console.error(
+          "An error occurred during get membership log by membership record ID:",
+          error
+        );
+        return error.response;
+      }
+    },
       async updateClassById(classData, classId) {
 
 
         try {
-          let response = await axios.put(`${TSY_API}/class/${classId}`, {
-            ClassName: classData.name,
+          let response = await axios.put(`${TSY_API}/memberships/${classId}`, {
+            Name: classData.name,
             Description: classData.description,
-            MaximumCapacity: classData.capacity,
+            Capacity: classData.capacity,
           });
   
           // Handle the response data here
@@ -83,7 +101,8 @@ export const useClassStore = defineStore("classDetails", {
       },
 
       async deleteClassById(classId) {
-        const apiUrl = `${TSY_API}/class/${classId}`;
+
+        const apiUrl = `${TSY_API}/memberships/${classId}`;
   
         try {
 
@@ -105,12 +124,10 @@ export const useClassStore = defineStore("classDetails", {
 
         try {
           let response = await axios.post(`${TSY_API}/class`, {
-            ClassName: classData.name,
+            Name: classData.name,
             Description: classData.description,
-            MaximumCapacity: classData.capacity,
+            Capacity: classData.capacity,
           });
-
-          console.log('this is the response status'+ response.status)
   
           // Handle the response data here
           if (response.status === 200) {
