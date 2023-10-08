@@ -120,6 +120,23 @@ export const useClassStore = defineStore("classDetails", {
           return;
         }
       },
+      async getAllClassSlot(){
+        const apiUrl = `${TSY_API}/classSlot`;
+        try {
+          const response = await axios.get(apiUrl);
+  
+          if (response.status === 200) {
+            return response;
+          }
+          return response;
+        } catch (error) {
+          console.error(
+            "An error occurred during get class slots:",
+            error
+          );
+        }
+      },
+
   },
 
 
