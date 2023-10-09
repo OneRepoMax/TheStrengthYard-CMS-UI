@@ -3,9 +3,9 @@
 
         <v-card elevation="3" class="pa-5" width="700px">
             <v-card-title class="text-center">
-                <v-card-title v-if="this.classId
-                    == 'create'">Create Class</v-card-title>
-                <v-card-title v-else>Manage Class</v-card-title>
+                <v-card-title v-if="this.classSlotId
+                    == 'create'">Create Class Slot</v-card-title>
+                <v-card-title v-else>Manage Class Slot</v-card-title>
             </v-card-title>
             <v-form ref="form" @submit.prevent="validateForm" validate-on="submit">
 
@@ -17,14 +17,24 @@
                                 variant="outlined"></v-text-field>
                         </v-col>
                         <v-col cols="12" md="4">
-                            <v-text-field clearable hide-details="auto" label="Capacity"
+                            <v-text-field clearable hide-details="auto" label="Max Capacity"
                                 v-model="this.classData.capacity" required :rules="rules"
                                 variant="outlined"></v-text-field>
                         </v-col>
-                        <v-col cols="12" md="12">
-                            <v-textarea clearable hide-details="auto" class="mb-3" label="Description"
-                                v-model="this.classData.description" required :rules="rules"
-                                variant="outlined"></v-textarea>
+                        <v-col cols="12" md="4">
+                            <v-text-field clearable hide-details="auto" label="Day"
+                                v-model="this.classData.day" required :rules="rules"
+                                variant="outlined"></v-text-field>
+                        </v-col>
+                        <v-col cols="12" md="4">
+                            <v-text-field clearable hide-details="auto" label="Start Time"
+                                v-model="this.classData.startTime" required :rules="rules"
+                                variant="outlined"></v-text-field>
+                        </v-col>
+                        <v-col cols="12" md="4">
+                            <v-text-field clearable hide-details="auto" label="End Time"
+                                v-model="this.classData.endTime" required :rules="rules"
+                                variant="outlined"></v-text-field>
                         </v-col>
                     </v-row>
                 </v-card-text>
@@ -36,7 +46,7 @@
                             <v-btn color="teal" block variant="outlined" to="/admin/class" size="large">back</v-btn>
                         </v-col>
                         <v-col cols="12" md="6">
-                            <v-btn v-if="this.classId == 'create'" color="teal" block type="submit"
+                            <v-btn v-if="this.classSlotId == 'create'" color="teal" block type="submit"
                                 size="large">Create</v-btn>
                             <v-btn v-else color="teal" block type="submit" size="large">Update</v-btn>
                         </v-col>
@@ -81,10 +91,10 @@ export default {
         }
     },
     watch: {
-        classId(newValue) {
+        classSlotId(newValue) {
             try {
                 if (newValue != null) {
-                    this.getClassData();
+                    this.getClassSlotData();
                 } else {
                     console.log("test");
                     this.classData = this.classStore.$state
@@ -97,12 +107,13 @@ export default {
 
         }
     },
-    mounted() {
-        if (this.classId == "create") {
+    async mounted() {
+        if (this.classSlotId == "create") {
             this.classData = this.classStore.$state
             console.log(this.classData)
         } else {
-            this.getClassData();
+            await this.getClassSlotData();
+            
         }
 
         console.log(this.classData)
@@ -112,8 +123,10 @@ export default {
             rules: [v => (!!v) || 'This field is required'],
             classData: {
                 name: null,
-                description: null,
                 capacity: null,
+                day: null,
+                startTime: null,
+                endTime: null,
             },
             modal: {
                 show: false,
@@ -124,10 +137,11 @@ export default {
                 path: "/"
             },
             showError: false,
+            loading: false,
         }
     },
     computed: {
-        classId() {
+        classSlotId() {
             return this.$route.params.id || null;
         },
     },
@@ -137,14 +151,21 @@ export default {
             this.modal.show = false
         },
 
-        async getClassData() {
+        async getClassSlotData() {
             try {
-                const response = await this.classStore.getClassById(this.classId)
+                this.loading = true
+                const response = await this.classStore.getClassSlotById(this.classSlotId)
+                this.loading = false
+                
+                console.log(response.data)
                 if (response.status == 200) {
-                    this.classData.name = response.data[0].ClassName
-                    this.classData.description = response.data[0].Description
-                    this.classData.capacity = response.data[0].MaximumCapacity
-                }
+                    //this.classData = response.data
+                    this.classData.name = response.data.Class.ClassName
+                    this.classData.capacity = response.data.Class.MaximumCapacity
+                    this.classData.day = response.data.Day
+                    this.classData.startTime = response.data.StartTime
+                    this.classData.endTime = response.data.EndTime
+                }   
             } catch (error) {
                 console.error("Error retrieving user info", error);
             }
@@ -154,8 +175,10 @@ export default {
             state.error = 0;
 
             if (this.classData.name == "" || this.classData.name == null) { state.error++; }
-            if (this.classData.description == "" || this.classData.description == null) { state.error++; }
             if (this.classData.capacity == "" || this.classData.capacity == null) { state.error++; }
+            if (this.classData.day == "" || this.classData.day == null) { state.error++; }
+            if (this.classData.startTime == "" || this.classData.startTime == null) { state.error++; }
+            if (this.classData.endTime == "" || this.classData.endTime == null) { state.error++; }
 
             if (state.error == 0) {
                 this.showError = false
@@ -171,10 +194,18 @@ export default {
         async updateClass() {
 
             console.log(JSON.stringify({
-                ClassName: this.classData.name,
-                Description: this.classData.description,
-                MaximumCapacity: this.classData.capacity,
+                Day: this.classData.day,
+                StartTime: this.classData.startTime,
+                EndTime: this.classData.endTime,
             }))
+
+            // darren stopped here
+            // just checked backend and realised another field call RecurringUntil needed for creating class slots..
+            // also need updateClassSlotById, createClassSlot on store,
+            //also need updateClassSlotById on backend booking.py
+            //need to format time for startTime and endTime,
+            //day need to use dropdown list
+
             // try {
             
                 let tempclassId = this.classId

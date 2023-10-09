@@ -81,9 +81,9 @@ export default {
     },
 
     methods: {
-        editClass(classId) {
-            console.log(classId)
-            this.$router.push(`/admin/class/${classId}`)
+        editClass(classSlotId) {
+            console.log(classSlotId)
+            this.$router.push(`/admin/class-slot/${classSlotId}`)
         },
         formattedTime(timeInput) {
             const date = new Date(timeInput);
