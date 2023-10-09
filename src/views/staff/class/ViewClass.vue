@@ -1,107 +1,97 @@
 <template>
     <v-container fluid class="mx-auto">
-        
-        <v-card max-width="1280x" class="mx-auto">
-            <v-card-text>
-                <v-row align="center" dense>
-                    <v-col cols="8">
-                        <v-card-title>Class Slots</v-card-title>
-                    </v-col>
-                    <v-spacer></v-spacer>
-                    <!-- <v-col cols="12" md="3" >
-                        <v-autocomplete density="compact" variant="outlined" clearable prepend-inner-icon="mdi-magnify"
-                        v-model="searchValue" :items="names" hide-details="auto" class="me-3 w-100" label="Search class"></v-autocomplete>
-                    </v-col> -->
-                    <v-col cols="2">
-                        <v-btn class="d-none d-md-block" variant="outlined" @click="createClassSlot('create')">Create class Slot</v-btn>
-                        <!-- <v-btn class="d-none d-md-block" variant="outlined" @click="createClass('create')">Create class</v-btn> -->
-                        <v-btn block class="d-block d-sm-none" variant="outlined" @click="createClassSlot('create')">Create class</v-btn>
-                    </v-col>
-                </v-row>
-            </v-card-text>
-            <v-divider></v-divider>
+        <v-row dense>
+            <v-col cols="12" md="4">
+                <v-card max-width="500px" class="mx-auto">
+                    <v-card-text>
+                        <v-row align="center" dense>
+                            <v-col cols="8">
+                                <v-card-title>Classes</v-card-title>
+                            </v-col>
+                            <v-spacer></v-spacer>
+                            <v-col cols="2">
+                                <v-btn variant="text" icon="mdi-plus-circle" size="large" class="me-2"
+                                    @click="createClass('create')"></v-btn>
+                            </v-col>
+                        </v-row>
+                    </v-card-text>
+                    <v-divider></v-divider>
 
-            <!-- Skeleton loaders -->
-            <template v-if="loading">
-                <v-card-text class="px-8">
-                    <v-skeleton-loader 
-                        type="list-item-three-line"
-                        :loading="loading"
-                        v-for="index in 10" :key="index"
-                    ></v-skeleton-loader>
-                </v-card-text>
-            </template>
+                    <!-- Skeleton loaders -->
+                    <template v-if="loading">
+                        <v-card-text class="px-8">
+                            <v-skeleton-loader type="list-item-three-line" :loading="loading" v-for="index in 10"
+                                :key="index"></v-skeleton-loader>
+                        </v-card-text>
+                    </template>
+                    <v-card-item class="px-2">
+                        <!-- Manage class page -->
+                        <ClassList :classList="displayedClass" />
+                    </v-card-item>
 
 
-            <!-- Manage class page -->
-            <ClassSlotList :classList="displayedClassSlot"/>
+                    <v-divider></v-divider>
 
-            <v-divider></v-divider>
-            
-            <v-card-text class="px-8">
-                <v-row>
-                    <v-col cols="12" sm="2" class="d-flex justify-end align-center">
-                        <v-select label="Results per page:" :items="[10, 50, 100]" v-model="classPerPage"
-                            variant="outlined" max-width="40px" density="compact" hide-details="auto"></v-select>
-                    </v-col>
-                    <v-spacer></v-spacer>
-                    <v-col class="d-flex justify-end align-center">
-                        <v-pagination v-model="page" :length="totalPages"></v-pagination>
-                    </v-col>
-                </v-row>
-            </v-card-text>
-        </v-card>
-<!----------------------------- -->
-        <v-card max-width="500px" class="mx-auto">
-            <v-card-text>
-                <v-row align="center" dense>
-                    <v-col cols="8">
-                        <v-card-title>Classes</v-card-title>
-                    </v-col>
-                    <v-spacer></v-spacer>
-                    <!-- <v-col cols="12" md="3" >
-                        <v-autocomplete density="compact" variant="outlined" clearable prepend-inner-icon="mdi-magnify"
-                        v-model="searchValue" :items="names" hide-details="auto" class="me-3 w-100" label="Search class"></v-autocomplete>
-                    </v-col> -->
-                    <v-col cols="2">
-                        <v-btn variant="text" icon="mdi-plus-circle" size="large" class="me-2" @click="createClass('create')"></v-btn>
-                        <!-- <v-btn class="d-none d-md-block" variant="outlined" @click="createClass('create')">Create class</v-btn> -->
-                        <v-btn block class="d-block d-sm-none" variant="outlined" @click="createClass('create')">Create class</v-btn>
-                    </v-col>
-                </v-row>
-            </v-card-text>
-            <v-divider></v-divider>
+                    <v-card-text class="px-8">
+                        <v-row>
+                            <v-col cols="12" sm="2" class="d-flex justify-end align-center">
+                                <v-select label="Results per page:" :items="[10, 50, 100]" v-model="classPerPage"
+                                    variant="outlined" max-width="40px" density="compact" hide-details="auto"></v-select>
+                            </v-col>
+                            <v-spacer></v-spacer>
+                            <v-col class="d-flex justify-end align-center">
+                                <v-pagination v-model="page" :length="totalPages"></v-pagination>
+                            </v-col>
+                        </v-row>
+                    </v-card-text>
+                </v-card>
+            </v-col>
+            <v-col cols="12" md="8">
+                <v-card max-width="1280x" class="mx-auto">
+                    <v-card-text>
+                        <v-row align="center" dense>
+                            <v-col cols="8">
+                                <v-card-title>Class Slots</v-card-title>
+                            </v-col>
+                            <v-spacer></v-spacer>
+                            
+                            <v-col cols="4">
+                                <v-btn block color="grey-darken-4"
+                                    @click="createClassSlot('create')">Create Slot</v-btn>
+                            </v-col>
+                        </v-row>
+                    </v-card-text>
+                    <v-divider></v-divider>
 
-            <!-- Skeleton loaders -->
-            <template v-if="loading">
-                <v-card-text class="px-8">
-                    <v-skeleton-loader 
-                        type="list-item-three-line"
-                        :loading="loading"
-                        v-for="index in 10" :key="index"
-                    ></v-skeleton-loader>
-                </v-card-text>
-            </template>
+                    <!-- Skeleton loaders -->
+                    <template v-if="loading">
+                        <v-card-text class="px-8">
+                            <v-skeleton-loader type="list-item-three-line" :loading="loading" v-for="index in 10"
+                                :key="index"></v-skeleton-loader>
+                        </v-card-text>
+                    </template>
 
 
-            <!-- Manage class page -->
-            <ClassList :classList="displayedClass"/>
+                    <!-- Manage class page -->
+                    <ClassSlotList :classSlotList="displayedClassSlot" />
 
-            <v-divider></v-divider>
-            
-            <v-card-text class="px-8">
-                <v-row>
-                    <v-col cols="12" sm="2" class="d-flex justify-end align-center">
-                        <v-select label="Results per page:" :items="[10, 50, 100]" v-model="classPerPage"
-                            variant="outlined" max-width="40px" density="compact" hide-details="auto"></v-select>
-                    </v-col>
-                    <v-spacer></v-spacer>
-                    <v-col class="d-flex justify-end align-center">
-                        <v-pagination v-model="page" :length="totalPages"></v-pagination>
-                    </v-col>
-                </v-row>
-            </v-card-text>
-        </v-card>
+                    <v-divider></v-divider>
+
+                    <v-card-text class="px-8">
+                        <v-row>
+                            <v-col cols="12" sm="2" class="d-flex justify-end align-center">
+                                <v-select label="Results per page:" :items="[10, 50, 100]" v-model="classPerPage"
+                                    variant="outlined" max-width="40px" density="compact" hide-details="auto"></v-select>
+                            </v-col>
+                            <v-spacer></v-spacer>
+                            <v-col class="d-flex justify-end align-center">
+                                <v-pagination v-model="page" :length="totalPages"></v-pagination>
+                            </v-col>
+                        </v-row>
+                    </v-card-text>
+                </v-card>
+            </v-col>
+        </v-row>
 
     </v-container>
 </template>
@@ -117,7 +107,7 @@ export default {
         ClassList,
         ClassSlotList
     },
-    setup () {
+    setup() {
         const classStore = useClassStore();
         return { classStore }
     },
@@ -134,8 +124,8 @@ export default {
         }
     },
     watch: {
-        searchValue(){
-            this.page=1;
+        searchValue() {
+            this.page = 1;
         }
     },
     computed: {
@@ -184,11 +174,11 @@ export default {
                     : this.ClassSlotList.length) / this.classPerPage
             );
         },
-        
+
     },
 
 
-    
+
     mounted() {
         this.getClassList();
         this.getClassSlotList();
@@ -220,7 +210,7 @@ export default {
             } catch (error) {
                 console.error("An error occurred during get all class API request:", error);
             }
-            
+
             return
 
         },
@@ -254,7 +244,7 @@ export default {
 
             return
 
-            },
+        },
 
         createClass(classId) {
             this.$router.push(`/admin/class/${classId}`)
@@ -266,6 +256,4 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>

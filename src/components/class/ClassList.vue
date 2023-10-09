@@ -1,5 +1,5 @@
 <template>
-    <v-expansion-panels variant="popout" class="pa-1">
+    <v-expansion-panels class="pa-1">
         <v-expansion-panel v-for="classDetails in this.classList" :key="classDetails.ClassId"
             :value="classDetails.ClassId">
             <v-expansion-panel-title>
@@ -11,7 +11,7 @@
                         <p>Description: {{ classDetails.Description }}</p>
                     </v-col> -->
                     <v-col cols="12" md="3">
-                        <p>Capacity: {{ classDetails.MaximumCapacity }}</p>
+                        <v-chip prependIcon="mdi-account-multiple">{{ classDetails.MaximumCapacity }}</v-chip>
                     </v-col>
                     <v-col cols="12" md="1" class="d-flex ms-auto me-5">
                         <v-btn  variant="text" icon="mdi-square-edit-outline" size="small" class="me-1"

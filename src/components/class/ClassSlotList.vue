@@ -1,68 +1,40 @@
 <template>
-    <v-expansion-panels variant="popout" class="pa-4">
-        <v-expansion-panel v-for="classDetails in this.classList" :key="classDetails.classId"
-            :value="classDetails.classId">
-            <v-expansion-panel-title>
-                <v-row align="center" dense>
-                    <v-col cols="12" md="3">
-                        <p> {{ classDetails.Class.ClassName}}</p>
-                    </v-col>
-                    <v-col cols="12" md="3">
-                        <p>{{ classDetails.Day }}</p>
-                    </v-col>
-                    <v-col cols="12" md="4">
-                        <p>Start Time: {{ this.formattedTime(classDetails.StartTime) }}</p>
-                    </v-col>
-                    <v-col cols="12" md="4">
-                        <p>End Time: {{ this.formattedTime(classDetails.EndTime) }}</p>
-                    </v-col>
-                    <v-col cols="12" md="4">
-                        <p>{{ classDetails.CurrentCapacity }}</p>
-                    </v-col>
-                    <!-- <v-col cols="12" md="2">
-                        <p>Setup Fee ${{ membership.SetupFee }}</p>
-                    </v-col> -->
-                   
-                    <!-- <v-col cols="12" md="1">
-                        <v-chip class="font-weight-medium" size="small">
-                            {{ classDetails.Visibility }}
-                        </v-chip>
-                    </v-col> -->
-                    <v-col cols="12" md="1" class="d-flex ms-auto me-5">
-                        <v-btn  variant="text" icon="mdi-square-edit-outline" size="small" class="me-2"
-                            @click.prevent="editClass(classDetails.classId)"></v-btn>
-                        <v-btn variant="text" icon="mdi-delete" color="red" size="small"
-                            @click.prevent="showModal(classDetails.ClassSlotId)"></v-btn>
-                    </v-col>
-                </v-row>
-            </v-expansion-panel-title>
-            <v-expansion-panel-text>
-                <!-- Skeleton loaders -->
-                <template v-if="loading">
-                    <v-card-text class="px-8">
-                        <v-skeleton-loader type="list-item-three-line" :loading="loading"></v-skeleton-loader>
-                    </v-card-text>
-                </template>
-                <!-- <v-card-text>
-                    <v-row>
-                        <v-col cols="12" md="3">
-                            <v-img :src="membership.Picture" height="200px" cover></v-img>
-                        </v-col>
-                        <v-col cols="12" md="9">
-                            <strong>Description </strong><br>
-                            <p>{{ membership.Description }} </p><br>
-                            <template v-if="membership.PayPalPlanId != null">
-                                <strong>PayPal Plan Id </strong><br>
-                                <p>{{ membership.PayPalPlanId }} </p>
-                            </template>
-                        </v-col>
-
-                    </v-row>
-
-                </v-card-text> -->
-            </v-expansion-panel-text>
-        </v-expansion-panel>
-    </v-expansion-panels>
+    <v-table>
+        <thead>
+            <tr class="font-weight-bold">
+                <th class="text-left">Class Name</th>
+                <th class="text-left">Date</th>
+                <th class="text-left">Class Time</th>
+                <th class="text-left">Capacity</th>
+                <th class="text-left">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr v-for="classSlot in this.classSlotList" :key="classSlot.ClassSlotId">
+                <td class="font-weight-medium">
+                    {{ classSlot.Class.ClassName }}
+                </td>
+                <td>
+                    <v-chip variant="text" prependIcon="mdi-calendar">{{ formattedDate(classSlot.StartTime) }}</v-chip>
+                </td>
+                <td>
+                    <v-chip variant="text" prepend-icon="mdi-clock-outline">
+                        {{ this.formattedTime(classSlot.StartTime) }} - {{ this.formattedTime(classSlot.EndTime) }}
+                    </v-chip>
+                </td>
+                <td>
+                    <v-chip variant="text" prependIcon="mdi-account-multiple">{{ classSlot.CurrentCapacity }}/{{
+                        classSlot.Class.MaximumCapacity }}</v-chip>
+                </td>
+                <td>
+                    <v-btn variant="text" icon="mdi-square-edit-outline" size="small" class="me-2"
+                        @click.prevent="editClass(classSlot.ClassSlotId)"></v-btn>
+                    <v-btn variant="text" icon="mdi-delete" color="red" size="small"
+                        @click.prevent="showModal(classSlot.ClassSlotId)"></v-btn>
+                </td>
+            </tr>
+        </tbody>
+    </v-table>
 
     <template>
         <Modal v-model="modal.show" :title="modal.title" :message="modal.message" :icon="modal.icon"
@@ -79,7 +51,7 @@ import { useClassStore } from '@/store/class'
 
 export default {
     props: {
-        classList: Object,
+        classSlotList: Object,
     },
 
     components: { Modal },
@@ -113,7 +85,7 @@ export default {
             console.log(classId)
             this.$router.push(`/admin/class/${classId}`)
         },
-        formattedTime(timeInput){
+        formattedTime(timeInput) {
             const date = new Date(timeInput);
 
             // Get hours and minutes as two-digit strings
@@ -121,7 +93,13 @@ export default {
             const minutes = String(date.getMinutes()).padStart(2, "0");
             return hours + minutes;
         },
-
+        // Format to ddd, mm/yy
+        formattedDate(dateInput){
+            const date = new Date(dateInput);
+            const options = { weekday: 'long', year: '2-digit', month: '2-digit' };
+            const formatted = date.toLocaleDateString("en-US", options);
+            return formatted
+        },
         async deleteClassSlot(classSlotId) {
             console.log("deleting: Class slot " + classSlotId)
             try {
