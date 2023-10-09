@@ -14,10 +14,10 @@
                         <p>{{ classDetails.Day }}</p>
                     </v-col>
                     <v-col cols="12" md="4">
-                        <p>{{ classDetails.StartTime }}</p>
+                        <p>{{ this.formattedTime(classDetails.StartTime) }}</p>
                     </v-col>
                     <v-col cols="12" md="4">
-                        <p>{{ classDetails.EndTime }}</p>
+                        <p>{{ this.formattedTime(classDetails.EndTime) }}</p>
                     </v-col>
                     <v-col cols="12" md="4">
                         <p>{{ classDetails.CurrentCapacity }}</p>
@@ -35,7 +35,7 @@
                         <v-btn  variant="text" icon="mdi-square-edit-outline" size="small" class="me-2"
                             @click.prevent="editClass(classDetails.classId)"></v-btn>
                         <v-btn variant="text" icon="mdi-delete" color="red" size="small"
-                            @click.prevent="showModal(classDetails.classId)"></v-btn>
+                            @click.prevent="showModal(classDetails.classSlotId)"></v-btn>
                     </v-col>
                 </v-row>
             </v-expansion-panel-title>
@@ -110,16 +110,25 @@ export default {
             }
         }
     },
+
     methods: {
         editClass(classId) {
             console.log(classId)
             this.$router.push(`/admin/class/${classId}`)
         },
+        formattedTime(timeInput){
+            const date = new Date(timeInput);
 
-        async deleteClass(classId) {
-            console.log("deleting: " + classId)
+            // Get hours and minutes as two-digit strings
+            const hours = String(date.getHours()).padStart(2, "0");
+            const minutes = String(date.getMinutes()).padStart(2, "0");
+            return hours + minutes;
+        },
+
+        async deleteClassSlot(classSlotId) {
+            console.log("deleting: " + classSlotId)
             try {
-                await this.classStore.deleteClassById(classId).then((response) => {
+                await this.classStore.deleteClassSlotById(classSlotId).then((response) => {
                     if (response.status == 200) {
                         location.reload()
                         console.log(response.data)
@@ -127,20 +136,20 @@ export default {
                     }
                 })
             } catch (error) {
-                console.error("Error deleting membership", error);
+                console.error("Error deleting Class Slot", error);
             }
         },
 
 
         showModal(id) {
             this.modal.show = true
-            this.classId = id
+            this.classSlotId = id
         },
         closeModal() {
             this.modal.show = false
         },
         actionModal() {
-            this.deleteClass(this.classId)
+            this.deleteClassSlot(this.classSlotId)
         }
     }
 }
