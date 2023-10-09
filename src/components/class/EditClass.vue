@@ -119,7 +119,7 @@ export default {
                 show: false,
                 type: "success",
                 icon: "mdi-check-circle",
-                title: "Update successful",
+                title: "Create successful",
                 message: "Your class has been successfully updated!",
                 path: "/"
             },
@@ -175,30 +175,27 @@ export default {
                 Description: this.classData.description,
                 MaximumCapacity: this.classData.capacity,
             }))
-            // try {
+            try {
             
                 let tempclassId = this.classId
                 if (this.classId == "create") {
                     tempclassId = this.classStore.classId
-                    console.log("creating: new membership")
+                    console.log("creating: new class")
                     // trigger update profile form through this API and put in variables
                     // Edit the function below accordingly, e.g. update the parameters, etc
-                    await this.classStore.createClass(this.classData).then((response) => {
-                        if (response.status == 200) {
-                            console.log(response.data);
-
-                            // Show success modal
-                            this.modal.message = "Your class has been created successfully!"
-                            this.modal.path = "/admin/class"
-                            this.classStore.$state = {
-                                classId: null,
-                                name: null,
-                                description: null,
-                                capacity: null,
-                            }
-
+                    
+                    await this.classStore.createClass(this.classData);
+                        // Show success modal
+                        this.modal.show = true
+                        this.modal.message = "Your class has been created successfully!"
+                        this.modal.path = "/admin/class"
+                        this.classStore.$state = {
+                            classId: null,
+                            name: null,
+                            description: null,
+                            capacity: null,
                         }
-                    })
+
 
                 } else {
                     console.log("Updating: " + tempclassId)
@@ -221,9 +218,9 @@ export default {
                     })
                 }
 
-            // } catch (error) {
-            //     console.log("Membership error: ", error);
-            // }
+            } catch (error) {
+                console.log("Class error: ", error);
+            }
         }
     },
 
