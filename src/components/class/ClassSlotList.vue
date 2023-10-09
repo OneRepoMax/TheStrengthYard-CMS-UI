@@ -35,7 +35,7 @@
                         <v-btn  variant="text" icon="mdi-square-edit-outline" size="small" class="me-2"
                             @click.prevent="editClass(classDetails.classId)"></v-btn>
                         <v-btn variant="text" icon="mdi-delete" color="red" size="small"
-                            @click.prevent="showModal(classDetails.classSlotId)"></v-btn>
+                            @click.prevent="showModal(classDetails.ClassSlotId)"></v-btn>
                     </v-col>
                 </v-row>
             </v-expansion-panel-title>
@@ -126,7 +126,7 @@ export default {
         },
 
         async deleteClassSlot(classSlotId) {
-            console.log("deleting: " + classSlotId)
+            console.log("deleting: Class slot " + classSlotId)
             try {
                 await this.classStore.deleteClassSlotById(classSlotId).then((response) => {
                     if (response.status == 200) {
