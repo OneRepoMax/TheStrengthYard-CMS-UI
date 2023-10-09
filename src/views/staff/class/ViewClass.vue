@@ -3,7 +3,7 @@
         <v-card max-width="500px" class="mx-auto">
             <v-card-text>
                 <v-row align="center" dense>
-                    <v-col cols="12" md="8">
+                    <v-col cols="8">
                         <v-card-title>Classes</v-card-title>
                     </v-col>
                     <v-spacer></v-spacer>
@@ -11,7 +11,7 @@
                         <v-autocomplete density="compact" variant="outlined" clearable prepend-inner-icon="mdi-magnify"
                         v-model="searchValue" :items="names" hide-details="auto" class="me-3 w-100" label="Search class"></v-autocomplete>
                     </v-col> -->
-                    <v-col cols="8" md="2">
+                    <v-col cols="2">
                         <v-btn variant="text" icon="mdi-plus-circle" size="large" class="me-2" @click="createClass('create')"></v-btn>
                         <!-- <v-btn class="d-none d-md-block" variant="outlined" @click="createClass('create')">Create class</v-btn> -->
                         <v-btn block class="d-block d-sm-none" variant="outlined" @click="createClass('create')">Create class</v-btn>
