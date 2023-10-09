@@ -100,6 +100,24 @@ export const useClassStore = defineStore("classDetails", {
         }
       },
 
+      async deleteClassSlotById(classSlotId) {
+
+        const apiUrl = `${TSY_API}/classSlot/${classSlotId}`;
+  
+        try {
+
+          const response = await axios.delete(apiUrl);
+  
+          // Handle the response data here
+          if (response.status === 200) {
+            return response;
+          }
+        } catch (error) {
+          console.error("Deletion error:", error);
+          return;
+        }
+      },
+
       async createClass(classData) {
 
         console.log(classData);
