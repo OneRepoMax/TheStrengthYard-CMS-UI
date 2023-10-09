@@ -119,18 +119,15 @@ export const useClassStore = defineStore("classDetails", {
       },
 
       async createClass(classData) {
-
-        console.log(classData);
-
+      
         try {
           let response = await axios.post(`${TSY_API}/class`, {
             ClassName: classData.name,
             Description: classData.description,
             MaximumCapacity: classData.capacity,
           });
-  
           // Handle the response data here
-          if (response.status === 200) {
+          if (response.status === 201) {
             return response;
           }
         } catch (error) {

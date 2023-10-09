@@ -51,7 +51,7 @@
             </v-form>
 
             <template>
-                <Modal v-model="modal.show" :path="modal.path" :title="modal.title" :message="modal.message"
+                <Modal v-model="modal.show" :path="modal.path" :title="modal.title" :message="modal.message" :closeOnClick="false"
                     :icon="modal.icon" @closeModal="closeModal" />
             </template>
 
@@ -184,17 +184,21 @@ export default {
                     // trigger update profile form through this API and put in variables
                     // Edit the function below accordingly, e.g. update the parameters, etc
                     
-                    await this.classStore.createClass(this.classData);
+                    const response = await this.classStore.createClass(this.classData);
                         // Show success modal
-                        this.modal.show = true
-                        this.modal.message = "Your class has been created successfully!"
-                        this.modal.path = "/admin/class"
-                        this.classStore.$state = {
-                            classId: null,
-                            name: null,
-                            description: null,
-                            capacity: null,
+                        console.log(response)
+                        if(response.status == 201) {
+                            this.modal.show = true
+                            this.modal.message = "Your class has been created successfully!"
+                            this.modal.path = "/admin/class"
+                            this.classStore.$state = {
+                                classId: null,
+                                name: null,
+                                description: null,
+                                capacity: null,
                         }
+                        }
+                        
 
 
                 } else {

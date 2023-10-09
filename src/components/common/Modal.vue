@@ -34,7 +34,7 @@ export default {
             if (this.closeOnClick) {
                 this.$emit('closeModal')
             } else {
-                this.$router.go(path)
+                this.$router.push(path)
             }
         }
     }
