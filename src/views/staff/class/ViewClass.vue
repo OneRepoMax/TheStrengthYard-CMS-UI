@@ -5,7 +5,7 @@
             <v-card-text>
                 <v-row align="center" dense>
                     <v-col cols="8">
-                        <v-card-title>Classes</v-card-title>
+                        <v-card-title>Class Slots</v-card-title>
                     </v-col>
                     <v-spacer></v-spacer>
                     <!-- <v-col cols="12" md="3" >
@@ -13,9 +13,9 @@
                         v-model="searchValue" :items="names" hide-details="auto" class="me-3 w-100" label="Search class"></v-autocomplete>
                     </v-col> -->
                     <v-col cols="2">
-                        <v-btn class="d-none d-md-block" variant="outlined" @click="createClass('create')">Create class Slot</v-btn>
+                        <v-btn class="d-none d-md-block" variant="outlined" @click="createClassSlot('create')">Create class Slot</v-btn>
                         <!-- <v-btn class="d-none d-md-block" variant="outlined" @click="createClass('create')">Create class</v-btn> -->
-                        <v-btn block class="d-block d-sm-none" variant="outlined" @click="createClass('create')">Create class</v-btn>
+                        <v-btn block class="d-block d-sm-none" variant="outlined" @click="createClassSlot('create')">Create class</v-btn>
                     </v-col>
                 </v-row>
             </v-card-text>
@@ -258,6 +258,9 @@ export default {
 
         createClass(classId) {
             this.$router.push(`/admin/class/${classId}`)
+        },
+        createClassSlot(classSlotId) {
+            this.$router.push(`/admin/class-slot/${classSlotId}`)
         },
     }
 }

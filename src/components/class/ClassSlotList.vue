@@ -4,20 +4,17 @@
             :value="classDetails.classId">
             <v-expansion-panel-title>
                 <v-row align="center" dense>
-                    <v-col v-if="classDetails.ClassId == 301" cols="12" md="3">
-                        <p> Olympic</p>
-                    </v-col>
-                    <v-col v-if="classDetails.ClassId == 300" cols="12" md="3">
-                        <p> Progressive</p>
+                    <v-col cols="12" md="3">
+                        <p> {{ classDetails.Class.ClassName}}</p>
                     </v-col>
                     <v-col cols="12" md="3">
                         <p>{{ classDetails.Day }}</p>
                     </v-col>
                     <v-col cols="12" md="4">
-                        <p>{{ this.formattedTime(classDetails.StartTime) }}</p>
+                        <p>Start Time: {{ this.formattedTime(classDetails.StartTime) }}</p>
                     </v-col>
                     <v-col cols="12" md="4">
-                        <p>{{ this.formattedTime(classDetails.EndTime) }}</p>
+                        <p>End Time: {{ this.formattedTime(classDetails.EndTime) }}</p>
                     </v-col>
                     <v-col cols="12" md="4">
                         <p>{{ classDetails.CurrentCapacity }}</p>

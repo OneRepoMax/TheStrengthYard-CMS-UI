@@ -161,6 +161,13 @@ const routes = [
         component: () =>
           import(/* webpackChunkName: "EditMembership" */ "@/views/staff/class/EditClass.vue"),
       },
+      {
+        path: "class-slot/:id",
+        name: "Edit Class Slot",
+        props: true,
+        component: () =>
+          import(/* webpackChunkName: "EditMembership" */ "@/views/staff/class/EditClassSlot.vue"),
+      },
     ],
   },
 ];
