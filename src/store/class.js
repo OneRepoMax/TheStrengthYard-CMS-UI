@@ -103,6 +103,25 @@ export const useClassStore = defineStore("classDetails", {
         }
       },
 
+      async updateClassSlotById(classSlotData, classSlotId) {
+
+        try {
+          let response = await axios.put(`${TSY_API}/classSlot/${classSlotId}`, {
+            Day: classSlotData.day,
+            StartTime: classSlotData.startTime,
+            EndTime: classSlotData.endTime,
+          });
+  
+          // Handle the response data here
+          if (response.status === 200) {
+            return response;
+          }
+        } catch (error) {
+          console.error("Update error:", error);
+          return;
+        }
+      },
+
       async deleteClassById(classId) {
 
         const apiUrl = `${TSY_API}/class/${classId}`;
@@ -156,6 +175,26 @@ export const useClassStore = defineStore("classDetails", {
           return;
         }
       },
+
+      async createClassSlot(classSlotData, classSlotId) {
+      
+        try {
+          let response = await axios.post(`${TSY_API}/class/${classSlotId}/classSlot`, {
+            Day: classSlotData.day,
+            StartTime: classSlotData.startTime,
+            EndTime: classSlotData.endTime,
+            RecurringUntil: classSlotData.RecurringUntil
+          });
+          // Handle the response data here
+          if (response.status === 201) {
+            return response;
+          }
+        } catch (error) {
+          console.error("Creation error:", error);
+          return;
+        }
+      },
+
       async getAllClassSlot(){
         const apiUrl = `${TSY_API}/classSlot`;
         try {
