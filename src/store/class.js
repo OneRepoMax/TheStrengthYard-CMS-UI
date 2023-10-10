@@ -176,14 +176,14 @@ export const useClassStore = defineStore("classDetails", {
         }
       },
 
-      async createClassSlot(classSlotData, classSlotId) {
+      async createClassSlot(classSlotData, classId, RecurringUntil) {
       
         try {
-          let response = await axios.post(`${TSY_API}/class/${classSlotId}/classSlot`, {
+          let response = await axios.post(`${TSY_API}/class/${classId}/classSlot`, {
             Day: classSlotData.day,
             StartTime: classSlotData.startTime,
             EndTime: classSlotData.endTime,
-            RecurringUntil: classSlotData.RecurringUntil
+            RecurringUntil: RecurringUntil,
           });
           // Handle the response data here
           if (response.status === 201) {

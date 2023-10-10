@@ -8,33 +8,49 @@
                 <v-card-title v-else>Manage Class Slot</v-card-title>
             </v-card-title>
             <v-form ref="form" @submit.prevent="validateForm" validate-on="submit">
-
                 <v-card-text>
                     <v-row>
-                        <v-col cols="12" md="8">
+                        <!-- to make this loop through this.classes, allow user to select name through dropdown list -->
+                        <v-col v-if="this.classSlotId == 'create'" cols="12" md="8">
+                            <v-text-field clearable hide-details="auto" class="mb-3" label="Select Class"
+                                v-model="this.classData.name" required :rules="rules"
+                                variant="outlined"></v-text-field>
+                        </v-col>
+
+                        <v-col v-else cols="12" md="7">
                             <v-text-field clearable hide-details="auto" class="mb-3" label="Name"
                                 v-model="this.classData.name" required :rules="rules"
                                 variant="outlined"></v-text-field>
                         </v-col>
+
+                        <!-- to make capacity display based on selected class -->
                         <v-col cols="12" md="4">
                             <v-text-field clearable hide-details="auto" label="Max Capacity"
                                 v-model="this.classData.capacity" required :rules="rules"
                                 variant="outlined"></v-text-field>
                         </v-col>
+
                         <v-col cols="12" md="4">
-                            <v-text-field clearable hide-details="auto" label="Day"
-                                v-model="this.classData.day" required :rules="rules"
-                                variant="outlined"></v-text-field>
+                            <v-select clearable hide-details="auto" label="Day"
+                                v-model="this.classData.day" 
+                                :items="['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday']"
+                                required :rules="rules"
+                                variant="outlined"></v-select>
                         </v-col>
                         <v-col cols="12" md="4">
-                            <v-text-field clearable hide-details="auto" label="Start Time"
+                            <v-text-field clearable hide-details="auto" label="Start Time: 0000"
                                 v-model="this.classData.startTime" required :rules="rules"
                                 variant="outlined"></v-text-field>
                         </v-col>
                         <v-col cols="12" md="4">
-                            <v-text-field clearable hide-details="auto" label="End Time"
+                            <v-text-field clearable hide-details="auto" label="End Time: 0000"
                                 v-model="this.classData.endTime" required :rules="rules"
                                 variant="outlined"></v-text-field>
+                        </v-col>
+                        <v-col v-if="this.classSlotId == 'create'" cols="12" md="12">
+                            <v-text-field hide-details="auto" class="mb-3" label="Recurring Until" type="date"
+                                v-model="this.RecurringUntil" required :rules="dobRules" variant="outlined"
+                                placeholder="YYYY-MM-DD"></v-text-field>
                         </v-col>
                     </v-row>
                 </v-card-text>
@@ -110,7 +126,10 @@ export default {
     async mounted() {
         if (this.classSlotId == "create") {
             this.classData = this.classStore.$state
+            await this.getClassData();
             console.log(this.classData)
+            console.log(this.classes)
+            
         } else {
             await this.getClassSlotData();
             
@@ -128,6 +147,12 @@ export default {
                 startTime: null,
                 endTime: null,
             },
+            classes: {
+                name: null,
+                description: null,
+                capacity: null,
+            },
+            RecurringUntil: null,
             modal: {
                 show: false,
                 type: "success",
@@ -138,17 +163,46 @@ export default {
             },
             showError: false,
             loading: false,
+            classId: null,
         }
     },
     computed: {
         classSlotId() {
             return this.$route.params.id || null;
         },
+
+        // formattedStart: {
+        //     get() {
+        //         // Assuming timeValue is in "HHMM" format
+        //         const hours = this.classData.startTime.substring(0, 2);
+        //         const minutes = this.classData.startTime.substring(2, 4);
+        //         return `${hours}:${minutes}`;
+        //     },
+        //     set(newValue) {
+        //         // Parse the input string in "HH:MM" format
+        //         const [hours, minutes] = newValue.split(":");
+        //         if (hours.length === 2 && minutes.length === 2) {
+        //         // Update the timeValue with the formatted input
+        //         this.classData.startTime = hours + minutes;
+        //         }
+        //     }
+        // },
+
     },
 
     methods: {
         closeModal() {
             this.modal.show = false
+        },
+        async getClassData() {
+            try {
+                const response = await this.classStore.getAllClass()
+                if (response.status == 200) {
+                    this.classes = response.data
+                }
+            } catch (error) {
+                console.error("Error retrieving user info", error);
+            }
         },
 
         async getClassSlotData() {
@@ -160,6 +214,7 @@ export default {
                 console.log(response.data)
                 if (response.status == 200) {
                     //this.classData = response.data
+                    this.classId = response.data.Class.ClassId
                     this.classData.name = response.data.Class.ClassName
                     this.classData.capacity = response.data.Class.MaximumCapacity
                     this.classData.day = response.data.Day
@@ -199,22 +254,19 @@ export default {
                 EndTime: this.classData.endTime,
             }))
 
-            // darren stopped here
-            // just checked backend and realised another field call RecurringUntil needed for creating class slots..
-            // also need updateClassSlotById, createClassSlot on store,
-            //also need updateClassSlotById on backend booking.py
-            //need to format time for startTime and endTime,
-            //day need to use dropdown list
 
             // try {
             
-                let tempclassId = this.classId
-                if (this.classId == "create") {
+                let tempclassSlotId = this.classSlotId
+                if (this.classSlotId == "create") {
                     tempclassId = this.classStore.classId
-                    console.log("creating: new membership")
-                    // trigger update profile form through this API and put in variables
-                    // Edit the function below accordingly, e.g. update the parameters, etc
-                    await this.classStore.createClass(this.classData).then((response) => {
+                    console.log("creating: new class slot")
+                    
+                    //need to make select class work, compute max capacity based on selected class
+                    //not working yet, need to pass in classId to create, need to get class id based on what classname user select
+                    // need to format start and end time to "09:00:00"
+
+                    await this.classStore.createClassSlot(this.classData,this.classId,this.RecurringUntil).then((response) => {
                         if (response.status == 200) {
                             console.log(response.data);
 
@@ -222,32 +274,34 @@ export default {
                             this.modal.message = "Your class has been created successfully!"
                             this.modal.path = "/admin/class"
                             this.classStore.$state = {
-                                classId: null,
-                                name: null,
-                                description: null,
-                                capacity: null,
+                                classSlotId: null,
+                                day: null,
+                                startTime: null,
+                                endTime: null,
                             }
 
                         }
                     })
 
                 } else {
-                    console.log("Updating: " + tempclassId)
+                    console.log("Updating: " + tempclassSlotId)
                     // trigger update profile form through this API and put in variables
                     // Edit the function below accordingly, e.g. update the parameters, etc
-                    await this.classStore.updateClassById({
-                        name: this.classData.name,
-                        description: this.classData.description,
-                        capacity: this.classData.capacity,
-                    }, tempclassId).then((response) => {
+                    await this.classStore.updateClassSlotById({
+                        day: this.classData.day,
+                        startTime: this.classData.startTime,
+                        endTime: this.classData.endTime,
+                    }, tempclassSlotId).then((response) => {
                         if (response.status == 200) {
-
                             console.log(response.data);
-
                             // Show success modal
                             this.modal.show = true
                             this.modal.path = "/admin/class"
 
+                        }
+                        else{
+                            console.log(response.status)
+                            console.log('cannot update')
                         }
                     })
                 }
