@@ -212,6 +212,27 @@ export const useClassStore = defineStore("classDetails", {
         }
       },
 
+      async getClassSlotByDate(date) {
+        const apiUrl = `${TSY_API}/classSlot/slots/${date}`;
+  
+        try {
+          const response = await axios.get(apiUrl);
+  
+          if (response.status === 200) {
+            console.log(response)
+            return response;
+          }
+          return response;
+        } catch (error) {
+          console.error(
+            "An error occurred during get class by ID API request:",
+            error
+          );
+  
+          return error.response;
+        }
+      },
+
   },
 
 

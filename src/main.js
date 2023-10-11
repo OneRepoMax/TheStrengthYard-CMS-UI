@@ -12,9 +12,11 @@ import { createApp } from 'vue'
 
 // Plugins
 import { registerPlugins } from '@/plugins'
+import { setupCalendar } from 'v-calendar';
 
 const app = createApp(App)
 
 registerPlugins(app)
 
+app.use(setupCalendar, {})
 app.mount('#app')
