@@ -52,9 +52,9 @@
 
         <v-card-text class="d-md-flex pb-0 pb-md-5 ms-md-3">
             <!-- Purchase Membership Button -->
-            <v-btn class="me-3 mb-3 text-capitalize d-flex" x-large rounded color="teal"
+            <v-btn class="me-3 mb-3 text-capitalize d-flex" x-large rounded color="grey-darken-4"
                 to="membership/purchase-membership">
-                Purchase Membership
+                Buy Membership
             </v-btn>
 
             <!-- Payment History Button -->
