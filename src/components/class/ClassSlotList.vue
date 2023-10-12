@@ -1,4 +1,21 @@
 <template>
+    <!-- Dynamic Toolbar -->
+    <v-toolbar v-if="selected.length" :color="selected.length ? 'grey darken-4' : 'deep-purple accent-4'" dark>
+        <v-btn icon @click="selected = []">
+            <v-icon>mdi-close</v-icon>
+        </v-btn>
+
+        <v-toolbar-title>
+            {{ `${selected.length} selected` }}
+        </v-toolbar-title>
+
+        <v-spacer></v-spacer>
+
+        <v-scale-transition>
+            <v-btn icon="mdi-delete" key="delete" v-if="selected.length" @click.prevent="showModal()"></v-btn>
+        </v-scale-transition>
+
+    </v-toolbar>
     <v-table>
         <thead>
             <tr class="font-weight-bold">
@@ -6,13 +23,14 @@
                 <th class="text-left">Date</th>
                 <th class="text-left">Class Time</th>
                 <th class="text-left">Capacity</th>
-                <th class="text-left">Actions</th>
+                <th class="text-left" v-if="!selected.length">Actions</th>
             </tr>
         </thead>
         <tbody>
             <tr v-for="classSlot in this.classSlotList" :key="classSlot.ClassSlotId">
                 <td class="font-weight-medium">
-                    {{ classSlot.Class.ClassName }}
+                    <v-checkbox-btn v-model="selected" :label="classSlot.Class.ClassName" :value="classSlot.ClassSlotId"
+                        class="text-wrap"></v-checkbox-btn>
                 </td>
                 <td>
                     <v-chip variant="text" prependIcon="mdi-calendar">{{ formattedDate(classSlot.StartTime) }}</v-chip>
@@ -26,9 +44,7 @@
                     <v-chip variant="text" prependIcon="mdi-account-multiple">{{ classSlot.CurrentCapacity }}/{{
                         classSlot.Class.MaximumCapacity }}</v-chip>
                 </td>
-                <td>
-                    <v-btn variant="text" icon="mdi-square-edit-outline" size="small" class="me-2"
-                        @click.prevent="editClass(classSlot.ClassSlotId)"></v-btn>
+                <td v-if="!selected.length">
                     <v-btn variant="text" icon="mdi-delete" color="red" size="small"
                         @click.prevent="showModal(classSlot.ClassSlotId)"></v-btn>
                 </td>
@@ -37,8 +53,13 @@
     </v-table>
 
     <template>
-        <Modal v-model="modal.show" :title="modal.title" :message="modal.message" :icon="modal.icon"
-            @closeModal="closeModal" @action="actionModal" :color="modal.color" />
+        <ModalWarning v-model="modalWarning.show" :title="modalWarning.title" :message="modalWarning.message"
+            :icon="modalWarning.icon" @closeModal="modalWarning" @action="actionModal" :color="modalWarning.color" />
+    </template>
+
+    <template>
+        <Modal v-model="modal.show" :path="modal.path" :title="modal.title" :message="modal.message" :icon="modal.icon"
+            :closeOnClick="true" @closeModal="closeModal" />
     </template>
 </template>
 
@@ -46,7 +67,8 @@
 
 <script>
 
-import Modal from '@/components/common/ModalWarning.vue';
+import ModalWarning from '@/components/common/ModalWarning.vue';
+import Modal from '@/components/common/Modal.vue'
 import { useClassStore } from '@/store/class'
 
 export default {
@@ -54,7 +76,7 @@ export default {
         classSlotList: Object,
     },
 
-    components: { Modal },
+    components: { ModalWarning, Modal },
 
     setup() {
         const classStore = useClassStore()
@@ -68,7 +90,8 @@ export default {
         return {
             classId: null,
             loading: false,
-            modal: {
+            selected: [],
+            modalWarning: {
                 show: false,
                 type: "success",
                 icon: "mdi-alert",
@@ -76,7 +99,15 @@ export default {
                 message: "This action cannot be undone",
                 path: "/admin/class",
                 color: "red"
-            }
+            },
+            modal: {
+                show: false,
+                type: "success",
+                icon: "mdi-check-circle",
+                title: "Delete successful",
+                message: "Class slots has been successfully deleted!",
+                path: "/admin/class"
+            },
         }
     },
 
@@ -94,37 +125,41 @@ export default {
             return hours + minutes;
         },
         // Format to ddd, mm/yy
-        formattedDate(dateInput){
+        formattedDate(dateInput) {
             const date = new Date(dateInput);
             const options = { weekday: 'long', year: '2-digit', month: '2-digit' };
             const formatted = date.toLocaleDateString("en-US", options);
             return formatted
         },
-        async deleteClassSlot(classSlotId) {
-            console.log("deleting: Class slot " + classSlotId)
-            try {
-                await this.classStore.deleteClassSlotById(classSlotId).then((response) => {
-                    if (response.status == 200) {
-                        location.reload()
-                        console.log(response.data)
-                        this.modal.show = false
-                    }
-                })
-            } catch (error) {
-                console.error("Error deleting Class Slot", error);
+
+        async deleteClassSlots() {
+            console.log("deleting: Class slots " + this.selected)
+
+            console.log(this.selected);
+
+            const response = await this.classStore.deleteClassSlotsById(this.selected)
+            this.modalWarning.show = false
+
+            if (response.status == 200) {
+                this.modal.show = true
             }
+
         },
-
-
-        showModal(id) {
-            this.modal.show = true
-            this.classSlotId = id
+        showModal(classIds) {
+            if (classIds) {
+                this.selected = [classIds]
+            }
+            this.modalWarning.show = true
         },
         closeModal() {
             this.modal.show = false
+            location.reload();
         },
-        actionModal() {
-            this.deleteClassSlot(this.classSlotId)
+        closeModalWarning() {
+            this.modalWarning.show = false
+        },
+        async actionModal() {
+            await this.deleteClassSlots()
         }
     }
 }
