@@ -32,7 +32,7 @@ export default {
                 { title: 'Home', path: '/', icon: "mdi-home", color: 'transparent' },
                 { title: 'Schedule', icon: "mdi-calendar-badge", path: '/schedule', color: 'transparent' },
                 { title: 'Book', icon: "mdi-login-variant", path: '/book', color: 'transparent' },
-                { title: 'Buy Membership', path: '/membership/purchase-membership', icon: "mdi-home", color: 'amber-darken-3' },
+                { title: 'Buy Membership', path: '/membership/purchase-membership', icon: "mdi-weight-lifter", color: 'amber-darken-3' },
             ]
         } else if (this.userStore.userType == "A"){
             this.menuItems = [
