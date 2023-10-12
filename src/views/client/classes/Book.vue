@@ -9,23 +9,21 @@
                         Here’s Our Gym Classes For Those Who Enjoy The Camaraderie Of Training In A Group While Getting
                         Functionally Stronger!
                     </v-card-text>
-                    <!-- <template v-if="!loading">
-                        <template v-for="category in categories" :key="category">
-                            <v-card-title>{{ category }} Memberships</v-card-title>
-                            <v-divider class="mb-5"></v-divider>
-                            <div dense class="d-flex flex-wrap">
-                                <div v-for="membership in groupedMemberships[category]"
-                                    :key="membership.MembershipTypeId">
-                                    <PurchaseMembershipCard :membership="membership" />
-                                </div>
-                            </div>
-                        </template>
-                    </template> -->
+
                     <v-divider/>
+
                     <div class="mt-5">
                         <v-row>
                             <v-col cols="12" md="5" class="text-center">
-                                <DatePicker v-model.string="date" :masks="masks"/>
+                                <DatePicker v-model.string="date" :min-date="new Date()" color="gray" :masks="masks" :attributes="attributes" expanded>
+                                    <template #footer>
+                                    <div class="w-full px-4 pb-3">
+                                        <v-btn block color="black" @click="moveToday">
+                                            Today
+                                        </v-btn>
+                                    </div>
+                                    </template>
+                                </DatePicker>
                             </v-col>
                             <v-col cols="12" md="7">
                                 <!-- Start of V-if: show empty class -->
@@ -45,16 +43,31 @@
                                                 <!-- Show Class Slot Detail -->
                                                 <v-col cols="10">
                                                     <v-card-item>
-                                                        <v-card-title>{{slot.Class.ClassName}}</v-card-title>
+                                                        <v-card-title>
+                                                            {{slot.Class.ClassName}}
+                                                        </v-card-title>
                                                         <v-card-subtitle>
                                                             <!-- {{formattedDate(slot.StartTime)}},
                                                             {{slot.Day}}, -->
-                                                            {{formattedTime(slot.StartTime)}} - {{slot.Duration}} minutes
+                                                            {{slot.ClassSlotId}}
+                                                            
                                                         </v-card-subtitle>
                                                     </v-card-item>
 
                                                     <v-card-text>
+                                                        <p>{{formattedTime(slot.StartTime)}} - {{slot.Duration}} minutes</p>
                                                         <p>{{slot.CurrentCapacity}}/{{slot.Class.MaximumCapacity}} joined</p>
+                                                        <br>
+                                                        <div v-if="checkAvailability(slot.StartTime, slot.CurrentCapacity, slot.Class.MaximumCapacity) == 'Available'">
+                                                                <v-chip color="green" text-color="white">
+                                                                    {{checkAvailability(slot.StartTime, slot.CurrentCapacity, slot.Class.MaximumCapacity)}}
+                                                                </v-chip>
+                                                            </div>
+                                                            <div v-else>
+                                                                <v-chip color="red" text-color="white">
+                                                                    {{checkAvailability(slot.StartTime, slot.CurrentCapacity, slot.Class.MaximumCapacity)}}
+                                                                </v-chip>
+                                                            </div>
                                                     </v-card-text>
                                                 </v-col>
 
@@ -81,7 +94,8 @@
 </template>
 
 <script>
-import { reactive, ref } from 'vue';
+import { ref } from 'vue';
+import { format } from 'date-fns';
 import { Calendar, DatePicker } from 'v-calendar';
 import 'v-calendar/style.css';
 import { useClassStore } from '@/store/class'
@@ -99,11 +113,16 @@ export default {
 
     data() {
         return{
-            date: new Date(),
+            date: format(new Date(), 'yyyy-MM-dd'),
             classSlots: [],
             masks: ref({
                 modelValue: 'YYYY-MM-DD',
             }),
+            attributes: ref([{
+                // highlight: 'red',
+                dot: 'red',
+                dates: new Date(),
+            }])
         }
     },
 
@@ -132,6 +151,24 @@ export default {
             const hours = String(date.getUTCHours()).padStart(2, '0');
             const minutes = String(date.getUTCMinutes()).padStart(2, '0');
             return `${hours}:${minutes}`;
+        },
+
+        moveToday(){
+            this.date = new Date()
+        },
+
+        checkAvailability(dateInput, CurrentCapacity, MaximumCapacity){
+            const now = new Date();
+            const date = new Date(dateInput);
+            var status = "Available";
+
+            if (date <= now){
+                status = "Unavailable"
+            }
+            if (MaximumCapacity <= CurrentCapacity){
+                status = "Unavailable"
+            }
+            return status
         },
 
         async getClassSlotsByDate() {
