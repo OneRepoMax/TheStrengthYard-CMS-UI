@@ -103,7 +103,10 @@ import { ref } from 'vue';
 import { format } from 'date-fns';
 import { Calendar, DatePicker } from 'v-calendar';
 import 'v-calendar/style.css';
+import { useUserStore } from '@/store/user'
 import { useClassStore } from '@/store/class'
+import { useMembershipStore } from '@/store/membership'
+import { useBookStore } from '@/store/book'
 import Modal from '@/components/book/ConfirmBooking.vue';
 
 export default {
@@ -115,7 +118,10 @@ export default {
 
     setup () {
         const classStore = useClassStore();
-        return { classStore }
+        const userStore = useUserStore();
+        const membershipStore = useMembershipStore();
+        const bookStore = useBookStore();
+        return { classStore, userStore, membershipStore, bookStore }
     },
 
     data() {
@@ -133,7 +139,7 @@ export default {
             bookingInfo: {
                 show: false,
                 title: "Confirm booking",
-                message: "Please note that you can only request a cancellation within a 12-hour window prior to the scheduled class slot.",
+                message: "Please note that cancellations are not possible 12-hour prior to the scheduled class slot.",
                 color: "black",
                 className: "",
                 classId: "",
@@ -201,11 +207,13 @@ export default {
         },
 
         closeModal() {
-            this.bookingInfo.show = false
+            this.bookingInfo.show = false;
         },
 
         actionModal() {
-            console.log(this.bookingInfo.classId)
+            console.log(this.bookingInfo.classId);
+            console.log(this.userStore.userId);
+            this.createBooking();
         },
 
         async getClassSlotsByDate() {
@@ -228,8 +236,39 @@ export default {
                 return
 
             } catch (error) {
-                console.error("An error occurred during get all payment history API request:", error);
+                console.error("An error occurred during get class slots API request:", error);
             }
+            return
+        },
+
+        async createBooking() {
+            try {
+                
+                // Get membership records
+                const membershipRecord = await this.membershipStore.getMembershipRecordByUserId(this.userStore.userId);
+                var membershipRecordId = 0
+                
+                // Get membership id when there is only one membership record -- to be worked on again
+                if (membershipRecord.data.length == 1){
+                    membershipRecordId = membershipRecord.data[0].MembershipRecordId;
+                }
+
+                console.log(membershipRecordId)
+
+                const response = await this.bookStore.createBooking(membershipRecordId, this.userStore.userId, this.bookingInfo.classId);
+
+                console.log(response)
+
+                // if (response.status == 200){
+                //     console.log("create booking successful")
+                // }
+                
+                return
+
+            } catch (error) {
+                console.error("An error occurred during create booking API request:", error);
+            }
+            
             return
         },
     },
