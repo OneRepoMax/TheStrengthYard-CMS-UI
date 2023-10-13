@@ -54,7 +54,7 @@
 
     <template>
         <ModalWarning v-model="modalWarning.show" :title="modalWarning.title" :message="modalWarning.message"
-            :icon="modalWarning.icon" @closeModal="modalWarning" @action="actionModal" :color="modalWarning.color" />
+            :icon="modalWarning.icon" @closeModal="closeModalWarning" @action="actionModal" :color="modalWarning.color" />
     </template>
 
     <template>
