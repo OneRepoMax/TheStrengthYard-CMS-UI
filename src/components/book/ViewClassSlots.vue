@@ -91,8 +91,10 @@
             :classId="bookingInfo.classId"
             :date="bookingInfo.date"
             :time="bookingInfo.time"
+            :icon="bookingInfo.icon"
             @closeModal="closeModal" 
-            @action="actionModal" 
+            @closeModalReload="closeModalReload"
+            @actionModal="actionModal" 
             
         />
     </template>
@@ -145,6 +147,8 @@ export default {
                 classId: "",
                 date: "",
                 time: "",
+                icon: "",
+                bookingId: "",
             },
         }
     },
@@ -210,6 +214,10 @@ export default {
             this.bookingInfo.show = false;
         },
 
+        closeModalReload() {
+            location.reload()
+        },
+
         actionModal() {
             console.log(this.bookingInfo.classId);
             console.log(this.userStore.userId);
@@ -259,9 +267,16 @@ export default {
 
                 console.log(response)
 
-                // if (response.status == 200){
-                //     console.log("create booking successful")
-                // }
+                if (response.status == 201){
+                    console.log("create booking successful")
+                    // Update modal to successful
+                    this.bookingInfo.bookingId = response.data.BookingId;
+                    // this.bookingInfo.bookingDateTime = response.data.BookingDateTime;
+                    this.bookingInfo.title = "Booking Successful";
+                    this.bookingInfo.message = `Timestamp: ${response.data.BookingDateTime}`;
+                    this.bookingInfo.color = "green";
+                    this.bookingInfo.icon = "mdi-calendar-check";
+                }
                 
                 return
 

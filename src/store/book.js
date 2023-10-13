@@ -20,7 +20,7 @@ export const useBookStore = defineStore("book", {
         });
 
         // Handle the response data here
-        if (response.status === 200) {
+        if (response.status === 201) {
           return response;
         }
       } catch (error) {
