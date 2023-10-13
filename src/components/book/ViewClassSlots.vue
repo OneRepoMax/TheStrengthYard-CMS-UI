@@ -25,7 +25,7 @@
                 <!-- Start of V-else: Show class slots -->
                 <div v-else>
                     <div v-for="slot in this.classSlots" :key="slot.ClassSlotId">
-                        <v-card class="mb-3">
+                        <v-card class="mb-3" @click.prevent="showModal(slot)">
                             <v-row>
                                 <!-- Show Class Slot Detail -->
                                 <v-col cols="10">
@@ -80,6 +80,22 @@
         
         </v-row>
     </div>
+
+    <template>
+        <Modal 
+            v-model="bookingInfo.show" 
+            :title="bookingInfo.title" 
+            :message="bookingInfo.message"
+            :color="bookingInfo.color" 
+            :className="bookingInfo.className"
+            :classId="bookingInfo.classId"
+            :date="bookingInfo.date"
+            :time="bookingInfo.time"
+            @closeModal="closeModal" 
+            @action="actionModal" 
+            
+        />
+    </template>
 </template>
 
 <script>
@@ -88,11 +104,13 @@ import { format } from 'date-fns';
 import { Calendar, DatePicker } from 'v-calendar';
 import 'v-calendar/style.css';
 import { useClassStore } from '@/store/class'
+import Modal from '@/components/book/ConfirmBooking.vue';
 
 export default {
     components: {
         Calendar,
         DatePicker,
+        Modal
     },
 
     setup () {
@@ -111,7 +129,17 @@ export default {
                 // highlight: 'red',
                 dot: 'red',
                 dates: new Date(),
-            }])
+            }]),
+            bookingInfo: {
+                show: false,
+                title: "Confirm booking",
+                message: "Please note that you can only request a cancellation within a 12-hour window prior to the scheduled class slot.",
+                color: "black",
+                className: "",
+                classId: "",
+                date: "",
+                time: "",
+            },
         }
     },
 
@@ -154,10 +182,6 @@ export default {
             const now = new Date();
             const date = new Date(dateInput);
             var status = "Available";
-            // Show original start time - string
-            // console.log(dateInput)
-            // Show new start time - new Date
-            // console.log(date)
 
             if (dateInput <= now){
                 status = "Unavailable"
@@ -166,6 +190,22 @@ export default {
                 status = "Unavailable"
             }
             return status
+        },
+
+        showModal(slot) {
+            this.bookingInfo.show = true;
+            this.bookingInfo.className = `${slot.Class.ClassName}`;
+            this.bookingInfo.classId = `${slot.ClassSlotId}`;
+            this.bookingInfo.date = `${this.formattedDate(slot.StartTime)}`;
+            this.bookingInfo.time = `${this.formattedTime(slot.StartTime)} - ${this.formattedTime(slot.EndTime)} (${slot.Duration} Minutes)`;
+        },
+
+        closeModal() {
+            this.bookingInfo.show = false
+        },
+
+        actionModal() {
+            console.log(this.bookingInfo.classId)
         },
 
         async getClassSlotsByDate() {
