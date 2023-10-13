@@ -59,15 +59,15 @@
                                                         <p>{{slot.CurrentCapacity}}/{{slot.Class.MaximumCapacity}} joined</p>
                                                         <br>
                                                         <div v-if="checkAvailability(slot.StartTime, slot.CurrentCapacity, slot.Class.MaximumCapacity) == 'Available'">
-                                                                <v-chip color="green" text-color="white">
-                                                                    {{checkAvailability(slot.StartTime, slot.CurrentCapacity, slot.Class.MaximumCapacity)}}
-                                                                </v-chip>
-                                                            </div>
-                                                            <div v-else>
-                                                                <v-chip color="red" text-color="white">
-                                                                    {{checkAvailability(slot.StartTime, slot.CurrentCapacity, slot.Class.MaximumCapacity)}}
-                                                                </v-chip>
-                                                            </div>
+                                                            <v-chip color="green" text-color="white">
+                                                                Available
+                                                            </v-chip>
+                                                        </div>
+                                                        <div v-else>
+                                                            <v-chip color="red" text-color="white">
+                                                                Inavailable
+                                                            </v-chip>
+                                                        </div>
                                                     </v-card-text>
                                                 </v-col>
 
@@ -126,6 +126,10 @@ export default {
         }
     },
 
+    mounted () {
+        this.getClassSlotsByDate();
+    },
+
     watch: {
         date(){
             this.getClassSlotsByDate();
@@ -161,8 +165,12 @@ export default {
             const now = new Date();
             const date = new Date(dateInput);
             var status = "Available";
+            // Show original start time - string
+            console.log(dateInput)
+            // Show new start time - new Date
+            console.log(date)
 
-            if (date <= now){
+            if (dateInput <= now){
                 status = "Unavailable"
             }
             if (MaximumCapacity <= CurrentCapacity){
