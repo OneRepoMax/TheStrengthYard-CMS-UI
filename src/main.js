@@ -7,6 +7,11 @@
 // Components
 import App from './App.vue'
 
+
+// Vercel Analytics
+import { inject } from '@vercel/analytics';
+inject();
+
 // Composables
 import { createApp } from 'vue'
 
