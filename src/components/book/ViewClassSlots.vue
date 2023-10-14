@@ -267,17 +267,28 @@ export default {
 
                 console.log(response)
 
-                if (response.status == 201){
-                    console.log("create booking successful")
+                if (response == null){
+                    console.log("create booking unsuccessful")
                     // Update modal to successful
-                    this.bookingInfo.bookingId = response.data.BookingId;
+                    // this.bookingInfo.bookingId = response.data.BookingId;
                     // this.bookingInfo.bookingDateTime = response.data.BookingDateTime;
-                    this.bookingInfo.title = "Booking Successful";
-                    this.bookingInfo.message = `Timestamp: ${response.data.BookingDateTime}`;
-                    this.bookingInfo.color = "green";
-                    this.bookingInfo.icon = "mdi-calendar-check";
+                    this.bookingInfo.title = "Booking Unsuccessful";
+                    this.bookingInfo.message = `Something went wrong when you are trying to book.`;
+                    this.bookingInfo.color = "red";
+                    this.bookingInfo.icon = "mdi-alert-circle";
+                } else {
+                    if (response.status == 201){
+                        console.log("create booking successful")
+                        // Update modal to successful
+                        this.bookingInfo.bookingId = response.data.BookingId;
+                        // this.bookingInfo.bookingDateTime = response.data.BookingDateTime;
+                        this.bookingInfo.title = "Booking Successful";
+                        this.bookingInfo.message = `Timestamp: ${response.data.BookingDateTime}`;
+                        this.bookingInfo.color = "green";
+                        this.bookingInfo.icon = "mdi-calendar-check";
+                    }
                 }
-                
+
                 return
 
             } catch (error) {

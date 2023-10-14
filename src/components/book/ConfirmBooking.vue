@@ -2,11 +2,11 @@
     <v-dialog max-width="400px" @input="$emit('input', $event)">
         <v-card :title="this.title">
             <template v-slot:append>
-                <v-btn icon="$close" variant="text" @click="$emit('closeModal')"></v-btn>
+                <v-btn icon="$close" variant="text" @click="$emit('closeModalReload')"></v-btn>
             </template>
             <v-divider></v-divider>
 
-            <v-card-text v-if="this.title == 'Booking Successful'" class="text-center">
+            <v-card-text v-if="this.color != 'black'" class="text-center">
                 <v-icon size="130" :color="this.color">{{ this.icon }}</v-icon>
             </v-card-text>
 
@@ -30,6 +30,10 @@
                     <v-icon icon="mdi-clock-outline" size="small"/>
                     {{ this.time }}
                 </p>
+                <p v-if="this.color == 'green'">
+                    <br>
+                    A confirmation email will be send to you shortly.
+                </p>
             </v-card-text>
             <v-card-text class="text-caption">
                 {{ this.message }}
@@ -38,7 +42,7 @@
             <v-divider></v-divider>
 
             <!-- Confirm Buttons -->
-            <v-card-text v-if="this.title != 'Booking Successful'">
+            <v-card-text v-if="this.color == 'black'">
                 <v-row dense>
                     <v-col cols="12" md="6">
                         <v-btn block variant="outlined" :color="this.color" class="mb-5" @click="$emit('closeModal')">No</v-btn>
