@@ -10,11 +10,10 @@
             <v-form ref="form" @submit.prevent="validateForm" validate-on="submit">
                 <v-card-text>
                     <v-row>
-                        <!-- to make this loop through this.classes, allow user to select name through dropdown list -->
                         <v-col v-if="this.classSlotId == 'create'" cols="12" md="8">
-                            <v-text-field clearable hide-details="auto" class="mb-3" label="Select Class"
-                                v-model="this.classData.name" required :rules="rules"
-                                variant="outlined"></v-text-field>
+                                <v-autocomplete label="Select Class" :items="classes" item-title="ClassName"
+                                item-value="ClassId" v-model="selectedClassId" hide-details="auto" clearable
+                                :rules="rules"></v-autocomplete>
                         </v-col>
 
                         <v-col v-else cols="12" md="7">
@@ -23,7 +22,6 @@
                                 variant="outlined"></v-text-field>
                         </v-col>
 
-                        <!-- to make capacity display based on selected class -->
                         <v-col cols="12" md="4">
                             <v-text-field clearable hide-details="auto" label="Max Capacity"
                                 v-model="this.classData.capacity" required :rules="rules"
@@ -38,12 +36,12 @@
                                 variant="outlined"></v-select>
                         </v-col>
                         <v-col cols="12" md="4">
-                            <v-text-field clearable hide-details="auto" label="Start Time: 0000"
+                            <v-text-field clearable hide-details="auto" label="Start Time: 00:00:00"
                                 v-model="this.classData.startTime" required :rules="rules"
                                 variant="outlined"></v-text-field>
                         </v-col>
                         <v-col cols="12" md="4">
-                            <v-text-field clearable hide-details="auto" label="End Time: 0000"
+                            <v-text-field clearable hide-details="auto" label="End Time: 00:00:00"
                                 v-model="this.classData.endTime" required :rules="rules"
                                 variant="outlined"></v-text-field>
                         </v-col>
@@ -77,7 +75,7 @@
             </v-form>
 
             <template>
-                <Modal v-model="modal.show" :path="modal.path" :title="modal.title" :message="modal.message"
+                <Modal v-model="modal.show" :path="modal.path" :title="modal.title" :message="modal.message" :closeOnClick="false"
                     :icon="modal.icon" @closeModal="closeModal" />
             </template>
 
@@ -121,21 +119,28 @@ export default {
                 console.error("Error getting user by ID", error)
             }
 
+        },
+
+    selectedClassId(newValue){
+        if (newValue != null){
+            for (const classx of this.classes) {
+                if (classx.ClassId === newValue) {
+                    this.selectedClass = classx;
+                    this.classStore.$state.capacity = classx.MaximumCapacity
+                }
+            }
+            return null;
         }
     },
+},
     async mounted() {
         if (this.classSlotId == "create") {
             this.classData = this.classStore.$state
             await this.getClassData();
-            console.log(this.classData)
-            console.log(this.classes)
             
         } else {
             await this.getClassSlotData();
-            
         }
-
-        console.log(this.classData)
     },
     data() {
         return {
@@ -147,11 +152,9 @@ export default {
                 startTime: null,
                 endTime: null,
             },
-            classes: {
-                name: null,
-                description: null,
-                capacity: null,
-            },
+            classes: [],
+            selectedClassId: null,
+            selectedClass: null,
             RecurringUntil: null,
             modal: {
                 show: false,
@@ -171,22 +174,6 @@ export default {
             return this.$route.params.id || null;
         },
 
-        // formattedStart: {
-        //     get() {
-        //         // Assuming timeValue is in "HHMM" format
-        //         const hours = this.classData.startTime.substring(0, 2);
-        //         const minutes = this.classData.startTime.substring(2, 4);
-        //         return `${hours}:${minutes}`;
-        //     },
-        //     set(newValue) {
-        //         // Parse the input string in "HH:MM" format
-        //         const [hours, minutes] = newValue.split(":");
-        //         if (hours.length === 2 && minutes.length === 2) {
-        //         // Update the timeValue with the formatted input
-        //         this.classData.startTime = hours + minutes;
-        //         }
-        //     }
-        // },
 
     },
 
@@ -229,7 +216,6 @@ export default {
         validateForm() {
             state.error = 0;
 
-            if (this.classData.name == "" || this.classData.name == null) { state.error++; }
             if (this.classData.capacity == "" || this.classData.capacity == null) { state.error++; }
             if (this.classData.day == "" || this.classData.day == null) { state.error++; }
             if (this.classData.startTime == "" || this.classData.startTime == null) { state.error++; }
@@ -257,24 +243,21 @@ export default {
 
             // try {
             
-                let tempclassSlotId = this.classSlotId
+
                 if (this.classSlotId == "create") {
-                    tempclassId = this.classStore.classId
                     console.log("creating: new class slot")
                     
-                    //need to make select class work, compute max capacity based on selected class
-                    //not working yet, need to pass in classId to create, need to get class id based on what classname user select
-                    // need to format start and end time to "09:00:00"
-
-                    await this.classStore.createClassSlot(this.classData,this.classId,this.RecurringUntil).then((response) => {
-                        if (response.status == 200) {
+                    const response = await this.classStore.createClassSlot(this.classData,this.selectedClassId,this.RecurringUntil).then((response) => {
+                        if (response.status == 201) {
                             console.log(response.data);
-
                             // Show success modal
-                            this.modal.message = "Your class has been created successfully!"
+                            this.modal.show = true
+                            this.modal.message = "Your class slot has been created successfully!"
                             this.modal.path = "/admin/class"
                             this.classStore.$state = {
+                                classId: null,
                                 classSlotId: null,
+                                capacity: null,
                                 day: null,
                                 startTime: null,
                                 endTime: null,

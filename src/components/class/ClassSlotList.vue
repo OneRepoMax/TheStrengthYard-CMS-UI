@@ -33,7 +33,7 @@
                         class="text-wrap"></v-checkbox-btn>
                 </td>
                 <td>
-                    <v-chip variant="text" prependIcon="mdi-calendar">{{ formattedDate(classSlot.StartTime) }}</v-chip>
+                    <v-chip variant="text" prependIcon="mdi-calendar">{{ this.formattedDate(classSlot.StartTime) }}</v-chip>
                 </td>
                 <td>
                     <v-chip variant="text" prepend-icon="mdi-clock-outline">
@@ -118,18 +118,18 @@ export default {
         },
         formattedTime(timeInput) {
             const date = new Date(timeInput);
-
+            date.setHours(date.getHours() - 8);
             // Get hours and minutes as two-digit strings
             const hours = String(date.getHours()).padStart(2, "0");
             const minutes = String(date.getMinutes()).padStart(2, "0");
             return hours + minutes;
         },
-        // Format to ddd, mm/yy
+        
         formattedDate(dateInput) {
-            const date = new Date(dateInput);
-            const options = { weekday: 'long', year: '2-digit', month: '2-digit' };
-            const formatted = date.toLocaleDateString("en-US", options);
-            return formatted
+            const inputDate = new Date(dateInput);
+            const month = (inputDate.getUTCMonth() + 1).toString().padStart(2, '0'); // Adding 1 because months are 0-indexed
+            const day = inputDate.getUTCDate().toString().padStart(2, '0');
+            return month + '/' + day;
         },
 
         async deleteClassSlots() {

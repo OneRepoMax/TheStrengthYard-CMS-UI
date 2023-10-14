@@ -53,7 +53,7 @@
                             <v-col cols="12">
                                 <v-select
                                     :items="['Active', 'Pending Payment', 'Paused', 'Expired', 'Terminated', 'Inactive']"
-                                    hide-details="auto" v-model="status" label="Satus" :rules="statusRules"
+                                    hide-details="auto" v-model="status" label="Status" :rules="statusRules"
                                     required></v-select>
                             </v-col>
                         </template>
