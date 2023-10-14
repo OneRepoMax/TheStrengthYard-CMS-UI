@@ -11,7 +11,7 @@ services:
         - VITE_S3_SECRET_KEY=$VITE_S3_SECRET_KEY
         - VITE_S3_BUCKET_NAME=$VITE_S3_BUCKET_NAME
         - VITE_AWS_REGION=$VITE_AWS_REGION
-        - VITE_TSY_API=$VITE_VITE_TSY_API
+        - VITE_TSY_API=$VITE_TSY_API
     ports:
       - 80:80
     restart: always
