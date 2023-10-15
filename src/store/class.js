@@ -230,5 +230,25 @@ export const useClassStore = defineStore("classDetails", {
         return;
       }
     },
+    async getAllBookingByClassSlotId(classSlotId) {
+        const apiUrl = `${TSY_API}/booking/classSlot/${classSlotId}`;
+    
+        try {
+            const response = await axios.get(apiUrl);
+    
+            if (response.status === 200) {
+            console.log(response);
+            return response;
+            }
+            return response;
+        } catch (error) {
+            console.error(
+            "An error occurred during get class by ID API request:",
+            error
+            );
+    
+            return error.response;
+        }
+    }
   },
 });

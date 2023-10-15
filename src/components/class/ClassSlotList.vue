@@ -35,7 +35,6 @@
                 </td>
                 <td class="font-weight-medium">
                    {{ classSlot.Class.ClassName }}
-                       
                 </td>
                 <td>
                     <v-chip variant="text" prependIcon="mdi-calendar">{{ this.formattedDate(classSlot.StartTime) }}</v-chip>
@@ -46,7 +45,7 @@
                     </v-chip>
                 </td>
                 <td>
-                    <v-chip @click.prevent="console.log('hello')" color="classSlot" prependIcon="mdi-account-multiple">{{ classSlot.CurrentCapacity }}/{{
+                    <v-chip @click.prevent="showBookingListModal(classSlot.ClassSlotId)" color="classSlot" prependIcon="mdi-account-multiple">{{ classSlot.CurrentCapacity }}/{{
                         classSlot.Class.MaximumCapacity }}</v-chip>
                 </td>
                 <td v-if="!selected.length">
@@ -66,6 +65,10 @@
         <Modal v-model="modal.show" :path="modal.path" :title="modal.title" :message="modal.message" :icon="modal.icon"
             :closeOnClick="true" @closeModal="closeModal" />
     </template>
+
+    <template v-if="this.selectedClassSlotId">
+        <BookingListModal v-model="bookingListModal.show" @closeModal="closeBookingListModal()" :classSlotId="this.selectedClassSlotId"/>
+    </template>
 </template>
 
 
@@ -74,6 +77,7 @@
 
 import ModalWarning from '@/components/common/ModalWarning.vue';
 import Modal from '@/components/common/Modal.vue'
+import BookingListModal from '@/components/class/ClassSlotBookingModal.vue'
 import { useClassStore } from '@/store/class'
 
 export default {
@@ -81,7 +85,7 @@ export default {
         classSlotList: Object,
     },
 
-    components: { ModalWarning, Modal },
+    components: { ModalWarning, Modal, BookingListModal },
 
     setup() {
         const classStore = useClassStore()
@@ -96,6 +100,7 @@ export default {
             classId: null,
             loading: false,
             selected: [],
+            selectedClassSlotId: null,
             modalWarning: {
                 show: false,
                 type: "success",
@@ -113,6 +118,9 @@ export default {
                 message: "Class slots has been successfully deleted!",
                 path: "/admin/class"
             },
+            bookingListModal:{
+                show: false
+            }
         }
     },
 
@@ -165,6 +173,14 @@ export default {
         },
         async actionModal() {
             await this.deleteClassSlots()
+        },
+        showBookingListModal(classSlotId){
+            this.bookingListModal.show = true
+            this.selectedClassSlotId = classSlotId
+        },
+        closeBookingListModal(){
+            this.bookingListModal.show = false
+            this.selectedClassSlotId = null
         }
     }
 }
