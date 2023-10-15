@@ -2,20 +2,20 @@
   <v-container>
     <v-expansion-panels class="pa-1" style="min-width: 40vw">
       <v-expansion-panel
-        v-for="bookDetails in this.bookList"
-        :key="bookDetails.BookingId"
-        :value="bookDetails.BookingId"
+        v-for="book in this.bookList"
+        :key="book.BookingId"
+        :value="book.BookingId"
       >
         <v-expansion-panel-title>
           <v-row align="center" dense>
             <v-col cols="12" md="10">
               <b
-                ><p class="lh-lg">{{ bookDetails.ClassSlot.StartTime }}</p></b
+                ><p class="lh-lg">{{ book.ClassSlot.StartTime }}</p></b
               >
             </v-col>
             <v-col cols="12" md="2">
               <b
-                ><p class="lh-lg">{{ bookDetails.Status }}</p></b
+                ><p class="lh-lg">{{ book.Status }}</p></b
               >
             </v-col>
           </v-row>
@@ -30,31 +30,30 @@
               ></v-skeleton-loader>
             </v-card-text>
           </template>
-          <!-- <v-card class="ma-3"> -->
             <v-row>
               <!-- Show Class Slot Detail -->
               <v-col cols="12">
                 <v-card-item>
                   <v-row class="ma-2 ml-0 justify-space-between">
                     <v-card-title>
-                      {{ bookDetails.ClassSlot.Day }}
+                      {{ book.ClassSlot.Day }}
                     </v-card-title>
                     <v-chip prependIcon="mdi-account-multiple">
-                        {{ bookDetails.ClassSlot.CurrentCapacity}}
+                        {{ book.ClassSlot.CurrentCapacity}}
                     </v-chip>
                   </v-row>
                   <v-card-subtitle>
-                    {{ bookDetails.ClassSlot.Duration }} minutes
+                    {{ book.ClassSlot.Duration }} minutes
                   </v-card-subtitle>
                   <v-card-text>
                     <v-row>
-                        <p><b>Class Slot ID:</b> {{ bookDetails.ClassSlot.ClassSlotId }}</p>
+                        <p><b>Class Slot ID:</b> {{ book.ClassSlot.ClassSlotId }}</p>
                     </v-row>
                     <v-row>
-                        <p><b>Start Time: </b>{{ bookDetails.ClassSlot.StartTime }}</p> 
+                        <p><b>Start Time: </b>{{ book.ClassSlot.StartTime }}</p> 
                     </v-row>
                     <v-row>
-                        <p><b>End Time:</b> {{ bookDetails.ClassSlot.EndTime }}</p> 
+                        <p><b>End Time:</b> {{ book.ClassSlot.EndTime }}</p> 
                     </v-row>
 
                   </v-card-text>
