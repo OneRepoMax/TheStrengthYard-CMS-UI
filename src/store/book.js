@@ -6,7 +6,12 @@ const TSY_API = import.meta.env.VITE_TSY_API;
 
 export const useBookStore = defineStore("book", {
   state: () => ({
-
+    bookingDateTime: null,
+    bookingId: null,
+    classSlotId: null,
+    membershipRecordId: null,
+    status: null,
+    userId: null,
   }),
   actions: {
 
@@ -26,6 +31,25 @@ export const useBookStore = defineStore("book", {
       } catch (error) {
         console.error("Creation error:", error);
         return;
+      }
+    },
+    async getAllBooking() {
+      const apiUrl = `${TSY_API}/booking`;
+
+      try {
+        const response = await axios.get(apiUrl);
+
+        if (response.status === 200) {
+          return response;
+        }
+        return response;
+      } catch (error) {
+        console.error(
+          "An error occurred during get all booking API request:",
+          error
+        );
+
+        return error.response;
       }
     },
 

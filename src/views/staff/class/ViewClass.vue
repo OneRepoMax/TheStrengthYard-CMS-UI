@@ -182,13 +182,6 @@ export default {
             }
             return this.ClassSlotList.slice(startIndex, endIndex);
         },
-        totalPages() {
-            return Math.ceil(
-                (this.searchValue
-                    ? this.displayedClassSlot.length
-                    : this.ClassSlotList.length) / this.classPerPage
-            );
-        },
 
     },
 
