@@ -1,26 +1,38 @@
 import { defineStore } from "pinia";
-// import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import axios from "axios";
-// import { v4 as uuidv4 } from "uuid";
 
 // Declare variable
 const TSY_API = import.meta.env.VITE_TSY_API;
-// const secretAccessKey = import.meta.env.VITE_S3_SECRET_KEY; // IAM user secret key
-// const accessKeyId = import.meta.env.VITE_S3_ACCESS_KEY; // IAM user access id
-// const bucket = import.meta.env.VITE_S3_BUCKET_ADMIN_NAME; // Bucket name
-// const region = import.meta.env.VITE_AWS_REGION; // Region
 
-export const useBookStore = defineStore("bookDetails", {
+export const useBookStore = defineStore("book", {
   state: () => ({
     bookingDateTime: null,
     bookingId: null,
     classSlotId: null,
-    // classId: null,
     membershipRecordId: null,
     status: null,
     userId: null,
   }),
   actions: {
+
+    async createBooking(MembershipRecordId, UserId, ClassSlotId) {
+
+      try {
+        let response = await axios.post(`${TSY_API}/booking`, {
+          MembershipRecordId: MembershipRecordId,
+          UserId: UserId,
+          ClassSlotId: ClassSlotId,
+        });
+
+        // Handle the response data here
+        if (response.status === 201) {
+          return response;
+        }
+      } catch (error) {
+        console.error("Creation error:", error);
+        return;
+      }
+    },
     async getAllBooking() {
       const apiUrl = `${TSY_API}/booking`;
 
@@ -40,5 +52,9 @@ export const useBookStore = defineStore("bookDetails", {
         return error.response;
       }
     },
+
+     
   },
+
+
 });

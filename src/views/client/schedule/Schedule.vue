@@ -36,7 +36,7 @@
 
     <template v-if="modal.show">
         <Modal v-model="modal.show" :path="modal.path" :title="modal.title" :message="modal.message" :icon="modal.icon"
-            @closeModal="closeCommonModal" :closeOnClick="false" />
+            @closeModal="closeCommonModal" :closeOnClick="true" />
     </template>
 </template>
 
@@ -106,12 +106,15 @@ export default {
         },
         closeModal() {
             this.postModal.show = false
+            location.reload()
         },
         closeCommonModal() {
             this.modal.show = false
+            location.reload()
         },
         closeModalWarning() {
             this.modalWarning.show = false
+            location.reload()
         },
         editPost(postId) {
             console.log(postId);
