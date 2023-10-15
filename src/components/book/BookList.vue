@@ -1,6 +1,5 @@
 <template>
-  <v-container>
-    <v-expansion-panels class="pa-1" style="min-width: 40vw">
+    <v-expansion-panels class="pa-1">
       <v-expansion-panel
         v-for="book in this.bookList"
         :key="book.BookingId"
@@ -64,7 +63,6 @@
         </v-expansion-panel-text>
       </v-expansion-panel>
     </v-expansion-panels>
-  </v-container>
 </template>
 
 <script>
