@@ -1,96 +1,156 @@
 <template>
-    <v-main>
-        <v-container fluid max-width="800px" class="d-flex flex-wrap justify-center align-center">
-            <v-card>
-                <v-img src="@/assets/BookingBanner.jpg" max-height="250px" cover></v-img>
-                <div class="pa-5">
-                    <v-card-title>Book A Class</v-card-title>
-                    <v-card-text>
-                        Here’s Our Gym Classes For Those Who Enjoy The Camaraderie Of Training In A Group While Getting
-                        Functionally Stronger!
-                    </v-card-text>
+  <v-main>
+    <v-container
+      fluid
+      max-width="800px"
+      class="d-flex flex-wrap justify-center align-center"
+    >
+      <v-card>
+        <v-img
+          src="@/assets/BookingBanner.jpg"
+          max-height="250px"
+          cover
+        ></v-img>
+        <v-tabs v-model="tab" bg-color="black">
+          <v-tab value="book-class">Book Class</v-tab>
+          <v-tab value="confirm-class">Confirmed Class</v-tab>
+        </v-tabs>
+        <v-card-text>
+          <v-window v-model="tab">
+            <v-window-item value="book-class">
+              <div class="pa-5">
+                <v-card-title>Book A Class</v-card-title>
+                <v-card-text>
+                  Here’s Our Gym Classes For Those Who Enjoy The Camaraderie Of
+                  Training In A Group While Getting Functionally Stronger!
+                </v-card-text>
 
-                    <v-divider/>
+                <v-divider />
 
-                    <div class="mt-5">
-                        <v-row>
-                            <v-col cols="12" md="5" class="text-center">
-                                <DatePicker v-model.string="date" :min-date="new Date()" color="gray" :masks="masks" :attributes="attributes" expanded>
-                                    <template #footer>
-                                    <div class="w-full px-4 pb-3">
-                                        <v-btn block color="black" @click="moveToday">
-                                            Today
-                                        </v-btn>
-                                    </div>
-                                    </template>
-                                </DatePicker>
-                            </v-col>
-                            <v-col cols="12" md="7">
-                                <!-- Start of V-if: show empty class -->
-                                <div v-if="this.classSlots.length == 0">
-                                    <v-card>
-                                        <v-card-text class="text-center">
-                                            <p>There is no class on this day.</p>
-                                        </v-card-text>
-                                    </v-card>
-                                </div>
-                                <!-- End of V-if -->
-                                <!-- Start of V-else: Show class slots -->
-                                <div v-else>
-                                    <div v-for="slot in this.classSlots" :key="slot.ClassSlotId">
-                                        <v-card class="mb-3">
-                                            <v-row>
-                                                <!-- Show Class Slot Detail -->
-                                                <v-col cols="10">
-                                                    <v-card-item>
-                                                        <v-card-title>
-                                                            {{slot.Class.ClassName}}
-                                                        </v-card-title>
-                                                        <v-card-subtitle>
-                                                            <!-- {{formattedDate(slot.StartTime)}},
+                <div class="mt-5">
+                  <v-row>
+                    <v-col cols="12" md="5" class="text-center">
+                      <DatePicker
+                        v-model.string="date"
+                        :min-date="new Date()"
+                        color="gray"
+                        :masks="masks"
+                        :attributes="attributes"
+                        expanded
+                      >
+                        <template #footer>
+                          <div class="w-full px-4 pb-3">
+                            <v-btn block color="black" @click="moveToday">
+                              Today
+                            </v-btn>
+                          </div>
+                        </template>
+                      </DatePicker>
+                    </v-col>
+                    <v-col cols="12" md="7">
+                      <!-- Start of V-if: show empty class -->
+                      <div v-if="this.classSlots.length == 0">
+                        <v-card>
+                          <v-card-text class="text-center">
+                            <p>There is no class on this day.</p>
+                          </v-card-text>
+                        </v-card>
+                      </div>
+                      <!-- End of V-if -->
+                      <!-- Start of V-else: Show class slots -->
+                      <div v-else>
+                        <div
+                          v-for="slot in this.classSlots"
+                          :key="slot.ClassSlotId"
+                        >
+                          <v-card class="mb-3">
+                            <v-row>
+                              <!-- Show Class Slot Detail -->
+                              <v-col cols="10">
+                                <v-card-item>
+                                  <v-card-title>
+                                    {{ slot.Class.ClassName }}
+                                  </v-card-title>
+                                  <v-card-subtitle>
+                                    <!-- {{formattedDate(slot.StartTime)}},
                                                             {{slot.Day}}, -->
-                                                            {{slot.ClassSlotId}}
-                                                            
-                                                        </v-card-subtitle>
-                                                    </v-card-item>
+                                    {{ slot.ClassSlotId }}
+                                  </v-card-subtitle>
+                                </v-card-item>
 
-                                                    <v-card-text>
-                                                        <p>{{formattedTime(slot.StartTime)}} - {{slot.Duration}} minutes</p>
-                                                        <p>{{slot.CurrentCapacity}}/{{slot.Class.MaximumCapacity}} joined</p>
-                                                        <br>
-                                                        <div v-if="checkAvailability(slot.StartTime, slot.CurrentCapacity, slot.Class.MaximumCapacity) == 'Available'">
-                                                                <v-chip color="green" text-color="white">
-                                                                    {{checkAvailability(slot.StartTime, slot.CurrentCapacity, slot.Class.MaximumCapacity)}}
-                                                                </v-chip>
-                                                            </div>
-                                                            <div v-else>
-                                                                <v-chip color="red" text-color="white">
-                                                                    {{checkAvailability(slot.StartTime, slot.CurrentCapacity, slot.Class.MaximumCapacity)}}
-                                                                </v-chip>
-                                                            </div>
-                                                    </v-card-text>
-                                                </v-col>
+                                <v-card-text>
+                                  <p>
+                                    {{ formattedTime(slot.StartTime) }} -
+                                    {{ slot.Duration }} minutes
+                                  </p>
+                                  <p>
+                                    {{ slot.CurrentCapacity }}/{{
+                                      slot.Class.MaximumCapacity
+                                    }}
+                                    joined
+                                  </p>
+                                  <br />
+                                  <div
+                                    v-if="
+                                      checkAvailability(
+                                        slot.StartTime,
+                                        slot.CurrentCapacity,
+                                        slot.Class.MaximumCapacity
+                                      ) == 'Available'
+                                    "
+                                  >
+                                    <v-chip color="green" text-color="white">
+                                      {{
+                                        checkAvailability(
+                                          slot.StartTime,
+                                          slot.CurrentCapacity,
+                                          slot.Class.MaximumCapacity
+                                        )
+                                      }}
+                                    </v-chip>
+                                  </div>
+                                  <div v-else>
+                                    <v-chip color="red" text-color="white">
+                                      {{
+                                        checkAvailability(
+                                          slot.StartTime,
+                                          slot.CurrentCapacity,
+                                          slot.Class.MaximumCapacity
+                                        )
+                                      }}
+                                    </v-chip>
+                                  </div>
+                                </v-card-text>
+                              </v-col>
 
-                                                <!-- Book icon -->
-                                                <v-col cols="2" align-self="center">
-                                                    <v-btn  variant="text" icon="mdi-calendar-plus" size="large"></v-btn>
-                                                </v-col>
-                                            </v-row>
-                                            
-                                        </v-card>
-                                    </div>
-                                </div>
-                                <!-- End of V-Else -->
-
-                            </v-col>
-                        
-                        </v-row>
-                    </div>
-
+                              <!-- Book icon -->
+                              <v-col cols="2" align-self="center">
+                                <v-btn
+                                  variant="text"
+                                  icon="mdi-calendar-plus"
+                                  size="large"
+                                ></v-btn>
+                              </v-col>
+                            </v-row>
+                          </v-card>
+                        </div>
+                      </div>
+                      <!-- End of V-Else -->
+                    </v-col>
+                  </v-row>
                 </div>
-            </v-card>
-        </v-container>
-    </v-main>
+              </div>
+            </v-window-item>
+            <v-window-item value="confirm-class" >
+              <v-card-text >
+                <BookList :bookList="displayedBooking" width="800px"/>
+              </v-card-text>
+            </v-window-item>
+          </v-window>
+        </v-card-text>
+      </v-card>
+    </v-container>
+  </v-main>
 </template>
 
 <script>
@@ -98,17 +158,23 @@ import { ref } from 'vue';
 import { format } from 'date-fns';
 import { Calendar, DatePicker } from 'v-calendar';
 import 'v-calendar/style.css';
-import { useClassStore } from '@/store/class'
+import { useClassStore } from '@/store/class';
+import { useBookStore } from '@/store/book';
+import BookList from "@/components/booking/BookList.vue"
+
 
 export default {
     components: {
         Calendar,
         DatePicker,
+        BookList,
     },
 
     setup () {
         const classStore = useClassStore();
-        return { classStore }
+        const bookStore = useBookStore();
+
+        return { classStore, bookStore }
     },
 
     data() {
@@ -122,17 +188,54 @@ export default {
                 // highlight: 'red',
                 dot: 'red',
                 dates: new Date(),
-            }])
+            }]),
+            BookList: [],
+            dates: [],
+            loading: false,
+            searchValue: null,
+            page: 1,
+            pageLength: 1,
+            bookPerPage: 10,
+            tab: null,
         }
     },
 
     watch: {
         date(){
             this.getClassSlotsByDate();
+        },
+        searchValue() {
+            this.page = 1;
         }
-        
-    },
 
+    },
+    computed:{
+        displayedBooking() {
+            const startIndex = (this.page - 1) * this.bookPerPage;
+            const endIndex = startIndex + this.bookPerPage;
+
+            if (this.searchValue != null) {
+
+                const filteredBook = this.BookList.filter(bookDetails =>
+                    `${bookDetails.BookingDateTime}`
+                        .toLowerCase()
+                        .includes(this.searchValue.toLowerCase())
+                );
+                return filteredBook.slice(startIndex, endIndex);
+            }
+            return this.BookList.slice(startIndex, endIndex);
+        },
+        totalPages() {
+            return Math.ceil(
+                (this.searchValue
+                    ? this.displayedBooking.length
+                    : this.BookList.length) / this.bookPerPage
+            );
+        },
+    },
+    mounted() {
+        this.getBookList();
+    },
     methods: {
         formattedDate(dateInput) {
             const date = new Date(dateInput);
@@ -195,10 +298,38 @@ export default {
             }
             return
         },
+        async getBookList() {
+
+        try {
+            this.loading = true;
+            const response = await this.bookStore.getAllBooking();
+            this.loading = false;
+            if (response == null || response.status != 200) {
+                return
+            } else {
+                if (response.status == 200) {
+                    this.BookList = response.data
+                    console.log(this.BookList)
+                    for (const bookDetails of this.BookList) {
+                        const date = `${bookDetails.BookingDateTime}`;
+                        if (this.dates.indexOf(date) === -1) {
+                            this.dates.push(date);
+                        }
+                    }
+                }
+            }
+
+            return
+
+        } catch (error) {
+            console.error("An error occurred during get all class API request:", error);
+        }
+
+        return
+
+        },
     },
 }
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>
