@@ -41,7 +41,7 @@
                     </v-chip>
                 </td>
                 <td>
-                    <v-chip variant="text" prependIcon="mdi-account-multiple">{{ classSlot.CurrentCapacity }}/{{
+                    <v-chip @click.prevent="console.log('hello')" color="classSlot" prependIcon="mdi-account-multiple">{{ classSlot.CurrentCapacity }}/{{
                         classSlot.Class.MaximumCapacity }}</v-chip>
                 </td>
                 <td v-if="!selected.length">
