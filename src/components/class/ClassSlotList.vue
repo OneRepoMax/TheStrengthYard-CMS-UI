@@ -30,7 +30,7 @@
         <tbody>
             <tr v-for="classSlot in this.classSlotList" :key="classSlot.ClassSlotId">
                 <td class="font-weight-medium">
-                    <v-checkbox-btn v-model="selected" :label="classSlot.ClassSlotId" :value="classSlot.ClassSlotId"
+                    <v-checkbox-btn v-model="selected" :label="classSlot.ClassSlotId.toString()" :value="classSlot.ClassSlotId"
                         class="text-wrap"></v-checkbox-btn>
                 </td>
                 <td class="font-weight-medium">
@@ -94,7 +94,7 @@ export default {
             classStore,
         }
     },
-
+    emits:['reload-data'],
     data() {
         return {
             classId: null,

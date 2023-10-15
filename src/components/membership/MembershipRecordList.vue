@@ -236,6 +236,7 @@ export default {
     membershipRecord: Object,
     userId: Number,
   },
+  emits:['reload-data'],
   components: {
     MembershipLogModal,
     MembershipRecordForm,
