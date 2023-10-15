@@ -19,6 +19,7 @@
     <v-table>
         <thead>
             <tr class="font-weight-bold">
+                <th class="text-left">Class Slot Id</th>
                 <th class="text-left">Class Name</th>
                 <th class="text-left">Date</th>
                 <th class="text-left">Class Time</th>
@@ -29,8 +30,12 @@
         <tbody>
             <tr v-for="classSlot in this.classSlotList" :key="classSlot.ClassSlotId">
                 <td class="font-weight-medium">
-                    <v-checkbox-btn v-model="selected" :label="classSlot.Class.ClassName" :value="classSlot.ClassSlotId"
+                    <v-checkbox-btn v-model="selected" :label="classSlot.ClassSlotId" :value="classSlot.ClassSlotId"
                         class="text-wrap"></v-checkbox-btn>
+                </td>
+                <td class="font-weight-medium">
+                   {{ classSlot.Class.ClassName }}
+                       
                 </td>
                 <td>
                     <v-chip variant="text" prependIcon="mdi-calendar">{{ this.formattedDate(classSlot.StartTime) }}</v-chip>
