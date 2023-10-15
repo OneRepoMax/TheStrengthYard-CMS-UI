@@ -8,7 +8,7 @@
 
             <v-card-text>
                 <v-window v-model="tab">
-                    <v-window-item value="class">
+                    <v-window-item value="class" id="class">
                         <v-card-text>
                             <v-row align="center" dense>
                                 <v-col cols="8">
@@ -55,50 +55,50 @@
 
                     <v-window-item value="class-slot">
                         <!-- Class Slot -->
-                        
-                            <v-card-text>
-                                <v-row align="center" dense>
-                                    <v-col cols="8">
-                                        <v-card-title>Class Slots</v-card-title>
-                                    </v-col>
-                                    <v-spacer></v-spacer>
 
-                                    <v-col cols="2">
-                                        <v-btn block color="grey-darken-4" @click="createClassSlot('create')">Create
-                                            Slot</v-btn>
-                                    </v-col>
-                                </v-row>
-                            </v-card-text>
-                            <v-divider></v-divider>
+                        <v-card-text>
+                            <v-row align="center" dense>
+                                <v-col cols="8">
+                                    <v-card-title id="class-slot">Class Slots</v-card-title>
+                                </v-col>
+                                <v-spacer></v-spacer>
 
-                            <!-- Skeleton loaders -->
-                            <template v-if="loading">
-                                <v-card-text class="px-8">
-                                    <v-skeleton-loader type="list-item-three-line" :loading="loading" v-for="index in 10"
-                                        :key="index"></v-skeleton-loader>
-                                </v-card-text>
-                            </template>
+                                <v-col cols="2">
+                                    <v-btn block color="grey-darken-4" @click="createClassSlot('create')">Create
+                                        Slot</v-btn>
+                                </v-col>
+                            </v-row>
+                        </v-card-text>
+                        <v-divider></v-divider>
 
-
-                            <!-- Manage class page -->
-                            <ClassSlotList :classSlotList="displayedClassSlot" />
-
-                            <v-divider></v-divider>
-
+                        <!-- Skeleton loaders -->
+                        <template v-if="loading">
                             <v-card-text class="px-8">
-                                <v-row>
-                                    <v-col cols="12" sm="2" class="d-flex justify-end align-center">
-                                        <v-select label="Results per page:" :items="[10, 50, 100]" v-model="classPerPage"
-                                            variant="outlined" max-width="40px" density="compact"
-                                            hide-details="auto"></v-select>
-                                    </v-col>
-                                    <v-spacer></v-spacer>
-                                    <v-col class="d-flex justify-end align-center">
-                                        <v-pagination v-model="page" :length="totalPages"></v-pagination>
-                                    </v-col>
-                                </v-row>
+                                <v-skeleton-loader type="list-item-three-line" :loading="loading" v-for="index in 10"
+                                    :key="index"></v-skeleton-loader>
                             </v-card-text>
-                        
+                        </template>
+
+
+                        <!-- Manage class page -->
+                        <ClassSlotList :classSlotList="displayedClassSlot" @reload-data="this.getClassSlotList()"/>
+
+                        <v-divider></v-divider>
+
+                        <v-card-text class="px-8">
+                            <v-row>
+                                <v-col cols="12" sm="2" class="d-flex justify-end align-center">
+                                    <v-select label="Results per page:" :items="[10, 50, 100]" v-model="classPerPage"
+                                        variant="outlined" max-width="40px" density="compact"
+                                        hide-details="auto"></v-select>
+                                </v-col>
+                                <v-spacer></v-spacer>
+                                <v-col class="d-flex justify-end align-center">
+                                    <v-pagination v-model="page" :length="totalPages"></v-pagination>
+                                </v-col>
+                            </v-row>
+                        </v-card-text>
+
                     </v-window-item>
                 </v-window>
             </v-card-text>
@@ -185,8 +185,6 @@ export default {
 
     },
 
-
-
     mounted() {
         this.getClassList();
         this.getClassSlotList();
@@ -225,32 +223,15 @@ export default {
 
         async getClassSlotList() {
 
-            try {
-                this.loading = true;
-                const response = await this.classStore.getAllClassSlot();
-                this.loading = false;
-                if (response == null || response.status != 200) {
-                    return
-                } else {
-                    if (response.status == 200) {
-                        this.ClassSlotList = response.data
-                        console.log(this.ClassSlotList)
-                        for (const classDetails of this.ClassSlotList) {
-                            const name = `${classDetails.ClassName}`;
-                            if (this.names.indexOf(name) === -1) {
-                                this.names.push(name);
-                            }
-                        }
-                    }
-                }
-
-                return
-
-            } catch (error) {
-                console.error("An error occurred during get all class API request:", error);
+            this.loading = true;
+            const response = await this.classStore.getAllClassSlot();
+            this.loading = false;
+            if (response.status == 200) {
+                this.ClassSlotList = response.data
             }
-
-            return
+            if (response.status == 200) {
+                this.ClassSlotList = response.data
+            }
 
         },
 

@@ -166,7 +166,8 @@ export default {
         },
         closeModal() {
             this.modal.show = false
-            location.reload();
+            this.selected=[]
+            this.$emit('reload-data')
         },
         closeModalWarning() {
             this.modalWarning.show = false
