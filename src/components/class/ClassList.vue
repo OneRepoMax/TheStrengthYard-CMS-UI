@@ -7,9 +7,6 @@
                     <v-col cols="12" md="6">
                         <p class="lh-lg">{{ classDetails.ClassName }}</p>
                     </v-col>
-                    <!-- <v-col cols="12" md="3">
-                        <p>Description: {{ classDetails.Description }}</p>
-                    </v-col> -->
                     <v-col cols="12" md="3">
                         <v-chip prependIcon="mdi-account-multiple">{{ classDetails.MaximumCapacity }}</v-chip>
                     </v-col>
