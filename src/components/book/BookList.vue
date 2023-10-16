@@ -9,7 +9,7 @@
           <v-row align="center" dense>
             <v-col cols="12" md="10">
               <b
-                ><p class="lh-lg">{{ book.ClassSlot.StartTime }}</p></b
+                ><p class="lh-lg">{{ book.ClassSlot.Class.ClassName }}</p></b
               >
             </v-col>
             <v-col cols="12" md="2">
@@ -38,13 +38,19 @@
                       {{ book.ClassSlot.Day }}
                     </v-card-title>
                     <v-chip prependIcon="mdi-account-multiple">
-                        {{ book.ClassSlot.CurrentCapacity}}
+                        {{ book.ClassSlot.CurrentCapacity}}/{{ book.ClassSlot.Class.MaximumCapacity }}
                     </v-chip>
                   </v-row>
                   <v-card-subtitle>
                     {{ book.ClassSlot.Duration }} minutes
                   </v-card-subtitle>
                   <v-card-text>
+                    <v-row>
+                        <p><b>Booking ID:</b> {{ book.BookingId }}</p>
+                    </v-row>
+                    <v-row>
+                        <p><b>Booking Date/Time:</b> {{ book.BookingDateTime }}</p>
+                    </v-row>
                     <v-row>
                         <p><b>Class Slot ID:</b> {{ book.ClassSlot.ClassSlotId }}</p>
                     </v-row>
@@ -59,7 +65,6 @@
                 </v-card-item>
               </v-col>
             </v-row>
-          <!-- </v-card> -->
         </v-expansion-panel-text>
       </v-expansion-panel>
     </v-expansion-panels>
@@ -82,7 +87,6 @@ export default {
 
   data() {
     return {
-      BookingId: null,
       loading: false,
     };
   },

@@ -33,8 +33,8 @@ export const useBookStore = defineStore("book", {
         return error;
       }
     },
-    async getAllBooking() {
-      const apiUrl = `${TSY_API}/booking`;
+    async getAllBookingByUserId(userId) {
+      const apiUrl = `${TSY_API}/booking/user/${userId}`;
 
       try {
         const response = await axios.get(apiUrl);
