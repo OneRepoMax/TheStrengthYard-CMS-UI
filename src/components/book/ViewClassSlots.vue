@@ -86,6 +86,7 @@
             v-model="bookingInfo.show" 
             :title="bookingInfo.title" 
             :message="bookingInfo.message"
+            :timestamp="bookingInfo.timestamp"
             :color="bookingInfo.color" 
             :className="bookingInfo.className"
             :classId="bookingInfo.classId"
@@ -93,8 +94,8 @@
             :time="bookingInfo.time"
             :icon="bookingInfo.icon"
             @closeModal="closeModal" 
-            @closeModalReload="closeModalReload"
             @actionModal="actionModal" 
+            :loading="bookingInfo.loading"
             
         />
     </template>
@@ -149,6 +150,8 @@ export default {
                 time: "",
                 icon: "",
                 bookingId: "",
+                timestamp: "",
+                loading: false,
             },
         }
     },
@@ -212,10 +215,13 @@ export default {
 
         closeModal() {
             this.bookingInfo.show = false;
-        },
-
-        closeModalReload() {
-            location.reload()
+            this.getClassSlotsByDate();
+            this.bookingInfo.bookingId = "";
+            this.bookingInfo.title = "Confirm booking";
+            this.bookingInfo.message = "Please note that cancellations are not possible 12-hour prior to the scheduled class slot.";
+            this.bookingInfo.timestamp = "";
+            this.bookingInfo.color = "black";
+            this.bookingInfo.icon = "";
         },
 
         actionModal() {
@@ -252,6 +258,8 @@ export default {
         async createBooking() {
             try {
                 
+                this.bookingInfo.loading = true;
+
                 // Get membership records
                 const membershipRecord = await this.membershipStore.getMembershipRecordByUserId(this.userStore.userId);
                 var membershipRecordId = 0
@@ -281,18 +289,31 @@ export default {
                         console.log("create booking successful")
                         // Update modal to successful
                         this.bookingInfo.bookingId = response.data.BookingId;
-                        // this.bookingInfo.bookingDateTime = response.data.BookingDateTime;
                         this.bookingInfo.title = "Booking Successful";
-                        this.bookingInfo.message = `Timestamp: ${response.data.BookingDateTime}`;
+                        this.bookingInfo.message = "A confirmation email will be send to you shortly.";
+                        this.bookingInfo.timestamp = `Timestamp: ${response.data.BookingDateTime}`;
                         this.bookingInfo.color = "green";
                         this.bookingInfo.icon = "mdi-calendar-check";
+                        console.log(response.data.BookingDateTime)
+                    } else {
+                        console.log("create booking unsuccessful")
+                        // Update modal to successful
+                        // this.bookingInfo.bookingId = response.data.BookingId;
+                        // this.bookingInfo.bookingDateTime = response.data.BookingDateTime;
+                        this.bookingInfo.title = "Booking Unsuccessful";
+                        this.bookingInfo.message = `${response.response.data}.`;
+                        this.bookingInfo.color = "red";
+                        this.bookingInfo.icon = "mdi-alert-circle";
                     }
                 }
 
+                this.bookingInfo.loading = false;
+
                 return
 
-            } catch (error) {
-                console.error("An error occurred during create booking API request:", error);
+            } 
+            catch (error) {
+                // console.error("An error occurred during create booking API request:", error);
             }
             
             return

@@ -30,7 +30,7 @@ export const useBookStore = defineStore("book", {
         }
       } catch (error) {
         console.error("Creation error:", error);
-        return;
+        return error;
       }
     },
     async getAllBooking() {
