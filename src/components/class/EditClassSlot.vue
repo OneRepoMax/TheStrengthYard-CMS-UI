@@ -23,8 +23,8 @@
                         </v-col>
 
                         <v-col cols="12" md="4">
-                            <v-text-field clearable hide-details="auto" label="Max Capacity"
-                                v-model="this.classData.capacity" required :rules="rules" readonly
+                            <v-text-field clearable hide-details="auto" label="Max Capacity" disabled
+                                v-model="this.classData.capacity" required :rules="rules"
                                 variant="outlined"></v-text-field>
                         </v-col>
 
@@ -36,13 +36,13 @@
                                 variant="outlined"></v-select>
                         </v-col>
                         <v-col cols="12" md="4">
-                            <v-text-field clearable hide-details="auto" label="Start Time: 00:00:00"
-                                v-model="this.classData.startTime" required :rules="rules"
+                            <v-text-field clearable hide-details="auto" label="Start Time"
+                                v-model="this.classData.startTime" required :rules="rules" type="time"
                                 variant="outlined"></v-text-field>
                         </v-col>
                         <v-col cols="12" md="4">
-                            <v-text-field clearable hide-details="auto" label="End Time: 00:00:00"
-                                v-model="this.classData.endTime" required :rules="rules"
+                            <v-text-field clearable hide-details="auto" label="End Time"
+                                v-model="this.classData.endTime" required :rules="rules" type="time"
                                 variant="outlined"></v-text-field>
                         </v-col>
                         <v-col v-if="this.classSlotId == 'create'" cols="12" md="12">

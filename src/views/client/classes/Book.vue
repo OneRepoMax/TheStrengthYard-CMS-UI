@@ -1,44 +1,34 @@
 <template>
-  <v-main>
-    <v-container
-      fluid
-      max-width="800px"
-      class="d-flex flex-wrap justify-center align-center"
-    >
-      <v-card>
-        <v-img
-          src="@/assets/BookingBanner.jpg"
-          max-height="250px"
-          cover
-        ></v-img>
-        <v-tabs v-model="tab" bg-color="black">
-          <v-tab value="book-class">Book Class</v-tab>
-          <v-tab value="confirm-class">Confirmed Class</v-tab>
-        </v-tabs>
-        <v-card-text>
-          <v-window v-model="tab">
-            <v-window-item value="book-class">
-              <div class="pa-5">
-                <v-card-title>Book A Class</v-card-title>
+        <v-container :style="{'max-width':'1200px'}" class="mx-auto">
+            <v-card>
+                <v-img src="@/assets/BookingBanner.jpg" max-height="250px" cover></v-img>
+                <v-tabs v-model="tab" bg-color="black">
+                    <v-tab value="book-class">Book Class</v-tab>
+                    <v-tab value="confirm-class">My Bookings</v-tab>
+                </v-tabs>
                 <v-card-text>
-                  Here’s Our Gym Classes For Those Who Enjoy The Camaraderie Of
-                  Training In A Group While Getting Functionally Stronger!
-                </v-card-text>
+                    <v-window v-model="tab">
+                        <v-window-item value="book-class">
+                            <div class="pa-5">
+                                <v-card-title>Book A Class</v-card-title>
+                                <v-card-text>
+                                    Here’s Our Gym Classes For Those Who Enjoy The Camaraderie Of
+                                    Training In A Group While Getting Functionally Stronger!
+                                </v-card-text>
 
-                <v-divider />
-                    <ViewClassSlots />
-              </div>
-            </v-window-item>
-            <v-window-item value="confirm-class" >
-              <v-card-text >
-                <BookList :bookList="displayedBooking" width="800px"/>
-              </v-card-text>
-            </v-window-item>
-          </v-window>
-        </v-card-text>
-      </v-card>
-    </v-container>
-  </v-main>
+                                <v-divider />
+                                <ViewClassSlots />
+                            </div>
+                        </v-window-item>
+                        <v-window-item value="confirm-class">
+                            <div class="pa-5">
+                                <BookList :bookList="displayedBooking" />
+                            </div>
+                        </v-window-item>
+                    </v-window>
+                </v-card-text>
+            </v-card>
+        </v-container>
 </template>
 
 <script>
@@ -54,7 +44,7 @@ export default {
         ViewClassSlots
     },
 
-    setup () {
+    setup() {
         const classStore = useClassStore();
         const bookStore = useBookStore();
 
@@ -62,7 +52,7 @@ export default {
     },
 
     data() {
-        return{
+        return {
             BookList: [],
             dates: [],
             loading: false,
@@ -80,7 +70,7 @@ export default {
         }
 
     },
-    computed:{
+    computed: {
         displayedBooking() {
             const startIndex = (this.page - 1) * this.bookPerPage;
             const endIndex = startIndex + this.bookPerPage;
@@ -108,39 +98,39 @@ export default {
         this.getBookList();
     },
     methods: {
-    
+
         async getBookList() {
 
-        try {
-            this.loading = true;
-            const response = await this.bookStore.getAllBooking();
-            this.loading = false;
-            if (response == null || response.status != 200) {
-                return
-            } else {
-                if (response.status == 200) {
-                    this.BookList = response.data
-                    console.log(this.BookList)
-                    for (const book of this.BookList) {
-                        const date = `${book.BookingDateTime}`;
-                        if (this.dates.indexOf(date) === -1) {
-                            this.dates.push(date);
+            try {
+                this.loading = true;
+                const response = await this.bookStore.getAllBooking();
+                this.loading = false;
+                if (response == null || response.status != 200) {
+                    return
+                } else {
+                    if (response.status == 200) {
+                        this.BookList = response.data
+                        console.log(this.BookList)
+                        for (const book of this.BookList) {
+                            const date = `${book.BookingDateTime}`;
+                            if (this.dates.indexOf(date) === -1) {
+                                this.dates.push(date);
+                            }
                         }
                     }
                 }
+
+                return
+
+            } catch (error) {
+                console.error("An error occurred during get all class API request:", error);
             }
 
             return
 
-        } catch (error) {
-            console.error("An error occurred during get all class API request:", error);
-        }
-
-        return
-
         },
-      }}
+    }
+}
 
 </script>
 
-<style lang="scss" scoped></style>

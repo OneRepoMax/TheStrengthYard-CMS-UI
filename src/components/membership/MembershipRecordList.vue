@@ -236,6 +236,7 @@ export default {
     membershipRecord: Object,
     userId: Number,
   },
+  emits:['reload-data'],
   components: {
     MembershipLogModal,
     MembershipRecordForm,
@@ -300,6 +301,7 @@ export default {
     },
     closeModal() {
       this.membershipLog.show = false;
+      this.$emit('reload-data', this.userId)
     },
     async showMembershipLog(membershipData) {
       this.logLoading = true;
@@ -385,6 +387,7 @@ export default {
       if (response.status === 200) {
         this.modal.show = true;
         this.modal.message = "Membership record has been deleted!";
+        this.$emit('reload-data', this.userId)
       }
     },
     closeModalWarning() {
@@ -392,6 +395,7 @@ export default {
     },
     closeAddMembershipRecord() {
       this.membershipRecordAddForm.show = false;
+      this.$emit('reload-data', this.userId)
     },
     addRecordSuccess() {
       this.closeAddMembershipRecord();
