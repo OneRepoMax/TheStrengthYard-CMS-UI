@@ -260,26 +260,13 @@ export default {
                 
                 this.bookingInfo.loading = true;
 
-                // Get membership records
-                const membershipRecord = await this.membershipStore.getMembershipRecordByUserId(this.userStore.userId);
-                var membershipRecordId = 0
-                
-                // Get membership id when there is only one membership record -- to be worked on again
-                if (membershipRecord.data.length == 1){
-                    membershipRecordId = membershipRecord.data[0].MembershipRecordId;
-                }
-
-                console.log(membershipRecordId)
-
-                const response = await this.bookStore.createBooking(membershipRecordId, this.userStore.userId, this.bookingInfo.classId);
+                const response = await this.bookStore.createBooking(this.userStore.userId, this.bookingInfo.classId);
 
                 console.log(response)
 
                 if (response == null){
                     console.log("create booking unsuccessful")
                     // Update modal to successful
-                    // this.bookingInfo.bookingId = response.data.BookingId;
-                    // this.bookingInfo.bookingDateTime = response.data.BookingDateTime;
                     this.bookingInfo.title = "Booking Unsuccessful";
                     this.bookingInfo.message = `Something went wrong when you are trying to book.`;
                     this.bookingInfo.color = "red";
@@ -298,8 +285,6 @@ export default {
                     } else {
                         console.log("create booking unsuccessful")
                         // Update modal to successful
-                        // this.bookingInfo.bookingId = response.data.BookingId;
-                        // this.bookingInfo.bookingDateTime = response.data.BookingDateTime;
                         this.bookingInfo.title = "Booking Unsuccessful";
                         this.bookingInfo.message = `${response.response.data}.`;
                         this.bookingInfo.color = "red";
@@ -313,7 +298,7 @@ export default {
 
             } 
             catch (error) {
-                // console.error("An error occurred during create booking API request:", error);
+                console.error("An error occurred during create booking API request:", error);
             }
             
             return

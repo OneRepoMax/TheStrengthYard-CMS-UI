@@ -9,17 +9,15 @@ export const useBookStore = defineStore("book", {
     bookingDateTime: null,
     bookingId: null,
     classSlotId: null,
-    membershipRecordId: null,
     status: null,
     userId: null,
   }),
   actions: {
 
-    async createBooking(MembershipRecordId, UserId, ClassSlotId) {
+    async createBooking(UserId, ClassSlotId) {
 
       try {
-        let response = await axios.post(`${TSY_API}/booking`, {
-          MembershipRecordId: MembershipRecordId,
+        let response = await axios.post(`${TSY_API}/booking2`, {
           UserId: UserId,
           ClassSlotId: ClassSlotId,
         });
@@ -33,6 +31,7 @@ export const useBookStore = defineStore("book", {
         return error;
       }
     },
+    
     async getAllBookingByUserId(userId) {
       const apiUrl = `${TSY_API}/booking/user/${userId}`;
 
