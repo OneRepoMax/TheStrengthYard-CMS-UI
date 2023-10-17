@@ -22,6 +22,7 @@ export const useMembershipStore = defineStore("membership", {
     picture: null,
     membershipRecord: null,
     selectedMembership: null,
+    hasClasses: null,
   }),
   actions: {
     async uploadPicture(file) {
@@ -299,6 +300,7 @@ export const useMembershipStore = defineStore("membership", {
             SetupFee: membershipData.setupfee,
             Picture: membershipData.picture,
             Visibility: membershipData.visibility,
+            hasClasses: membershipData.hasClasses,
           });
   
           // Handle the response data here

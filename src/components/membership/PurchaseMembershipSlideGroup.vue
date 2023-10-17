@@ -1,5 +1,5 @@
 <template>
-    <v-sheet class="mx-auto my-sm-1 my-1" elevation="3" max-width="800">
+    <v-sheet class="mx-auto my-sm-1 my-1" elevation="3">
         <v-card-title class="pt-5 pb-1">Purchase Membership</v-card-title>
         <v-card-subtitle class="pt-0">Discover TSY's memberships and join us today</v-card-subtitle>
         <v-slide-group v-model="model" class="pa-4" selected-class="bg-success">

@@ -15,13 +15,15 @@
                 Here’s Our Gym Classes For Those Who Enjoy The Camaraderie Of
                 Training In A Group While Getting Functionally Stronger!
               </v-card-text>
-
               <v-divider />
               <ViewClassSlots />
             </div>
           </v-window-item>
           <v-window-item value="confirm-class">
-            <div class="pa-5">
+            <div class="pa-md-5">
+              <v-card-title>My Bookings</v-card-title>
+              <v-card-subtitle>All bookings under your account</v-card-subtitle>
+              <v-divider class="my-3"></v-divider>
               <BookList :bookList="displayedBooking" />
             </div>
           </v-window-item>
