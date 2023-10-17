@@ -110,7 +110,7 @@ import { useUserStore } from '@/store/user'
 import { useClassStore } from '@/store/class'
 import { useMembershipStore } from '@/store/membership'
 import { useBookStore } from '@/store/book'
-import Modal from '@/components/book/ConfirmBooking.vue';
+import Modal from '@/components/book/ConfirmBookingModal.vue';
 
 export default {
     components: {
