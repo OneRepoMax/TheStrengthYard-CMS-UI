@@ -300,6 +300,7 @@ export const useMembershipStore = defineStore("membership", {
             SetupFee: membershipData.setupfee,
             Picture: membershipData.picture,
             Visibility: membershipData.visibility,
+            HasClasses: membershipData.hasClasses,
           });
   
           // Handle the response data here
