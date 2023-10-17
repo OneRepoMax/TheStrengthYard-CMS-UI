@@ -51,6 +51,25 @@ export const useBookStore = defineStore("book", {
         return error.response;
       }
     },
+    async cancelBooking(bookingId) {
+      const apiUrl = `${TSY_API}/booking/cancel/${bookingId}`;
+
+      try {
+        const response = await axios.get(apiUrl);
+
+        if (response.status === 200) {
+          return response;
+        }
+        return response;
+      } catch (error) {
+        console.error(
+          "An error occurred during get all booking API request:",
+          error
+        );
+
+        return error.response;
+      }
+    },
 
      
   },
