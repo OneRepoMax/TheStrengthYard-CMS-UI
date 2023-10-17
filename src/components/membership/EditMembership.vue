@@ -17,9 +17,9 @@
                                 variant="outlined"></v-text-field>
                         </v-col>
                         <v-col cols="12" md="4">
-                            <v-select hide-details="auto" class="mb-3" label="Visibility" v-model="this.membershipData.visibility"
-                                :items="['Public', 'Private']" required :rules="rules"
-                                variant="outlined"></v-select>
+                            <v-select hide-details="auto" class="mb-3" label="Visibility"
+                                v-model="this.membershipData.visibility" :items="['Public', 'Private']" required
+                                :rules="rules" variant="outlined"></v-select>
                         </v-col>
                         <v-col cols="12" md="12" v-if="this.membershipData.paypalPlanId">
                             <v-text-field clearable hide-details="auto" class="mb-3" label="PayPal Plan ID"
@@ -56,12 +56,16 @@
                                 <v-img :src="this.membershipData.picture" height="300" cover></v-img>
                             </v-card>
                         </v-col>
-                        <v-col cols="12" md="12">
+                        <v-col cols="12">
                             <v-file-input v-if="this.membershipId == 'create'" label="Upload Picture" prepend-icon=""
                                 append-inner-icon="mdi-paperclip" variant="outlined" :rules="pictureRules" accept="image/*"
                                 @change="handleFileUpload"></v-file-input>
                             <v-file-input v-else label="Change picture" prepend-icon="" append-inner-icon="mdi-paperclip"
                                 variant="outlined" accept="image/*" @change="handleFileUpload"></v-file-input>
+                        </v-col>
+                        <v-col cols="12">
+                            <v-switch hide-details="auto" class="mb-3" label="This membership have classes conducted by TSY" v-model="membershipData.hasClasses" color="primary"
+                                inset required :rules="rules" variant="outlined"></v-switch>
                         </v-col>
                     </v-row>
                 </v-card-text>
@@ -132,14 +136,14 @@ export default {
                 console.error("Error getting user by ID", error)
             }
 
-        }
+        },
     },
-    mounted() {
+    async created() {
         if (this.membershipId == "create") {
             this.membershipData = this.membershipStore.$state
             console.log(this.membershipData)
         } else {
-            this.getMembershipData();
+            await this.getMembershipData();
         }
 
         console.log(this.membershipData)
@@ -162,6 +166,7 @@ export default {
                 setupfee: null,
                 picture: null,
                 paypalPlanId: null,
+                hasClasses: false,
             },
             modal: {
                 show: false,
@@ -209,22 +214,24 @@ export default {
         },
 
         async getMembershipData() {
-            try {
-                const response = await this.membershipStore.getMembershipById(this.membershipId)
-                if (response.status == 200) {
-                    this.membershipData.title = response.data[0].Title
-                    this.membershipData.visibility = response.data[0].Visibility
-                    this.membershipData.description = response.data[0].Description
-                    this.membershipData.type = response.data[0].Type
-                    this.membershipData.basefee = response.data[0].BaseFee
-                    this.membershipData.setupfee = response.data[0].SetupFee
-                    this.membershipData.picture = response.data[0].Picture
-                    this.membershipData.paypalPlanId = response.data[0].PayPalPlanId
-                    this.membershipData.visibility = response.data[0].Visibility
-                }
-            } catch (error) {
-                console.error("Error retrieving user info", error);
+
+            this.loading = true;
+            const response = await this.membershipStore.getMembershipById(this.membershipId)
+            this.loading = false;
+
+            if (response.status == 200) {
+                this.membershipData.title = response.data[0].Title
+                this.membershipData.visibility = response.data[0].Visibility
+                this.membershipData.description = response.data[0].Description
+                this.membershipData.type = response.data[0].Type
+                this.membershipData.basefee = response.data[0].BaseFee
+                this.membershipData.setupfee = response.data[0].SetupFee
+                this.membershipData.picture = response.data[0].Picture
+                this.membershipData.paypalPlanId = response.data[0].PayPalPlanId
+                this.membershipData.visibility = response.data[0].Visibility
+                this.membershipData.hasClasses = response.data[0].hasClasses
             }
+
         },
 
         validateForm() {
@@ -250,13 +257,6 @@ export default {
 
         async updateMembership() {
 
-            console.log(JSON.stringify({
-                Title: this.membershipData.title,
-                Description: this.membershipData.description,
-                Type: this.membershipData.type,
-                BaseFee: this.membershipData.basefee,
-                Picture: this.membershipData.picture
-            }))
             try {
 
                 // uri to uploaded picture
@@ -265,7 +265,6 @@ export default {
                     this.membershipData.picture = uploadResponse.s3Uri
                     console.log(this.membershipData.picture);
                 }
-
 
                 let tempmembershipId = this.membershipId
                 if (this.membershipId == "create") {
@@ -282,16 +281,7 @@ export default {
                             this.modal.show = true
                             this.modal.message = "Your membership has been successfully updated!"
                             this.modal.path = "/admin/membership"
-                            this.membershipStore.$state = {
-                                membershipId: null,
-                                title: null,
-                                description: null,
-                                type: null,
-                                basefee: null,
-                                picture: null,
-                                setupfee: null,
-                                validity: null,
-                            }
+                            this.membershipStore.$reset()
 
                         }
                     })

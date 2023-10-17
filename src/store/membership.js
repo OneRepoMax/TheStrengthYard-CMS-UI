@@ -22,6 +22,7 @@ export const useMembershipStore = defineStore("membership", {
     picture: null,
     membershipRecord: null,
     selectedMembership: null,
+    hasClasses: null,
   }),
   actions: {
     async uploadPicture(file) {
