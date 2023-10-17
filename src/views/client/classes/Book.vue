@@ -15,7 +15,6 @@
                 Here’s Our Gym Classes For Those Who Enjoy The Camaraderie Of
                 Training In A Group While Getting Functionally Stronger!
               </v-card-text>
-
               <v-divider />
               <ViewClassSlots />
             </div>
