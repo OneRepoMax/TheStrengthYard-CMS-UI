@@ -71,6 +71,9 @@ export default {
     searchValue() {
       this.page = 1;
     },
+    tab() {
+      this.getBookList();
+    },
   },
   computed: {
     displayedBooking() {
