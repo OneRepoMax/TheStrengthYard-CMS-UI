@@ -59,7 +59,7 @@
                                         </div>
                                         <div v-else>
                                             <v-chip color="red" text-color="white">
-                                                Inavailable
+                                                Unavailable
                                             </v-chip>
                                         </div>
                                     </v-card-text>
