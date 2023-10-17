@@ -64,7 +64,7 @@
                                 variant="outlined" accept="image/*" @change="handleFileUpload"></v-file-input>
                         </v-col>
                         <v-col cols="12">
-                            <v-switch hide-details="auto" class="mb-3" label="This membership have classes conducted by TSY" v-model="membershipData.hasClasses" color="primary"
+                            <v-switch hide-details="auto" class="mb-3" label="This membership has classes conducted by TSY" v-model="membershipData.hasClasses" color="primary"
                                 inset required :rules="rules" variant="outlined"></v-switch>
                         </v-col>
                     </v-row>
