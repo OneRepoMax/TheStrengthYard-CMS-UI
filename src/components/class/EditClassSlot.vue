@@ -23,7 +23,7 @@
                         </v-col>
 
                         <v-col cols="12" md="4">
-                            <v-text-field clearable hide-details="auto" label="Max Capacity" disabled
+                            <v-text-field hide-details="auto" label="Max Capacity" disabled
                                 v-model="this.classData.capacity" required :rules="rules"
                                 variant="outlined"></v-text-field>
                         </v-col>

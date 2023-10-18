@@ -10,6 +10,9 @@
           <v-chip :color="getColor(book.Status)" :prepend-icon="getIcon(book.Status)">
             {{ book.Status }}
           </v-chip>
+          <v-chip class="mx-1" prepend-icon="mdi-cancel" @click.prevent="showModal(book)">
+            Cancel Booking
+          </v-chip>
         </div>
 
       </v-card-title>
@@ -27,6 +30,25 @@
 
     </v-card>
   </v-list>
+
+  <template>
+        <Modal 
+            v-model="bookingInfo.show" 
+            :title="bookingInfo.title" 
+            :message="bookingInfo.message"
+            :timestamp="bookingInfo.timestamp"
+            :color="bookingInfo.color" 
+            :className="bookingInfo.className"
+            :classId="bookingInfo.classId"
+            :date="bookingInfo.date"
+            :time="bookingInfo.time"
+            :icon="bookingInfo.icon"
+            @closeModal="closeModal" 
+            @actionModal="actionModal" 
+            :loading="bookingInfo.loading"
+            
+        />
+    </template>
 </template>
 
 <script>
@@ -98,7 +120,14 @@ export default {
       else {
         return 'mdi-alert'
       }
-    }
+    },
+    showModal(book) {
+            this.bookingInfo.show = true;
+            this.bookingInfo.className = `${book.ClassSlot.Class.ClassName}`;
+            this.bookingInfo.classId = `${book.ClassSlotId}`;
+            this.bookingInfo.date = `${this.formattedDate(book.ClassSlot.StartTime)}`;
+            this.bookingInfo.time = `${this.formattedTime(book.ClassSlot.StartTime)} - ${this.formattedTime(book.ClassSlot.EndTime)} (${book.ClassSlot.Duration} Minutes)`;
+        }
   },
 
   data() {
