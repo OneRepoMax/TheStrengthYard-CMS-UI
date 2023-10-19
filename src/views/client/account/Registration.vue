@@ -225,6 +225,8 @@ function closeModal() {
 
 async function submitForm() {
 
+    state.loading = true;
+
     try {
         const uploadResponse = await userStore.uploadAvatar(userStore.displayPicture)
         if (uploadResponse.status == 200) {
@@ -281,6 +283,9 @@ async function submitForm() {
         } else {
             throw new Error("AWS upload failed with status code: ", uploadResponse.status);
         }
+
+        state.loading = false;
+
     } catch (error) {
         console.log("Registration error: ", error);
     } finally {
