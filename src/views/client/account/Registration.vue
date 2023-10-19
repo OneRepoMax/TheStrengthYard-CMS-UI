@@ -271,7 +271,7 @@ async function submitForm() {
                 state.modal.show = true;
                 state.modal.title = "Registration successful";
                 state.modal.icon = "mdi-email";
-                state.modal.message = `Thank you ${userStore.firstName} ${userStore.lastName} for registering with The Strength Yard! email to verify your account.`;
+                state.modal.message = `Thank you ${userStore.firstName} ${userStore.lastName} for registering with The Strength Yard! Please check your email to verify your account.`;
                 state.modal.type = "success";
 
                 // redirect to email verification (I put login as temporary measure)
