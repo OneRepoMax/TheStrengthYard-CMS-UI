@@ -30,11 +30,11 @@
         <tbody>
             <tr v-for="classSlot in this.classSlotList" :key="classSlot.ClassSlotId">
                 <td class="font-weight-medium">
-                    <v-checkbox-btn v-model="selected" :label="classSlot.ClassSlotId.toString()" :value="classSlot.ClassSlotId"
-                        class="text-wrap"></v-checkbox-btn>
+                    <v-checkbox-btn v-model="selected" :label="classSlot.ClassSlotId.toString()"
+                        :value="classSlot.ClassSlotId" class="text-wrap"></v-checkbox-btn>
                 </td>
                 <td class="font-weight-medium">
-                   {{ classSlot.Class.ClassName }}
+                    {{ classSlot.Class.ClassName }}
                 </td>
                 <td>
                     <v-chip variant="text" prependIcon="mdi-calendar">{{ this.formattedDate(classSlot.StartTime) }}</v-chip>
@@ -45,8 +45,9 @@
                     </v-chip>
                 </td>
                 <td>
-                    <v-chip @click.prevent="showBookingListModal(classSlot.ClassSlotId)" color="classSlot" prependIcon="mdi-account-multiple">{{ classSlot.CurrentCapacity }}/{{
-                        classSlot.Class.MaximumCapacity }}</v-chip>
+                    <v-chip @click.prevent="showBookingListModal(classSlot.ClassSlotId)" color="classSlot"
+                        prependIcon="mdi-account-multiple">{{ classSlot.CurrentCapacity }}/{{
+                            classSlot.Class.MaximumCapacity }}</v-chip>
                 </td>
                 <td v-if="!selected.length">
                     <v-btn variant="text" icon="mdi-delete" color="red" size="small"
@@ -67,7 +68,8 @@
     </template>
 
     <template v-if="this.selectedClassSlotId">
-        <BookingListModal v-model="bookingListModal.show" @closeModal="closeBookingListModal()" :classSlotId="this.selectedClassSlotId"/>
+        <BookingListModal v-model="bookingListModal.show" @closeModal="closeBookingListModal()"
+            :classSlotId="this.selectedClassSlotId" />
     </template>
 </template>
 
@@ -82,7 +84,7 @@ import { useClassStore } from '@/store/class'
 
 export default {
     props: {
-        classSlotList: Object,
+        classSlotList: Array,
     },
 
     components: { ModalWarning, Modal, BookingListModal },
@@ -94,13 +96,14 @@ export default {
             classStore,
         }
     },
-    emits:['reload-data'],
+    emits: ['reload-data'],
     data() {
         return {
             classId: null,
             loading: false,
             selected: [],
             selectedClassSlotId: null,
+            searchValue: '',
             modalWarning: {
                 show: false,
                 type: "success",
@@ -118,12 +121,12 @@ export default {
                 message: "Class slots has been successfully deleted!",
                 path: "/admin/class"
             },
-            bookingListModal:{
+            bookingListModal: {
                 show: false
             }
         }
     },
-
+    
     methods: {
         editClass(classSlotId) {
             console.log(classSlotId)
@@ -137,7 +140,7 @@ export default {
             const minutes = String(date.getMinutes()).padStart(2, "0");
             return hours + minutes;
         },
-        
+
         formattedDate(dateInput) {
             const inputDate = new Date(dateInput);
             const month = (inputDate.getUTCMonth() + 1).toString().padStart(2, '0'); // Adding 1 because months are 0-indexed
@@ -166,7 +169,7 @@ export default {
         },
         closeModal() {
             this.modal.show = false
-            this.selected=[]
+            this.selected = []
             this.$emit('reload-data')
         },
         closeModalWarning() {
@@ -175,11 +178,11 @@ export default {
         async actionModal() {
             await this.deleteClassSlots()
         },
-        showBookingListModal(classSlotId){
+        showBookingListModal(classSlotId) {
             this.bookingListModal.show = true
             this.selectedClassSlotId = classSlotId
         },
-        closeBookingListModal(){
+        closeBookingListModal() {
             this.bookingListModal.show = false
             this.selectedClassSlotId = null
         }
