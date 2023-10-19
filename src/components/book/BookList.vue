@@ -171,11 +171,10 @@ export default {
                         console.log(response)
                         console.log(response.data)
                         console.log(response.data.BookingDateTime)
-                        this.bookingInfo.title = "Booking Cancellation Successful";
-                        this.bookingInfo.message = "A confirmation email will be send to you shortly.";
-                        this.bookingInfo.timestamp = `Timestamp: ${response.data.BookingDateTime}`;
+                        this.bookingInfo.title = "Booking Cancelled";
+                        this.bookingInfo.message = response.data+ + " A confirmation email will be send to you shortly.";
                         this.bookingInfo.color = "green";
-                        this.bookingInfo.icon = "mdi-calendar-check";
+                        this.bookingInfo.icon = "mdi-calendar-remove";
                 }
 
               

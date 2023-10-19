@@ -39,9 +39,6 @@
                     {{ this.message }}
                 </p>
             </v-card-text>
-            <v-card-text v-if="this.color == 'green'" class="text-caption">
-                <p>{{ this.timestamp }}</p>
-            </v-card-text>
 
             <v-divider></v-divider>
 
