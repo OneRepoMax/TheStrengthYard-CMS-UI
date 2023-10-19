@@ -40,6 +40,7 @@
             :color="bookingInfo.color" 
             :className="bookingInfo.className"
             :classId="bookingInfo.classId"
+            :bookingId="bookingInfo.bookingId"
             :date="bookingInfo.date"
             :time="bookingInfo.time"
             :icon="bookingInfo.icon"
@@ -53,10 +54,15 @@
 
 <script>
 import { useBookStore } from "@/store/book";
+import Modal from '@/components/book/CancelBookingModal.vue';
+import { format } from 'date-fns';
 
 export default {
   props: {
     bookList: Object,
+  },
+  components: {
+    Modal
   },
   setup() {
     const bookStore = useBookStore();
@@ -93,46 +99,113 @@ export default {
 
       return dateObj.toLocaleString(undefined, options);
     },
-    getColor(status) {
-      if (status == "Confirmed") {
-        return 'primary'
-      }
-      else if (status == "Cancelled") {
-        return 'error'
-      }
-      else if (status == "Pending") {
-        return 'warning'
-      }
-      else {
-        return 'secondary'
-      }
+
+    formattedTime(dateInput) {
+            const date = new Date(dateInput);
+            const hours = String(date.getUTCHours()).padStart(2, '0');
+            const minutes = String(date.getUTCMinutes()).padStart(2, '0');
+            return `${hours}:${minutes}`;
     },
-    getIcon(status) {
-      if (status == "Confirmed") {
-        return 'mdi-check'
-      }
-      else if (status == "Cancelled") {
-        return 'mdi-close'
-      }
-      else if (status == "Pending") {
-        return 'mdi-clock'
-      }
-      else {
-        return 'mdi-alert'
-      }
-    },
-    showModal(book) {
+
+      getColor(status) {
+        if (status == "Confirmed") {
+          return 'primary'
+        }
+        else if (status == "Cancelled") {
+          return 'error'
+        }
+        else if (status == "Pending") {
+          return 'warning'
+        }
+        else {
+          return 'secondary'
+        }
+      },
+      getIcon(status) {
+        if (status == "Confirmed") {
+          return 'mdi-check'
+        }
+        else if (status == "Cancelled") {
+          return 'mdi-close'
+        }
+        else if (status == "Pending") {
+          return 'mdi-clock'
+        }
+        else {
+          return 'mdi-alert'
+        }
+      },
+        showModal(book) {
             this.bookingInfo.show = true;
             this.bookingInfo.className = `${book.ClassSlot.Class.ClassName}`;
             this.bookingInfo.classId = `${book.ClassSlotId}`;
+            this.bookingInfo.bookingId = `${book.BookingId}`;
             this.bookingInfo.date = `${this.formattedDate(book.ClassSlot.StartTime)}`;
             this.bookingInfo.time = `${this.formattedTime(book.ClassSlot.StartTime)} - ${this.formattedTime(book.ClassSlot.EndTime)} (${book.ClassSlot.Duration} Minutes)`;
-        }
+        },
+        closeModal() {
+            this.bookingInfo.show = false;
+            this.bookingInfo.bookingId = "";
+            this.bookingInfo.title = "Cancel Booking";
+            this.bookingInfo.message = "Please note that cancellations are not possible 12-hour prior to the scheduled class slot.";
+            this.bookingInfo.timestamp = "";
+            this.bookingInfo.color = "black";
+            this.bookingInfo.icon = "";
+        },
+
+        actionModal() {
+            console.log(this.book)
+            this.deleteBooking();
+        },
+
+        async deleteBooking() {
+            try {
+                this.loading = true;
+
+                //const response = await this.classStore.getClassSlotByDate(this.date);
+
+                const response = await this.bookStore.cancelBooking(this.bookingInfo.bookingId);
+                this.loading = false;
+
+                if(response.status = 200){
+                        console.log(response)
+                        console.log(response.data)
+                        console.log(response.data.BookingDateTime)
+                        this.bookingInfo.title = "Booking Cancellation Successful";
+                        this.bookingInfo.message = "A confirmation email will be send to you shortly.";
+                        this.bookingInfo.timestamp = `Timestamp: ${response.data.BookingDateTime}`;
+                        this.bookingInfo.color = "green";
+                        this.bookingInfo.icon = "mdi-calendar-check";
+                }
+
+              
+                return
+
+            } catch (error) {
+                console.error("An error occurred during get class slots API request:", error);
+            }
+            return
+        },
   },
 
   data() {
     return {
       loading: false,
+      bookingInfo: {
+                show: false,
+                title: "Cancel booking",
+                message: "Please note that cancellations are not possible 12-hour prior to the scheduled class slot.",
+                color: "black",
+                className: "",
+                classId: "",
+                bookingId: "",
+                date: "",
+                time: "",
+                icon: "",
+                bookingId: "",
+                timestamp: "",
+                loading: false,
+            },
     };
   },
 };
