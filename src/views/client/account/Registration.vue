@@ -225,6 +225,8 @@ function closeModal() {
 
 async function submitForm() {
 
+    state.loading = true;
+
     try {
         const uploadResponse = await userStore.uploadAvatar(userStore.displayPicture)
         if (uploadResponse.status == 200) {
@@ -269,7 +271,7 @@ async function submitForm() {
                 state.modal.show = true;
                 state.modal.title = "Registration successful";
                 state.modal.icon = "mdi-email";
-                state.modal.message = `Thank you ${userStore.firstName} ${userStore.lastName} for registering with The Strength Yard! email to verify your account.`;
+                state.modal.message = `Thank you ${userStore.firstName} ${userStore.lastName} for registering with The Strength Yard! Please check your email to verify your account.`;
                 state.modal.type = "success";
 
                 // redirect to email verification (I put login as temporary measure)
@@ -281,6 +283,9 @@ async function submitForm() {
         } else {
             throw new Error("AWS upload failed with status code: ", uploadResponse.status);
         }
+
+        state.loading = false;
+
     } catch (error) {
         console.log("Registration error: ", error);
     } finally {

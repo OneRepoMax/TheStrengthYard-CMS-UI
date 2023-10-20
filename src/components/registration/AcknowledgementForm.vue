@@ -157,7 +157,7 @@
                 <v-btn block @click="prev" variant="outlined" color="teal" size="large" class="mt-3">Previous</v-btn>
             </v-col>
             <v-col cols="12" md="6" align="center" class="pt-0" order="first" order-md="last">
-                <v-btn :disabled="loading" :loading="loading" block @click="acknowledgement" color="teal" size="large"
+                <v-btn :disabled="this.loading" :loading="this.loading" block @click="acknowledgement" color="teal" size="large"
                     type="button" class="mt-3">Submit</v-btn>
             </v-col>
         </v-row>

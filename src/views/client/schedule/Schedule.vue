@@ -16,6 +16,9 @@
         </v-card>
 
         <v-divider class="my-3" v-if="userStore.userType == 'A'"></v-divider>
+
+        <v-skeleton-loader type="article,image" v-for="value in 3" class="mb-5" v-if="loading"></v-skeleton-loader>
+
         <template v-for="post in posts" :key="post.ScheduleId">
             <post-card :displayPicture="post.User.DisplayPicture" :firstName="post.User.FirstName"
                 :lastName="post.User.LastName" :publishDate="post.PublishDate" :description="post.Description"

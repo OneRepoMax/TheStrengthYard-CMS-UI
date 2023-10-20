@@ -47,7 +47,7 @@
                                 </v-col>
                                 <v-spacer></v-spacer>
                                 <v-col class="d-flex justify-end align-center">
-                                    <v-pagination v-model="page" :length="totalPages"></v-pagination>
+                                    <v-pagination v-model="classPage" :length="totalClassPages"></v-pagination>
                                 </v-col>
                             </v-row>
                         </v-card-text>
@@ -58,7 +58,7 @@
 
                         <v-card-text>
                             <v-row align="center" dense>
-                                <v-col cols="8">
+                                <v-col cols="4">
                                     <v-card-title id="class-slot">Class Slots</v-card-title>
                                 </v-col>
                                 <v-spacer></v-spacer>
@@ -81,20 +81,20 @@
 
 
                         <!-- Manage class page -->
-                        <ClassSlotList :classSlotList="displayedClassSlot" @reload-data="this.getClassSlotList()"/>
+                        <ClassSlotList :classSlotList="displayedClassSlot" @reload-data="this.getClassSlotList()" />
 
                         <v-divider></v-divider>
 
                         <v-card-text class="px-8">
                             <v-row>
                                 <v-col cols="12" sm="2" class="d-flex justify-end align-center">
-                                    <v-select label="Results per page:" :items="[10, 50, 100]" v-model="classPerPage"
+                                    <v-select label="Results per page:" :items="[10, 50, 100]" v-model="classSlotPerPage"
                                         variant="outlined" max-width="40px" density="compact"
                                         hide-details="auto"></v-select>
                                 </v-col>
                                 <v-spacer></v-spacer>
                                 <v-col class="d-flex justify-end align-center">
-                                    <v-pagination v-model="page" :length="totalPages"></v-pagination>
+                                    <v-pagination v-model="classSlotPage" :length="totalClassSlotPages"></v-pagination>
                                 </v-col>
                             </v-row>
                         </v-card-text>
@@ -132,20 +132,30 @@ export default {
             names: [],
             loading: false,
             searchValue: null,
-            page: 1,
+            classSlotSearchValue: null,
+            classPage: 1,
+            classSlotPage: 1,
             pageLength: 1,
             classPerPage: 10,
+            classSlotPerPage: 10,
+            classSlotNames: [],
             tab: null,
         }
     },
     watch: {
         searchValue() {
-            this.page = 1;
-        }
+            this.classPage = 1;
+        },
+        classPerPage() {
+            this.classPage = 1
+        },
+        classSlotPerPage() {
+            this.classSlotPage = 1
+        },
     },
     computed: {
         displayedClass() {
-            const startIndex = (this.page - 1) * this.classPerPage;
+            const startIndex = (this.classPage - 1) * this.classPerPage;
             const endIndex = startIndex + this.classPerPage;
 
             if (this.searchValue != null) {
@@ -159,17 +169,24 @@ export default {
             }
             return this.ClassList.slice(startIndex, endIndex);
         },
-        totalPages() {
+        totalClassPages() {
             return Math.ceil(
                 (this.searchValue
                     ? this.displayedClass.length
                     : this.ClassList.length) / this.classPerPage
             );
         },
+        totalClassSlotPages() {
+            return Math.ceil(
+                (this.searchValue
+                    ? this.displayedClass.length
+                    : this.ClassSlotList.length) / this.classSlotPerPage
+            );
+        },
 
         displayedClassSlot() {
-            const startIndex = (this.page - 1) * this.classPerPage;
-            const endIndex = startIndex + this.classPerPage;
+            const startIndex = (this.classSlotPage - 1) * this.classSlotPerPage;
+            const endIndex = startIndex + this.classSlotPerPage;
 
             if (this.searchValue != null) {
 

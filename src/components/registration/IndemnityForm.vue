@@ -5,7 +5,7 @@
         </p>
         <p v-if="validationError" class="error-text text-left text-red">{{ validationError }}</p>
         <v-checkbox
-          class="shrink mb-n8"
+          class="shrink mb-n8 text-left"
           v-for="(option, index) in options"
           v-model="userStore.MedicalHistory"
           :key="index"
