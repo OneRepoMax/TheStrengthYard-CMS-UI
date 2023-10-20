@@ -24,11 +24,23 @@
               <v-card-title>My Bookings</v-card-title>
               <v-card-subtitle>All bookings under your account</v-card-subtitle>
               <v-divider class="my-3"></v-divider>
-              <BookList :bookList="displayedBooking" />
+              <BookList :bookList="displayedBooking" @reload-data="this.getBookList()"/>
             </div>
           </v-window-item>
         </v-window>
       </v-card-text>
+      <v-card-text class="px-8">
+                <v-row>
+                    <v-col cols="12" sm="2" class="d-flex justify-end align-center">
+                        <v-select label="Results per page:" :items="[10, 50, 100]" v-model="bookPerPage"
+                            variant="outlined" max-width="40px" density="compact" hide-details="auto"></v-select>
+                    </v-col>
+                    <v-spacer></v-spacer>
+                    <v-col class="d-flex justify-end align-center">
+                        <v-pagination v-model="page" :length="totalPages"></v-pagination>
+                    </v-col>
+                </v-row>
+            </v-card-text>
     </v-card>
   </v-container>
 </template>
@@ -82,14 +94,6 @@ export default {
       const startIndex = (this.page - 1) * this.bookPerPage;
       const endIndex = startIndex + this.bookPerPage;
 
-      if (this.searchValue != null) {
-        const filteredBook = this.BookList.filter((book) =>
-          `${book.BookingDateTime}`
-            .toLowerCase()
-            .includes(this.searchValue.toLowerCase())
-        );
-        return filteredBook.slice(startIndex, endIndex);
-      }
       return this.BookList.slice(startIndex, endIndex);
     },
     totalPages() {
