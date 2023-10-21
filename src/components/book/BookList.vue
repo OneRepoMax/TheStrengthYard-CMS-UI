@@ -35,10 +35,15 @@
         Booking Id: {{ book.BookingId }} | Class Slot Id:
         {{ book.ClassSlot.ClassSlotId }}
       </v-card-subtitle>
+      
       <v-card-item class="pt-0">
-        <v-icon size="15" class="me-1">mdi-clock-outline</v-icon
-        ><b>Class Time: </b>{{ formattedDate(book.ClassSlot.StartTime) }} -
-        {{ formattedDateShort(book.ClassSlot.EndTime) }}
+        <v-icon size="15" class="me-1">mdi-calendar</v-icon
+        ><b>Date: </b> {{ formattedDate(book.ClassSlot.StartTime) }}
+      </v-card-item>
+      <v-card-item class="pt-0">
+        <v-icon size="15" class="me-1">mdi-clock-outline</v-icon        >
+        <b>Class Time: </b> {{ formattedTime(book.ClassSlot.StartTime) }} -
+        {{ formattedTime(book.ClassSlot.EndTime) }}
       </v-card-item>
       <v-card-item class="pt-0">
         <v-icon size="15" class="me-1">mdi-refresh</v-icon><b>Duration: </b>
@@ -96,6 +101,8 @@ export default {
         weekday: "short", // Full weekday name
         day: "2-digit", // Two-digit day
         month: "2-digit", // Two-digit month
+        // hour: "2-digit", // Two-digit hour
+        // minute: "2-digit", // Two-digit minute
         hour12: true, // Use 12-hour format
       };
 
@@ -116,9 +123,13 @@ export default {
 
     formattedTime(dateInput) {
       const date = new Date(dateInput);
-      const hours = String(date.getUTCHours()).padStart(2, "0");
+      let hours = String(date.getUTCHours()).padStart(2, "0");
       const minutes = String(date.getUTCMinutes()).padStart(2, "0");
-      return `${hours}:${minutes}`;
+      const ampm = hours >= 12 ? "PM" : "AM";
+  
+      // Convert hours to 12-hour format
+      hours = hours % 12 || 12;
+      return `${hours}:${minutes} ${ampm}`;
     },
 
     getColor(status) {
@@ -154,21 +165,22 @@ export default {
       )} - ${this.formattedTime(book.ClassSlot.EndTime)} (${
         book.ClassSlot.Duration
       } Minutes)`;
+      this.bookingInfo.message = this.getMessage(book);
     },
     closeModal() {
       this.bookingInfo.show = false;
       this.$emit("reload-data");
     },
 
-    actionModal(book) {
-      console.log(book);
-      this.deleteBooking(book);
+    actionModal() {
+      // console.log();
+      this.deleteBooking();
     },
 
-    async deleteBooking(book) {
+    async deleteBooking() {
       try {
         this.bookingInfo.loading = true;
-        this.bookingInfo.message = this.getMessage(book);
+        
 
         //const response = await this.classStore.getClassSlotByDate(this.date);
 
@@ -202,20 +214,21 @@ export default {
     },
     getMessage(book) {
       // Calculate 12 hours from book.ClassSlot.StartTime
-      if (book && book.ClassSlot && book.ClassSlot.StartTime) {
       console.log('this is the class slot start time', book.ClassSlot.StartTime)
-      const twelveHours = 12 * 60 * 60 * 1000; // 12 hours in milliseconds
+      
+      let twelveHours = 12 * 60 * 60 * 1000; // 12 hours in milliseconds
+      twelveHours = twelveHours - 21600000
       const startTime = new Date(book.ClassSlot.StartTime).getTime();
       const currentTime = new Date().getTime();
-
-      if (startTime - currentTime > twelveHours) {
+      console.log(startTime)
+      console.log(currentTime)
+      console.log(twelveHours)
+      if ((startTime - currentTime) < twelveHours) {
         return "Scheduled class is less than 12 hours away. No points will be refunded. Are you sure to cancel this booking?";
       } else {
         return "Are you sure you want to cancel this booking?";
       }
-      }else {
-        return "Booking information is incomplete.";
-      }
+
     },
   },
   data() {
