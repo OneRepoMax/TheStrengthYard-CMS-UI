@@ -52,6 +52,26 @@ export const useBookStore = defineStore("book", {
       }
     },
 
+    async getPointHistoryPaidByMembershipRecordId(membershipRecordId) {
+        const apiUrl = `${TSY_API}/pointsHistory/user/${membershipRecordId}`;
+    
+        try {
+            const response = await axios.get(apiUrl);
+    
+            if (response.status === 200) {
+            return response;
+            }
+            return response;
+        } catch (error) {
+            console.error(
+            "An error occurred during get all booking API request:",
+            error
+            );
+    
+            return error.response;
+        }
+        }
+
      
   },
 
