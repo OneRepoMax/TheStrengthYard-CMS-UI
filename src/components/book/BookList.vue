@@ -157,24 +157,18 @@ export default {
     },
     closeModal() {
       this.bookingInfo.show = false;
-      this.bookingInfo.bookingId = "";
-      this.bookingInfo.title = "Cancel Booking";
-      this.bookingInfo.message =
-        "Please note that cancellations are not possible 12-hour prior to the scheduled class slot.";
-      this.bookingInfo.timestamp = "";
-      this.bookingInfo.color = "black";
-      this.bookingInfo.icon = "";
       this.$emit("reload-data");
     },
 
-    actionModal() {
-      console.log(this.book);
-      this.deleteBooking();
+    actionModal(book) {
+      console.log(book);
+      this.deleteBooking(book);
     },
 
-    async deleteBooking() {
+    async deleteBooking(book) {
       try {
         this.bookingInfo.loading = true;
+        this.bookingInfo.message = this.getMessage(book);
 
         //const response = await this.classStore.getClassSlotByDate(this.date);
 
@@ -193,16 +187,35 @@ export default {
           this.bookingInfo.color = "green";
           this.bookingInfo.icon = "mdi-calendar-remove";
         }
-
         this.bookingInfo.loading = false;
-        return;
+        
+        // return;
+
       } catch (error) {
         console.error(
           "An error occurred during get class slots API request:",
           error
         );
       }
-      return;
+      
+      // return;
+    },
+    getMessage(book) {
+      // Calculate 12 hours from book.ClassSlot.StartTime
+      if (book && book.ClassSlot && book.ClassSlot.StartTime) {
+      console.log('this is the class slot start time', book.ClassSlot.StartTime)
+      const twelveHours = 12 * 60 * 60 * 1000; // 12 hours in milliseconds
+      const startTime = new Date(book.ClassSlot.StartTime).getTime();
+      const currentTime = new Date().getTime();
+
+      if (startTime - currentTime > twelveHours) {
+        return "Scheduled class is less than 12 hours away. No points will be refunded. Are you sure to cancel this booking?";
+      } else {
+        return "Are you sure you want to cancel this booking?";
+      }
+      }else {
+        return "Booking information is incomplete.";
+      }
     },
   },
   data() {
@@ -214,15 +227,14 @@ export default {
       bookingInfo: {
         show: false,
         title: "Cancel booking",
-        message:
-          "Please note that cancellations are not possible 12-hour prior to the scheduled class slot.",
-        color: "black",
+        message: "",
+        color: "red",
         className: "",
         classId: "",
         bookingId: "",
         date: "",
         time: "",
-        icon: "",
+        icon: "mdi-alert-circle",
         timestamp: "",
         loading: false,
       },

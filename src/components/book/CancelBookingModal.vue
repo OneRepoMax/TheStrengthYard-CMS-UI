@@ -43,7 +43,7 @@
             <v-divider></v-divider>
 
             <!-- Confirm Buttons -->
-            <v-card-text v-if="this.color == 'black'">
+            <v-card-text v-if="this.color == 'red'">
                 <v-row dense>
                     <v-col cols="12" md="6">
                         <v-btn block variant="outlined" :color="this.color" class="mb-5" @click="$emit('closeModal')">No</v-btn>
