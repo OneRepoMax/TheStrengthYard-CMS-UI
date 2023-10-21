@@ -266,7 +266,12 @@ export default {
             }
         },
         async getPointHistory() {
-            const response = await this.bookStore.getPointHistoryPaidByMembershipRecordId(this.membership.MembershipRecordId);
+            let response = null;
+            if(this.userStore.userType == 'A'){
+                response = await this.bookStore.getPointHistoryByMembershipRecordId(this.membership.MembershipRecordId);
+            } else {
+                response = await this.bookStore.getPointHistoryPaidByMembershipRecordId(this.membership.MembershipRecordId);
+            }
             if (response.status == 200) {
                 this.pointData = response.data;
             }
