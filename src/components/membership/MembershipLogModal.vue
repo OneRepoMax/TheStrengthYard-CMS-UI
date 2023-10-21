@@ -145,7 +145,11 @@
                                 <tr v-for="point in pointData" :key="point.PointsId">
                                     <td>{{ point.PointsId }}</td>
                                     <td>{{ point.Balance }}</td>
-                                    <td>{{ point.Status }}</td>
+                                    <td> <!-- Chip to display status -->
+                                        <v-chip :color="point.Status == 'Paid' ? 'green' : 'red'">
+                                            {{ point.Status }}
+                                        </v-chip>
+                                    </td>
                                     <td>{{ formattedDate(point.PointsStartDate) }}</td>
                                     <td>{{ formattedDate(point.PointsEndDate) }}</td>
                                 </tr>
