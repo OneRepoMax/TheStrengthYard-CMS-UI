@@ -1,6 +1,8 @@
 <template>
   <v-list>
+    
     <v-card v-for="book in this.bookList" :key="book.BookingId" :value="book.BookingId" variant="text">
+        <v-divider></v-divider>
       <v-card-title class="d-flex flex-wrap text-wrap">
         {{ book.ClassSlot.Class.ClassName }} <v-spacer class="d-none d-sm-flex"></v-spacer>
         <div>
@@ -23,7 +25,6 @@
       <v-card-item class="pt-0">
         <v-icon size="15" class="me-1">mdi-refresh</v-icon><b>Duration: </b> {{ book.ClassSlot.Duration }} minutes
       </v-card-item>
-      <v-divider></v-divider>
 
     </v-card>
   </v-list>
