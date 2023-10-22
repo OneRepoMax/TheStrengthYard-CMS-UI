@@ -217,12 +217,11 @@ export default {
       console.log('this is the class slot start time', book.ClassSlot.StartTime)
       
       let twelveHours = 12 * 60 * 60 * 1000; // 12 hours in milliseconds
-      twelveHours = twelveHours - 21600000
+      twelveHours = twelveHours + 28800000 // adjusted for 8 hrs difference
+
       const startTime = new Date(book.ClassSlot.StartTime).getTime();
       const currentTime = new Date().getTime();
-      console.log(startTime)
-      console.log(currentTime)
-      console.log(twelveHours)
+
       if ((startTime - currentTime) < twelveHours) {
         return "Scheduled class is less than 12 hours away. No points will be refunded. Are you sure to cancel this booking?";
       } else {
