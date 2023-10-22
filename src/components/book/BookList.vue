@@ -49,7 +49,6 @@
         <v-icon size="15" class="me-1">mdi-refresh</v-icon><b>Duration: </b>
         {{ book.ClassSlot.Duration }} minutes
       </v-card-item>
-      <v-divider></v-divider>
     </v-card>
   </v-list>
 
@@ -101,8 +100,6 @@ export default {
         weekday: "short", // Full weekday name
         day: "2-digit", // Two-digit day
         month: "2-digit", // Two-digit month
-        // hour: "2-digit", // Two-digit hour
-        // minute: "2-digit", // Two-digit minute
         hour12: true, // Use 12-hour format
       };
 
@@ -189,9 +186,6 @@ export default {
         );
 
         if (response.status == 200) {
-          console.log(response);
-          console.log(response.data);
-          console.log(response.data.BookingDateTime);
           this.bookingInfo.title = "Booking Cancelled";
           this.bookingInfo.message =
             response.data +

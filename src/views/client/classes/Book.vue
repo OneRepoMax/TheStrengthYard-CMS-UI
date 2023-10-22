@@ -23,7 +23,7 @@
                         <div class="pa-md-5">
                             <v-card-title>My Bookings</v-card-title>
                             <v-card-subtitle>All bookings under your account</v-card-subtitle>
-                            <BookList :bookList="displayedBooking" />
+                            <BookList :bookList="displayedBooking" @reload-data="this.getBookList()"/>
                             <v-divider></v-divider>
                             <v-card-text class="px-8">
                                 <v-row>
