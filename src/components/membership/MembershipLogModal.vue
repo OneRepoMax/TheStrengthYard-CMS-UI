@@ -11,7 +11,7 @@
             <v-img :src="membership.Membership.Picture" cover max-height="130px"></v-img>
             <v-card-title>{{ membership.Membership.Title }}</v-card-title>
             <v-card-subtitle class="d-flex d-cols flex-wrap">
-                <StatusChip :status="membership.ActiveStatus" />
+                <StatusChip :status="membership.ActiveStatus"  />
                 <v-chip class="me-3 mb-3">
                     {{ membership.Membership.Type }}
                 </v-chip>
@@ -21,12 +21,12 @@
                 <v-chip class="me-3 mb-3">
                     Membership Record ID: {{ membership.MembershipRecordId }}
                 </v-chip>
-                <v-chip class="me-3 mb-3" color="primary" v-if="membership.PayPalSubscriptionId != null">
-                    PayPal Subscription ID: {{ membership.PayPalSubscriptionId }}
+                <v-chip class="me-3 mb-3 custom-button" color="primary" v-if="membership.PayPalSubscriptionId != null">
+                    <span class="button-content">PayPal Subscription ID: {{ membership.PayPalSubscriptionId }} </span>
                 </v-chip>
-                <v-chip class="me-3 mb-3">
-                    <v-icon icon="mdi-calendar" size="18" color="error" class="me-1 pb-1"></v-icon> Effective Date:
-                    {{ formattedDate(membership.StartDate) }} to {{ formattedDate(membership.EndDate) }}
+                <v-chip class="me-3 mb-3 custom-button">
+                    <v-icon icon="mdi-calendar" size="18" color="error" class="me-1 pb-1"></v-icon> <span class="button-content">Effective Date:
+                    {{ formattedDate(membership.StartDate) }} to {{ formattedDate(membership.EndDate) }}</span>
                 </v-chip>
             </v-card-subtitle>
             <div>
@@ -299,4 +299,12 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.custom-button{
+    height: auto;
+    padding: 5px 15px
+}
+.button-content {
+    white-space: wrap;
+}
+</style>
