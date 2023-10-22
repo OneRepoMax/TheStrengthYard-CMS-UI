@@ -11,7 +11,7 @@
             <v-img :src="membership.Membership.Picture" cover max-height="130px"></v-img>
             <v-card-title>{{ membership.Membership.Title }}</v-card-title>
             <v-card-subtitle class="d-flex d-cols flex-wrap">
-                <StatusChip :status="membership.ActiveStatus" />
+                <StatusChip :status="membership.ActiveStatus"  />
                 <v-chip class="me-3 mb-3">
                     {{ membership.Membership.Type }}
                 </v-chip>
@@ -21,18 +21,19 @@
                 <v-chip class="me-3 mb-3">
                     Membership Record ID: {{ membership.MembershipRecordId }}
                 </v-chip>
-                <v-chip class="me-3 mb-3" color="primary" v-if="membership.PayPalSubscriptionId != null">
-                    PayPal Subscription ID: {{ membership.PayPalSubscriptionId }}
+                <v-chip class="me-3 mb-3 custom-button" color="primary" v-if="membership.PayPalSubscriptionId != null">
+                    <span class="button-content">PayPal Subscription ID: {{ membership.PayPalSubscriptionId }} </span>
                 </v-chip>
-                <v-chip class="me-3 mb-3">
-                    <v-icon icon="mdi-calendar" size="18" color="error" class="me-1 pb-1"></v-icon> Effective Date:
-                    {{ formattedDate(membership.StartDate) }} to {{ formattedDate(membership.EndDate) }}
+                <v-chip class="me-3 mb-3 custom-button">
+                    <v-icon icon="mdi-calendar" size="18" color="error" class="me-1 pb-1"></v-icon> <span class="button-content">Effective Date:
+                    {{ formattedDate(membership.StartDate) }} to {{ formattedDate(membership.EndDate) }}</span>
                 </v-chip>
             </v-card-subtitle>
             <div>
                 <v-tabs v-model="tab">
                     <v-tab :value="1">Membership Log</v-tab>
                     <v-tab :value="2">Payment History</v-tab>
+                    <v-tab :value="3">Point History</v-tab>
                 </v-tabs>
                 <v-window v-model="tab">
                     <v-window-item :value="1">
@@ -99,8 +100,6 @@
                             </v-timeline>
                         </v-card-text>
                     </v-window-item>
-                </v-window>
-                <v-window v-model="tab">
                     <v-window-item :value="2" class="pa-3">
                         <template v-if="paymentData.length == 0">
                             <v-alert type="info" title="No payment history found"
@@ -131,6 +130,34 @@
                             </v-table>
                         </template>
                     </v-window-item>
+                    <v-window-item :value="3" class="pa-3">
+                        <v-table v-if="pointData.length > 0">
+                            <thead>
+                                <tr>
+                                    <th class="text-left font-weight-bold">Points ID</th>
+                                    <th class="text-left font-weight-bold">Balance</th>
+                                    <th class="text-left font-weight-bold">Status</th>
+                                    <th class="text-left font-weight-bold">Points Start Date</th>
+                                    <th class="text-left font-weight-bold">Points End Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="point in pointData" :key="point.PointsId">
+                                    <td>{{ point.PointsId }}</td>
+                                    <td>{{ point.Balance }}</td>
+                                    <td> <!-- Chip to display status -->
+                                        <v-chip :color="point.Status == 'Paid' ? 'green' : 'red'">
+                                            {{ point.Status }}
+                                        </v-chip>
+                                    </td>
+                                    <td>{{ formattedDate(point.PointsStartDate) }}</td>
+                                    <td>{{ formattedDate(point.PointsEndDate) }}</td>
+                                </tr>
+                            </tbody>
+                        </v-table>
+                        <v-alert v-else type="info" title="No point history found"
+                            text="There's no point history found for this membership record. Please allow the system to process your payment and ensure that there is a point system tied to this memebrship."></v-alert>
+                    </v-window-item>
                 </v-window>
             </div>
         </v-card>
@@ -148,35 +175,7 @@ import { useUserStore } from '@/store/user';
 import { usePaymentStore } from '@/store/payment'
 import Modal from '@/components/common/Modal.vue'
 import StatusChip from '@/components/common/StatusChip.vue'
-
-// Sample payment data
-// [{
-//     Amount: 90,
-//     Discount: 0,
-//     MembershipRecordId: 1,
-//     PayPalTransactionId: "5R580284D01408702",
-//     PaymentId: 7000,
-//     PaymentMode: "PayPal",
-//     TransactionDate: "Sun, 17 Sep 2023 00:00:00 GMT"
-// },
-// {
-//     Amount: 250,
-//     Discount: 0,
-//     MembershipRecordId: 2,
-//     PayPalTransactionId: "48185841BJ220500G",
-//     PaymentId: 7001,
-//     PaymentMode: "PayPal",
-//     TransactionDate: "Wed, 13 Sep 2023 00:00:00 GMT"
-// },
-//     {
-//         "Amount": 90,
-//         "Discount": 0,
-//         "MembershipRecordId": 3,
-//         "PayPalTransactionId": "57M12318994098505",
-//         "PaymentId": 7002,
-//         "PaymentMode": "PayPal",
-//         "TransactionDate": "Tue, 19 Sep 2023 00:00:00 GMT"
-//     }]
+import { useBookStore } from '@/store/book';
 
 export default {
     setup() {
@@ -184,8 +183,9 @@ export default {
         const userStore = useUserStore();
         const membershipStore = useMembershipStore();
         const paymentStore = usePaymentStore()
+        const bookStore = useBookStore();
 
-        return { userStore, membershipStore, paymentStore }
+        return { userStore, membershipStore, paymentStore, bookStore }
     },
     props: {
         membershipLog: Array,
@@ -218,11 +218,13 @@ export default {
                 path: "/admin/account"
             },
             membershipLogData: [...this.membershipLog],
-            paymentData: []
+            paymentData: [],
+            pointData: []
         }
     },
     mounted() {
-        this.getPaymentData(this.membership.MembershipRecordId)
+        this.getPaymentData(this.membership.MembershipRecordId);
+        this.getPointHistory(this.membership.MembershipRecordId);
     },
     methods: {
         formattedDate(dateInput) {
@@ -262,6 +264,26 @@ export default {
             if (response.status == 200) {
                 this.paymentData = response.data;
             }
+        },
+        async getPointHistory() {
+            let response = null;
+            if(this.userStore.userType == 'A'){
+                response = await this.bookStore.getPointHistoryByMembershipRecordId(this.membership.MembershipRecordId);
+            } else {
+                response = await this.bookStore.getPointHistoryPaidByMembershipRecordId(this.membership.MembershipRecordId);
+            }
+            if (response.status == 200) {
+                this.pointData = response.data;
+            }
+        }
+    },
+    watch: {
+        membershipLog(newValue) {
+            this.membershipLogData = [...newValue];
+        },
+        tab() {
+            this.getPaymentData(this.membership.MembershipRecordId);
+            this.getPointHistory(this.membership.MembershipRecordId);
         }
     },
     computed: {
@@ -277,4 +299,12 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.custom-button{
+    height: auto;
+    padding: 5px 15px
+}
+.button-content {
+    white-space: wrap;
+}
+</style>

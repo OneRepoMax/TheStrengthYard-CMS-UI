@@ -17,7 +17,7 @@
                 <div v-if="this.classSlots.length == 0">
                     <v-card>
                         <v-card-text class="text-center">
-                            <p>There is no class on this day.</p>
+                            <p>{{ this.classMessage }}</p>
                         </v-card-text>
                     </v-card>
                 </div>
@@ -25,43 +25,32 @@
                 <!-- Start of V-else: Show class slots -->
                 <div v-else>
                     <div v-for="slot in this.classSlots" :key="slot.ClassSlotId">
-                        <v-card class="mb-3" @click.prevent="showModal(slot)">
+                        <v-card class="mb-3" @click.prevent="showModal(slot.ClassSlot)">
                             <v-row>
                                 <!-- Show Class Slot Detail -->
                                 <v-col cols="10">
                                     <v-card-item>
                                         <v-card-title class="text-wrap">
-                                            {{slot.Class.ClassName}}
+                                            {{slot.ClassSlot.Class.ClassName}}
                                         </v-card-title>
                                         <v-card-subtitle>
-                                            {{slot.ClassSlotId}}
+                                            {{slot.ClassSlot.ClassSlotId}}
                                         </v-card-subtitle>
                                     </v-card-item>
 
                                     <v-card-text>
                                         <p>
                                             <v-icon icon="mdi-calendar" size="small"/>
-                                            {{formattedDate(slot.StartTime)}}
+                                            {{formattedDate(slot.ClassSlot.StartTime)}}
                                         </p>
                                         <p>
                                             <v-icon icon="mdi-clock-outline" size="small"/>
-                                            {{formattedTime(slot.StartTime)}} - {{formattedTime(slot.EndTime)}} ({{slot.Duration}} Minutes)
+                                            {{formattedTime(slot.ClassSlot.StartTime)}} - {{formattedTime(slot.ClassSlot.EndTime)}} ({{slot.ClassSlot.Duration}} Minutes)
                                         </p>
                                         <p>
                                             <v-icon icon="mdi-account-multiple" size="small"/>
-                                            {{slot.CurrentCapacity}}/{{slot.Class.MaximumCapacity}} joined
+                                            {{slot.ClassSlot.CurrentCapacity}}/{{slot.ClassSlot.Class.MaximumCapacity}} joined
                                             </p>
-                                        <br>
-                                        <div v-if="checkAvailability(slot.StartTime, slot.CurrentCapacity, slot.Class.MaximumCapacity) == 'Available'">
-                                            <v-chip color="green" text-color="white">
-                                                Available
-                                            </v-chip>
-                                        </div>
-                                        <div v-else>
-                                            <v-chip color="red" text-color="white">
-                                                Unavailable
-                                            </v-chip>
-                                        </div>
                                     </v-card-text>
                                 </v-col>
 
@@ -70,6 +59,20 @@
                                     <v-btn  variant="text" icon="mdi-calendar-plus" size="large"></v-btn>
                                 </v-col>
                             </v-row>
+
+                            <v-card-item>
+                                <div v-if="slot.Status == 'Available'">
+                                    <v-chip color="green" text-color="white">
+                                        {{slot.Status}}
+                                    </v-chip>
+                                </div>
+                                <div v-else>
+                                    <v-chip color="red" text-color="white">
+                                        {{slot.Status}}
+                                    </v-chip>
+                                    <p class="text-red mt-3">{{slot.Message}}.</p>
+                                </div>
+                            </v-card-item>
                             
                         </v-card>
                     </div>
@@ -153,6 +156,7 @@ export default {
                 timestamp: "",
                 loading: false,
             },
+            classMessage: "",
         }
     },
 
@@ -162,6 +166,7 @@ export default {
 
     watch: {
         date(){
+            console.log(this.date)
             this.getClassSlotsByDate();
         }
         
@@ -235,16 +240,24 @@ export default {
                 this.loading = true;
 
                 console.log(this.date)
-                const response = await this.classStore.getClassSlotByDate(this.date);
+                const response = await this.classStore.getClassSlotByDateAndUserID(this.date, this.userStore.userId);
 
                 this.loading = false;
-                if (response == null || response.status != 200) {
+                if (response == null) {
                     this.classSlots = []
-                    console.log(this.classSlots)
+                    this.classMessage = `There are no class slots on this date.`;
                     return
                 } else {
                     if (response.status == 200) {
                         this.classSlots = response.data
+                    } 
+                    else if (response.status == 404){
+                        this.classSlots = []
+                        this.classMessage = `There are no class slots on this date.`;
+                    } else {
+                        console.log(response.data)
+                        this.classSlots = []
+                        this.classMessage = `${response.data}.`;
                     }
                 }
                 return

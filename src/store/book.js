@@ -13,9 +13,7 @@ export const useBookStore = defineStore("book", {
     userId: null,
   }),
   actions: {
-
     async createBooking(UserId, ClassSlotId) {
-
       try {
         let response = await axios.post(`${TSY_API}/booking2`, {
           UserId: UserId,
@@ -31,7 +29,7 @@ export const useBookStore = defineStore("book", {
         return error;
       }
     },
-    
+
     async getAllBookingByUserId(userId) {
       const apiUrl = `${TSY_API}/booking/user/${userId}`;
 
@@ -71,8 +69,43 @@ export const useBookStore = defineStore("book", {
       }
     },
 
-     
+    async getPointHistoryPaidByMembershipRecordId(membershipRecordId) {
+      const apiUrl = `${TSY_API}/pointsHistory/user/${membershipRecordId}`;
+
+      try {
+        const response = await axios.get(apiUrl);
+
+        if (response.status === 200) {
+          return response;
+        }
+        return response;
+      } catch (error) {
+        console.error(
+          "An error occurred during get all booking API request:",
+          error
+        );
+
+        return error.response;
+      }
+    },
+    async getPointHistoryByMembershipRecordId(membershipRecordId) {
+      const apiUrl = `${TSY_API}/pointsHistory/${membershipRecordId}`;
+
+      try {
+        const response = await axios.get(apiUrl);
+
+        if (response.status === 200) {
+          return response;
+        }
+        return response;
+      } catch (error) {
+        console.error(
+          "An error occurred during get all booking API request:",
+          error
+        );
+
+        return error.response;
+      }
+    },
   },
-
-
 });

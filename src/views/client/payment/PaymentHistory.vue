@@ -13,8 +13,8 @@
   <v-divider></v-divider>
   <v-card-text v-if="this.displayedPaymentHistory.length == 0" class="text-center">
     <v-btn block v-if="!this.loading" type="info" color="info"
-            prepend-icon="mdi-information-outline" to="membership/purchase-membership">
-            You have not made any payment, click to purchase membership
+            prepend-icon="mdi-information-outline" to="membership/purchase-membership" class="custom-button">
+            <span class="button-content">You have not made any payment, click to purchase membership</span>
     </v-btn>
   </v-card-text>
   <v-card-text v-if="this.displayedPaymentHistory.length > 0">
@@ -186,3 +186,12 @@ import { VDataTableServer } from 'vuetify/labs/VDataTable'
     },
   }
 </script>
+<style scoped>
+.custom-button{
+    height: auto;
+    padding: 10px
+}
+.button-content {
+    white-space: wrap;
+}
+</style>

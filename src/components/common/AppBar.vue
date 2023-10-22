@@ -29,7 +29,6 @@
 
         <v-divider class="my-3"></v-divider>
 
-
         <v-list nav>
             <v-list-item v-for="item in menuItems" :key="item.title" :to="item.path" :prepend-icon="item.icon"
                 :title="item.title">
@@ -94,7 +93,7 @@ export default {
 
         return { userStore }
     },
-    props:{
+    props: {
         menuItems: Object,
     },
     data() {
