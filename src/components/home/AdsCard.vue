@@ -3,7 +3,7 @@
         <v-carousel hide-delimiters show-arrows="hover" continuous cycle height="230px">
             <template v-for="(ads, index) in adsList" :key="index">
                 <v-carousel-item :src="ads.src" @click.prevent="openNewTab(ads.path)" cover>
-                    <v-chip class="text-caption font-weight-semi-bold">{{ title }}</v-chip>
+                    <v-chip class="text-caption font-weight-bold mt-3 ml-2" style="background-color: white;">{{ title }}</v-chip>
                 </v-carousel-item>
             </template>
         </v-carousel>
