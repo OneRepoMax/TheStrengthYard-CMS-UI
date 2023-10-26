@@ -93,8 +93,6 @@ export const useMembershipStore = defineStore("membership", {
 
       const apiUrl = `${TSY_API}/memberships/public`;
 
-      console.log(AUTH_CONFIG);
-
       try {
         const response = await axios.get(apiUrl, AUTH_CONFIG);
 
