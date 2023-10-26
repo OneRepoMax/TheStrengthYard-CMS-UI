@@ -14,7 +14,7 @@
                     <ClassBooking class="bg-white px-3 pt-3 rounded"/>
                 </v-col>
                 <v-col cols="12" md="6">
-                    <!-- <v-card>
+                    <v-card>
                         <v-tabs
                             v-model="tab"
                             bg-color="#fff"
@@ -29,12 +29,12 @@
                                 <AgeDemographic class="bg-white pa-3 rounded"/>
                             </v-window-item>
 
-                            <v-window-item value="two"> -->
-                                <AgeDemographic class="bg-white pa-3 rounded"/>
-                            <!-- </v-window-item>
+                            <v-window-item value="two">
+                                <GenderDemographic class="bg-white pa-3 rounded"/>
+                            </v-window-item>
                             </v-window>
                         </v-card-text>
-                    </v-card> -->
+                    </v-card>
                     
                 </v-col>
             </v-row>

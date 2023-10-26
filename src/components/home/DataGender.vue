@@ -4,7 +4,7 @@
       type="pie"
       :options="chartOptions"
       :series="series"
-      height="300"
+      height="220"
     />
   </div>
 
