@@ -2,17 +2,8 @@
     <v-container fluid class="mx-auto">
         <div class="mb-3">
             <v-row class="d-flex">
-                <v-col cols="12" sm="3">
-                    <card :title="this.totalNumUser.title" :message="this.totalNumUser.message" />
-                </v-col>
-                <v-col cols="12" sm="3">
-                    <card :title="this.numActiveUserToday.title" :message="this.numActiveUserToday.message" />
-                </v-col>
-                <v-col cols="12" sm="3">
-                    <card :title="this.numActiveUserWeek.title" :message="this.numActiveUserWeek.message" />
-                </v-col>
-                <v-col cols="12" sm="3">
-                    <card :title="this.numActiveUserYear.title" :message="this.numActiveUserYear.message" />
+                <v-col cols="12" sm="3" v-for="num in numbers" :key="num">
+                    <card :title="num.title" :value="num.value" :icon="num.icon" />
                 </v-col>
             </v-row>
         </div>
@@ -20,16 +11,37 @@
         <div class="mb-5">
             <v-row>
                 <v-col cols="12" md="6">
-                    <ActiveUser class="bg-white px-3 pt-3 rounded"/>
+                    <ClassBooking class="bg-white px-3 pt-3 rounded"/>
                 </v-col>
                 <v-col cols="12" md="6">
-                    <MembershipType class="bg-white pa-3 rounded"/>
+                    <!-- <v-card>
+                        <v-tabs
+                            v-model="tab"
+                            bg-color="#fff"
+                        >
+                            <v-tab value="one">Age</v-tab>
+                            <v-tab value="two">Gender</v-tab>
+                        </v-tabs>
+
+                        <v-card-text>
+                            <v-window v-model="tab">
+                            <v-window-item value="one">
+                                <AgeDemographic class="bg-white pa-3 rounded"/>
+                            </v-window-item>
+
+                            <v-window-item value="two"> -->
+                                <AgeDemographic class="bg-white pa-3 rounded"/>
+                            <!-- </v-window-item>
+                            </v-window>
+                        </v-card-text>
+                    </v-card> -->
+                    
                 </v-col>
             </v-row>
         </div>
 
         <div>
-            <DataTable />
+            <MembershipRecord />
         </div>
 
     </v-container>
@@ -37,44 +49,70 @@
 
 <script>
 import card from '@/components/common/Card.vue'
-import ActiveUser from '@/components/home/DataUsers.vue'
-import MembershipType from '@/components/home/DataMemberships.vue'
-import DataTable from '@/components/home/DataTable.vue'
+import ClassBooking from '@/components/home/DataBooking.vue'
+import AgeDemographic from '@/components/home/DataAge.vue'
+import GenderDemographic from '@/components/home/DataGender.vue'
+import MembershipRecord from '@/components/home/DataTable.vue'
+import { useAnalyticsStore } from '@/store/analytics'
 
 export default {
     components: {
         card,
-        ActiveUser,
-        MembershipType,
-        DataTable
+        ClassBooking,
+        AgeDemographic,
+        GenderDemographic,
+        MembershipRecord,
     },
     setup () {
-        
-
-        return {}
+        const analyticsStore = useAnalyticsStore();
+        return { analyticsStore }
     },
 
     data (){
         return {
-            totalNumUser: {
-                title: "Total No. of Users",
-                message: "60"
-            },
-            numActiveUserToday: {
-                title: "No. of Active Users (Today)",
-                message: "23"
-            },
-            numActiveUserWeek: {
-                title: "No. of Active Users (Week)",
-                message: "35"
-            },
-            numActiveUserYear: {
-                title: "No. of Active Users (Year)",
-                message: "54"
-            },
+            tab: null,
+            numbers: [],
         }
         
     },
+
+    mounted() {
+        this.getAllNumbers();
+    },
+
+    methods: {
+        async getAllNumbers(){
+
+            // Get Total Number of Clients
+            const totalClient = await this.analyticsStore.getTotalUserCount();
+        
+            if (totalClient.status == 200){
+                const info = {
+                    title: "Total Number of Clients",
+                    icon: "mdi-account-multiple",
+                    value: totalClient.data,
+                }
+                this.numbers.push(info)
+            } else {
+                console.log("Error getting total clients")
+            }
+
+            // Get Total Number of New Clients This Month
+            const totalNew = await this.analyticsStore.getNewUsersThisMonth();
+        
+            if (totalNew.status == 200){
+                const info = {
+                    title: "New Clients This Month",
+                    icon: "mdi-account-plus",
+                    value: totalNew.data,
+                }
+                this.numbers.push(info)
+            } else {
+                console.log("Error getting new clients")
+            }
+
+        },
+    }
 }
 </script>
 

@@ -22,7 +22,10 @@
       v-model:sort-by="sortBy"
       :headers="headers"
       :items="displayedMembership"
-    ><template v-slot:bottom> </template></v-data-table>
+      :items-per-page="this.membershipPerPage"
+    >
+      <template v-slot:bottom> </template>
+    </v-data-table>
   </v-card-text>
   
   <v-divider></v-divider>
@@ -110,11 +113,12 @@ import { VDataTableServer } from 'vuetify/labs/VDataTable'
             }
             return this.MembershipRecordsInfo.slice(startIndex, endIndex);
         },
+
         totalPages() {
             return Math.ceil(
                 (this.searchValue
                     ? this.displayedMembership.length
-                    : this.MembershipList.length) / this.membershipPerPage
+                    : this.MembershipRecordsInfo.length) / this.membershipPerPage
             );
         },
     },
@@ -154,7 +158,7 @@ import { VDataTableServer } from 'vuetify/labs/VDataTable'
                 } else {
                     if (response.status == 200) {
                         this.MembershipRecords = response.data
-                        console.log(this.MembershipRecords)
+                        // console.log(this.MembershipRecords)
                         for (const membership of this.MembershipRecords) {
                             const startdate = this.formattedDate(membership.StartDate)
                             const enddate = this.formattedDate(membership.EndDate)
