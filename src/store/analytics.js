@@ -1,8 +1,12 @@
 import { defineStore } from "pinia";
+import { useUserStore } from "./user";
 import axios from "axios";
 
 // Declare variable
 const TSY_API = import.meta.env.VITE_TSY_API;
+const AUTH_CONFIG = {
+    headers: { Authorization: `Bearer ${useUserStore().getJwt()}` },
+  };
 
 export const useAnalyticsStore = defineStore("analytics", {
   state: () => ({
@@ -14,7 +18,7 @@ export const useAnalyticsStore = defineStore("analytics", {
       const apiUrl = `${TSY_API}/analytics/totalusers`;
 
       try {
-        const response = await axios.get(apiUrl);
+        const response = await axios.get(apiUrl, AUTH_CONFIG);
 
         if (response.status === 200) {
           return response;
@@ -34,7 +38,7 @@ export const useAnalyticsStore = defineStore("analytics", {
       const apiUrl = `${TSY_API}/analytics/newmemberships/thismonth`;
 
       try {
-        const response = await axios.get(apiUrl);
+        const response = await axios.get(apiUrl, AUTH_CONFIG);
 
         if (response.status === 200) {
           return response;
@@ -54,7 +58,7 @@ export const useAnalyticsStore = defineStore("analytics", {
       const apiUrl = `${TSY_API}/analytics/totalbookings`;
 
       try {
-        const response = await axios.get(apiUrl);
+        const response = await axios.get(apiUrl, AUTH_CONFIG);
 
         if (response.status === 200) {
           return response;
@@ -74,7 +78,7 @@ export const useAnalyticsStore = defineStore("analytics", {
       const apiUrl = `${TSY_API}/analytics/userdemographics`;
 
       try {
-        const response = await axios.get(apiUrl);
+        const response = await axios.get(apiUrl, AUTH_CONFIG);
 
         if (response.status === 200) {
           return response;

@@ -12,7 +12,7 @@ const bucket = import.meta.env.VITE_S3_BUCKET_ADMIN_NAME; // Bucket name
 const region = import.meta.env.VITE_AWS_REGION; // Region
 
 const AUTH_CONFIG = {
-  headers: { Authorization: `Bearer ${useUserStore().getJwtToken()}` },
+  headers: { Authorization: `Bearer ${useUserStore().getJwt()}` },
 };
 
 export const useMembershipStore = defineStore("membership", {
@@ -281,7 +281,7 @@ export const useMembershipStore = defineStore("membership", {
       const apiUrl = `${TSY_API}/memberships/${membershipId}`;
 
       try {
-        const response = await axios.delete(apiUrl);
+        const response = await axios.delete(apiUrl, AUTH_CONFIG);
 
         // Handle the response data here
         if (response.status === 200) {

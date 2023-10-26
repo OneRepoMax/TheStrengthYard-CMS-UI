@@ -1,8 +1,13 @@
 import { defineStore } from "pinia";
+import { useUserStore } from "./user";
 import axios from "axios";
 
 // Declare variable
 const TSY_API = import.meta.env.VITE_TSY_API;
+
+const AUTH_CONFIG = {
+  headers: { Authorization: `Bearer ${useUserStore().getJwt()}` },
+};
 
 export const useBookStore = defineStore("book", {
   state: () => ({
@@ -18,7 +23,8 @@ export const useBookStore = defineStore("book", {
         let response = await axios.post(`${TSY_API}/booking2`, {
           UserId: UserId,
           ClassSlotId: ClassSlotId,
-        });
+        },
+        AUTH_CONFIG);
 
         // Handle the response data here
         if (response.status === 201) {
@@ -34,7 +40,7 @@ export const useBookStore = defineStore("book", {
       const apiUrl = `${TSY_API}/booking/user/${userId}`;
 
       try {
-        const response = await axios.get(apiUrl);
+        const response = await axios.get(apiUrl, AUTH_CONFIG);
 
         if (response.status === 200) {
           return response;
@@ -53,7 +59,7 @@ export const useBookStore = defineStore("book", {
       const apiUrl = `${TSY_API}/booking/cancel/${bookingId}`;
 
       try {
-        const response = await axios.get(apiUrl);
+        const response = await axios.get(apiUrl, AUTH_CONFIG);
 
         if (response.status === 200) {
           return response;
@@ -73,7 +79,7 @@ export const useBookStore = defineStore("book", {
       const apiUrl = `${TSY_API}/pointsHistory/user/${membershipRecordId}`;
 
       try {
-        const response = await axios.get(apiUrl);
+        const response = await axios.get(apiUrl, AUTH_CONFIG);
 
         if (response.status === 200) {
           return response;
@@ -92,7 +98,7 @@ export const useBookStore = defineStore("book", {
       const apiUrl = `${TSY_API}/pointsHistory/${membershipRecordId}`;
 
       try {
-        const response = await axios.get(apiUrl);
+        const response = await axios.get(apiUrl, AUTH_CONFIG);
 
         if (response.status === 200) {
           return response;

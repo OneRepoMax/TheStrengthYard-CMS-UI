@@ -1,8 +1,13 @@
 import { defineStore } from "pinia";
+import { useUserStore } from "./user";
 import axios from "axios";
 
 // Declare variable
 const TSY_API = import.meta.env.VITE_TSY_API;
+
+const AUTH_CONFIG = {
+  headers: { Authorization: `Bearer ${useUserStore().getJwt()}` },
+};
 
 export const useClassStore = defineStore("classDetails", {
   state: () => ({
@@ -16,7 +21,7 @@ export const useClassStore = defineStore("classDetails", {
       const apiUrl = `${TSY_API}/class`;
 
       try {
-        const response = await axios.get(apiUrl);
+        const response = await axios.get(apiUrl, AUTH_CONFIG);
 
         if (response.status === 200) {
           return response;
@@ -35,7 +40,7 @@ export const useClassStore = defineStore("classDetails", {
       const apiUrl = `${TSY_API}/class/${classId}`;
 
       try {
-        const response = await axios.get(apiUrl);
+        const response = await axios.get(apiUrl, AUTH_CONFIG);
 
         if (response.status === 200) {
           return response;
@@ -54,7 +59,7 @@ export const useClassStore = defineStore("classDetails", {
       const apiUrl = `${TSY_API}/classSlot/${classSlotId}`;
 
       try {
-        const response = await axios.get(apiUrl);
+        const response = await axios.get(apiUrl, AUTH_CONFIG);
 
         if (response.status === 200) {
           console.log(response);
@@ -77,7 +82,7 @@ export const useClassStore = defineStore("classDetails", {
           ClassName: classData.name,
           Description: classData.description,
           MaximumCapacity: classData.capacity,
-        });
+        }, AUTH_CONFIG);
 
         // Handle the response data here
         if (response.status === 200) {
@@ -95,7 +100,7 @@ export const useClassStore = defineStore("classDetails", {
           Day: classSlotData.day,
           StartTime: classSlotData.startTime,
           EndTime: classSlotData.endTime,
-        });
+        }, AUTH_CONFIG);
 
         // Handle the response data here
         if (response.status === 200) {
@@ -111,7 +116,7 @@ export const useClassStore = defineStore("classDetails", {
       const apiUrl = `${TSY_API}/class/${classId}`;
 
       try {
-        const response = await axios.delete(apiUrl);
+        const response = await axios.delete(apiUrl, AUTH_CONFIG);
 
         // Handle the response data here
         if (response.status === 200) {
@@ -127,7 +132,7 @@ export const useClassStore = defineStore("classDetails", {
       const apiUrl = `${TSY_API}/classSlot/${classSlotId}`;
 
       try {
-        const response = await axios.delete(apiUrl);
+        const response = await axios.delete(apiUrl, AUTH_CONFIG);
 
         // Handle the response data here
         if (response.status === 200) {
@@ -145,7 +150,7 @@ export const useClassStore = defineStore("classDetails", {
           ClassName: classData.name,
           Description: classData.description,
           MaximumCapacity: classData.capacity,
-        });
+        }, AUTH_CONFIG);
         // Handle the response data here
         if (response.status === 201) {
           return response;
@@ -165,7 +170,8 @@ export const useClassStore = defineStore("classDetails", {
             StartTime: classSlotData.startTime,
             EndTime: classSlotData.endTime,
             RecurringUntil: RecurringUntil,
-          }
+          },
+          AUTH_CONFIG
         );
         // Handle the response data here
         if (response.status === 201) {
@@ -180,7 +186,7 @@ export const useClassStore = defineStore("classDetails", {
     async getAllClassSlot() {
       const apiUrl = `${TSY_API}/classSlot`;
       try {
-        const response = await axios.get(apiUrl);
+        const response = await axios.get(apiUrl, AUTH_CONFIG);
 
         if (response.status === 200) {
           return response;
@@ -195,7 +201,7 @@ export const useClassStore = defineStore("classDetails", {
       const apiUrl = `${TSY_API}/classSlot/slots/${date}`;
 
       try {
-        const response = await axios.get(apiUrl);
+        const response = await axios.get(apiUrl, AUTH_CONFIG);
 
         if (response.status === 200) {
           console.log(response);
@@ -216,7 +222,7 @@ export const useClassStore = defineStore("classDetails", {
       const apiUrl = `${TSY_API}/classSlot/slots/${date}/user/${id}`;
 
       try {
-        const response = await axios.get(apiUrl);
+        const response = await axios.get(apiUrl, AUTH_CONFIG);
 
         if (response.status === 200) {
           console.log(response);
@@ -234,13 +240,12 @@ export const useClassStore = defineStore("classDetails", {
     },
 
     async deleteClassSlotsById(classIds) {
-
       const apiUrl = `${TSY_API}/classSlot/delete`;
 
       try {
         const response = await axios.post(apiUrl, {
-            ClassSlotIdList: classIds,
-        });
+          ClassSlotIdList: classIds,
+        }, AUTH_CONFIG);
 
         // Handle the response data here
         if (response.status === 200) {
@@ -252,24 +257,24 @@ export const useClassStore = defineStore("classDetails", {
       }
     },
     async getAllBookingByClassSlotId(classSlotId) {
-        const apiUrl = `${TSY_API}/booking/classSlot/${classSlotId}`;
-    
-        try {
-            const response = await axios.get(apiUrl);
-    
-            if (response.status === 200) {
-            console.log(response);
-            return response;
-            }
-            return response;
-        } catch (error) {
-            console.error(
-            "An error occurred during get class by ID API request:",
-            error
-            );
-    
-            return error.response;
+      const apiUrl = `${TSY_API}/booking/classSlot/${classSlotId}`;
+
+      try {
+        const response = await axios.get(apiUrl, AUTH_CONFIG);
+
+        if (response.status === 200) {
+          console.log(response);
+          return response;
         }
-    }
+        return response;
+      } catch (error) {
+        console.error(
+          "An error occurred during get class by ID API request:",
+          error
+        );
+
+        return error.response;
+      }
+    },
   },
 });

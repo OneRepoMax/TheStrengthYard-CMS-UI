@@ -34,7 +34,7 @@ export const useUserStore = defineStore("user", {
     AcknowledgementOpenGymRules: false,
     AcknowledgementTnC: false,
     selectedUser: null,
-    jwtToken: null,
+    jwt: null,
   }),
   actions: {
     loadUserFromLocalStorage() {
@@ -61,7 +61,7 @@ export const useUserStore = defineStore("user", {
         userType: this.userType,
         verified: this.verified,
         displayPicture: this.displayPicture,
-        jwtToken: this.jwtToken,
+        jwt: this.jwt,
       };
       localStorage.setItem("tsyUserInfo", JSON.stringify(userStore));
     },
@@ -87,13 +87,13 @@ export const useUserStore = defineStore("user", {
       this.displayPicture = response.data[0].DisplayPicture;
       this.verified = response.data[0].Verified;
 
-      this.jwtToken = response.data[1].token;
+      this.jwt = response.data[1].token;
       this.saveUserToLocalStorage();
     },
 
     async getUserInfo() {
       const config = {
-        headers: { Authorization: `Bearer ${this.jwtToken}` },
+        headers: { Authorization: `Bearer ${this.jwt}` },
       };
       try {
         let response = await axios.get(
@@ -212,7 +212,7 @@ export const useUserStore = defineStore("user", {
 
     async resendVerificationEmail(emailAddress) {
       const config = {
-        headers: { Authorization: `Bearer ${this.jwtToken}` },
+        headers: { Authorization: `Bearer ${this.jwt}` },
       };
       try {
         let response = await axios.post(
@@ -234,7 +234,7 @@ export const useUserStore = defineStore("user", {
 
     async updateProfile(profileData, userId) {
       const config = {
-        headers: { Authorization: `Bearer ${this.jwtToken}` },
+        headers: { Authorization: `Bearer ${this.jwt}` },
       };
 
       try {
@@ -265,7 +265,7 @@ export const useUserStore = defineStore("user", {
     },
     async changePassword(userId, newPassword) {
       const config = {
-        headers: { Authorization: `Bearer ${this.jwtToken}` },
+        headers: { Authorization: `Bearer ${this.jwt}` },
       };
 
       const apiUrl = `${TSY_API}/user/${userId}`;
@@ -310,7 +310,7 @@ export const useUserStore = defineStore("user", {
     },
     async getAllUser() {
       const config = {
-        headers: { Authorization: `Bearer ${this.jwtToken}` },
+        headers: { Authorization: `Bearer ${this.jwt}` },
       };
       const apiUrl = `${TSY_API}/user`;
 
@@ -330,7 +330,7 @@ export const useUserStore = defineStore("user", {
     },
     async getUserById(userId) {
       const config = {
-        headers: { Authorization: `Bearer ${this.jwtToken}` },
+        headers: { Authorization: `Bearer ${this.jwt}` },
       };
       const apiUrl = `${TSY_API}/user/${userId}`;
 
@@ -350,7 +350,7 @@ export const useUserStore = defineStore("user", {
     },
     async getIndemnityForm(userId) {
       const config = {
-        headers: { Authorization: `Bearer ${this.jwtToken}` },
+        headers: { Authorization: `Bearer ${this.jwt}` },
       };
 
       const apiUrl = `${TSY_API}/indemnityform/${userId}`;
@@ -371,7 +371,7 @@ export const useUserStore = defineStore("user", {
     },
     async deleteUser(userId) {
       const config = {
-        headers: { Authorization: `Bearer ${this.jwtToken}` },
+        headers: { Authorization: `Bearer ${this.jwt}` },
       };
 
       const apiUrl = `${TSY_API}/user/${userId}`;
@@ -396,7 +396,7 @@ export const useUserStore = defineStore("user", {
       try {
         // Add token to bearer
         const config = {
-          headers: { Authorization: `Bearer ${this.jwtToken}` },
+          headers: { Authorization: `Bearer ${this.jwt}` },
         };
 
         const response = await axios.get(apiUrl, config);
@@ -409,8 +409,8 @@ export const useUserStore = defineStore("user", {
         return false;
       }
     },
-    getJwtToken(){
-        return this.jwtToken
+    getJwt(){
+        return this.jwt
     }
   },
 });

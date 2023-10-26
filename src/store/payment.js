@@ -1,8 +1,13 @@
 import { defineStore } from "pinia";
 import axios from "axios";
+import { useUserStore } from "./user";
 
 // Declare variable
 const TSY_API = import.meta.env.VITE_TSY_API;
+
+const AUTH_CONFIG = {
+    headers: { Authorization: `Bearer ${useUserStore().getJwt()}` },
+  };
 
 export const usePaymentStore = defineStore("payment", {
   state: () => ({
@@ -14,7 +19,7 @@ export const usePaymentStore = defineStore("payment", {
       const apiUrl = `${TSY_API}/payments`;
 
       try {
-        const response = await axios.get(apiUrl);
+        const response = await axios.get(apiUrl, AUTH_CONFIG);
 
         if (response.status === 200) {
           return response;
@@ -33,7 +38,7 @@ export const usePaymentStore = defineStore("payment", {
       const apiUrl = `${TSY_API}/payments/history/membershiprecord/${membershipRecordId}`;
 
       try {
-        const response = await axios.get(apiUrl);
+        const response = await axios.get(apiUrl, AUTH_CONFIG);
 
         if (response.status === 200) {
           return response;
