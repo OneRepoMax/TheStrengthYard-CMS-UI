@@ -48,6 +48,8 @@ export default {
   setup() {
     const userStore = useUserStore();
 
+    userStore.$reset();
+
     return {
       userStore,
     };
@@ -95,7 +97,7 @@ export default {
         this.loginAlert = true;
       } else {
         console.log("Login Successful");
-        if (response.data.UserType.toUpperCase() == "A") {
+        if (response.data[0].UserType.toUpperCase() == "A") {
           this.$router.push({ path: "/admin/account" })
         } else {
           this.$router.push({ path: "/" });

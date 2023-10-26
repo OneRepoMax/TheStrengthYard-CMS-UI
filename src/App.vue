@@ -15,11 +15,16 @@ export default {
             userStore
         }
     },
-    created() {
+    async created() {
         if (localStorage.getItem("tsyUserInfo") == null){
             this.$router.push({path: '/account/login'})
         } else {
-            this.userStore.loadUserFromLocalStorage()
+            await this.userStore.loadUserFromLocalStorage()
+            // Check if jwt is expired
+            const jwtCheck = await this.userStore.jwtCheck()
+            if (!jwtCheck) {
+                this.$router.push({path: '/account/login'})
+            }
         }
     }
 }

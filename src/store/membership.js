@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
+import { useUserStore } from "./user";
 
 // Declare variable
 const TSY_API = import.meta.env.VITE_TSY_API;
@@ -9,6 +10,10 @@ const secretAccessKey = import.meta.env.VITE_S3_SECRET_KEY; // IAM user secret k
 const accessKeyId = import.meta.env.VITE_S3_ACCESS_KEY; // IAM user access id
 const bucket = import.meta.env.VITE_S3_BUCKET_ADMIN_NAME; // Bucket name
 const region = import.meta.env.VITE_AWS_REGION; // Region
+
+const AUTH_CONFIG = {
+  headers: { Authorization: `Bearer ${useUserStore().getJwtToken()}` },
+};
 
 export const useMembershipStore = defineStore("membership", {
   state: () => ({
@@ -65,10 +70,11 @@ export const useMembershipStore = defineStore("membership", {
     },
 
     async getAllMembership() {
+    
       const apiUrl = `${TSY_API}/memberships`;
 
       try {
-        const response = await axios.get(apiUrl);
+        const response = await axios.get(apiUrl, AUTH_CONFIG);
 
         if (response.status === 200) {
           return response;
@@ -84,29 +90,31 @@ export const useMembershipStore = defineStore("membership", {
       }
     },
     async getAllPublicMembership() {
-        const apiUrl = `${TSY_API}/memberships/public`;
-  
-        try {
-          const response = await axios.get(apiUrl);
-  
-          if (response.status === 200) {
-            return response;
-          }
+
+      const apiUrl = `${TSY_API}/memberships/public`;
+
+      console.log(AUTH_CONFIG);
+
+      try {
+        const response = await axios.get(apiUrl, AUTH_CONFIG);
+
+        if (response.status === 200) {
           return response;
-        } catch (error) {
-          console.error(
-            "An error occurred during get all membership API request:",
-            error
-          );
-  
-          return error.response;
         }
-      },
+      } catch (error) {
+        console.error(
+          "An error occurred during get all public membership API request:",
+          error
+        );
+
+        return error.response;
+      }
+    },
     async getMembershipById(membershipId) {
       const apiUrl = `${TSY_API}/memberships/${membershipId}`;
 
       try {
-        const response = await axios.get(apiUrl);
+        const response = await axios.get(apiUrl, AUTH_CONFIG);
 
         if (response.status === 200) {
           return response;
@@ -125,7 +133,7 @@ export const useMembershipStore = defineStore("membership", {
       const apiUrl = `${TSY_API}/membershiprecord/${userId}`;
 
       try {
-        const response = await axios.get(apiUrl);
+        const response = await axios.get(apiUrl, AUTH_CONFIG);
 
         if (response.status === 200) {
           return response;
@@ -143,7 +151,7 @@ export const useMembershipStore = defineStore("membership", {
       const apiUrl = `${TSY_API}/membershiplog/${membershipRecordId}`;
 
       try {
-        const response = await axios.get(apiUrl);
+        const response = await axios.get(apiUrl, AUTH_CONFIG);
 
         if (response.status === 200) {
           return response;
@@ -166,7 +174,7 @@ export const useMembershipStore = defineStore("membership", {
           ActionType: payload.actionType,
           Description: payload.description,
           MembershipRecordId: payload.membershipRecordId,
-        });
+        }, AUTH_CONFIG);
 
         if (response.status === 200) {
           return response;
@@ -178,17 +186,16 @@ export const useMembershipStore = defineStore("membership", {
       }
     },
     async updateMembershipRecord(payload) {
-
       const membershipRecordId = payload.membershipRecordId;
       const apiUrl = `${TSY_API}/membershiprecord/${membershipRecordId}`;
 
       try {
         const response = await axios.put(apiUrl, {
-            MembershipRecordId: membershipRecordId,
-            StartDate: payload.startDate,
-            EndDate: payload.endDate,
-            ActiveStatus: payload.status
-        });
+          MembershipRecordId: membershipRecordId,
+          StartDate: payload.startDate,
+          EndDate: payload.endDate,
+          ActiveStatus: payload.status,
+        }, AUTH_CONFIG);
 
         if (response.status === 200) {
           return response;
@@ -202,11 +209,11 @@ export const useMembershipStore = defineStore("membership", {
         return error.response;
       }
     },
-    async deleteMembershipRecord(membershipRecordId){
-        const apiUrl = `${TSY_API}/membershiprecord/${membershipRecordId}`;
+    async deleteMembershipRecord(membershipRecordId) {
+      const apiUrl = `${TSY_API}/membershiprecord/${membershipRecordId}`;
 
       try {
-        const response = await axios.delete(apiUrl);
+        const response = await axios.delete(apiUrl, AUTH_CONFIG);
 
         if (response.status === 200) {
           return response;
@@ -221,177 +228,167 @@ export const useMembershipStore = defineStore("membership", {
       }
     },
     async createMembershipLog(payload) {
+      const apiUrl = `${TSY_API}/membershiplog`;
 
-        const apiUrl = `${TSY_API}/membershiplog`;
-  
-        try {
-          const response = await axios.post(apiUrl, {
-              MembershipRecordId: payload.membershipRecordId,
-              Date: payload.date,
-              ActionType: payload.actionType,
-              Description: payload.description,
-          });
-  
-          if (response.status === 200) {
-            return response;
-          }
+      try {
+        const response = await axios.post(apiUrl, {
+          MembershipRecordId: payload.membershipRecordId,
+          Date: payload.date,
+          ActionType: payload.actionType,
+          Description: payload.description,
+        }, AUTH_CONFIG);
+
+        if (response.status === 200) {
           return response;
-        } catch (error) {
-          console.error(
-            "An error occurred when creating membership log by membership record ID:",
-            error
-          );
-          return error.response;
         }
-      },
+        return response;
+      } catch (error) {
+        console.error(
+          "An error occurred when creating membership log by membership record ID:",
+          error
+        );
+        return error.response;
+      }
+    },
 
-      async updateMembershipById(membershipData, membershipId) {
-
-
-        try {
-          let response = await axios.put(`${TSY_API}/memberships/${membershipId}`, {
+    async updateMembershipById(membershipData, membershipId) {
+      try {
+        let response = await axios.put(
+          `${TSY_API}/memberships/${membershipId}`,
+          {
             Title: membershipData.title,
             Description: membershipData.description,
             Type: membershipData.type,
             BaseFee: membershipData.basefee,
             SetupFee: membershipData.setupfee,
             PayPalPlanId: membershipData.paypalPlanId,
-            Picture: membershipData.picture
-          });
-  
-          // Handle the response data here
-          if (response.status === 200) {
-            return response;
-          }
-        } catch (error) {
-          console.error("Update error:", error);
-          return;
-        }
-      },
-
-      async deleteMembershipById(membershipId) {
-
-        const apiUrl = `${TSY_API}/memberships/${membershipId}`;
-  
-        try {
-
-          const response = await axios.delete(apiUrl);
-  
-          // Handle the response data here
-          if (response.status === 200) {
-            return response;
-          }
-        } catch (error) {
-          console.error("Deletion error:", error);
-          return;
-        }
-      },
-
-      async createMembership(membershipData) {
-
-        console.log(membershipData);
-
-        try {
-          let response = await axios.post(`${TSY_API}/memberships`, {
-            Title: membershipData.title,
-            Description: membershipData.description,
-            Type: membershipData.type,
-            BaseFee: membershipData.basefee,
-            SetupFee: membershipData.setupfee,
             Picture: membershipData.picture,
-            Visibility: membershipData.visibility,
-            hasClasses: membershipData.hasClasses,
-          });
-  
-          // Handle the response data here
-          if (response.status === 200) {
-            return response;
-          }
-        } catch (error) {
-          console.error("Creation error:", error);
-          return;
-        }
-      },
-      async getMembershipLogsByMembershipRecordID(userId){
-        const apiUrl = `${TSY_API}/membershiprecord/${userId}`;
-    
-        try {
-          const response = await axios.get(apiUrl);
-    
-          if (response.status === 200) {
-            return response;
-          }
-          return response;
-        } catch (error) {
-          console.error(
-            "An error occurred during get membership Record by ID API request:",
-            error
-          );
-        }
-      },
+          },
+          AUTH_CONFIG
+        );
 
-      async getAllMembershipRecords(){
-        const apiUrl = `${TSY_API}/membershiprecord`;
-        try {
-          const response = await axios.get(apiUrl);
-  
-          if (response.status === 200) {
-            return response;
-          }
+        // Handle the response data here
+        if (response.status === 200) {
           return response;
-        } catch (error) {
-          console.error(
-            "An error occurred during get membership Record:",
-            error
-          );
         }
-      },
+      } catch (error) {
+        console.error("Update error:", error);
+        return;
+      }
+    },
 
-      async getMembershipRecordsByFilter(status){
-        const apiUrl = `${TSY_API}/membershiprecord/filter`;
-        const data = {
-          ActiveStatus: status,
-        };
-        try {
-          const response = await axios.post(apiUrl, data);
-  
-          if (response.status === 200) {
-            return response;
-          }
+    async deleteMembershipById(membershipId) {
+      const apiUrl = `${TSY_API}/memberships/${membershipId}`;
+
+      try {
+        const response = await axios.delete(apiUrl);
+
+        // Handle the response data here
+        if (response.status === 200) {
           return response;
-        } catch (error) {
-          console.error(
-            "An error occurred during get membership Record by filter:",
-            error
-          );
         }
-      },
+      } catch (error) {
+        console.error("Deletion error:", error);
+        return;
+      }
+    },
 
-      async addMembershipRecord(payload){
-        const apiUrl = `${TSY_API}/membershiprecord`;
-        const data = {
-             UserId: payload.userId,
-             MembershipTypeId: payload.membershipTypeId,
-             StartDate: payload.startDate,
-             EndDate: payload.endDate,
-             ActiveStatus: payload.status,
-             PayPalSubscriptionId: payload.subscriptionId,
+    async createMembership(membershipData) {
+      console.log(membershipData);
+
+      try {
+        let response = await axios.post(`${TSY_API}/memberships`, {
+          Title: membershipData.title,
+          Description: membershipData.description,
+          Type: membershipData.type,
+          BaseFee: membershipData.basefee,
+          SetupFee: membershipData.setupfee,
+          Picture: membershipData.picture,
+          Visibility: membershipData.visibility,
+          hasClasses: membershipData.hasClasses,
+        }, AUTH_CONFIG);
+
+        // Handle the response data here
+        if (response.status === 200) {
+          return response;
         }
-        try {
-            const response = await axios.post(apiUrl, data);
-    
-            if (response.status === 200) {
-              return response;
-            }
-            return response;
-          } catch (error) {
-            console.error(
-              "An error occurred during add membership Record:",
-              error
-            );
-          }
-      } 
+      } catch (error) {
+        console.error("Creation error:", error);
+        return;
+      }
+    },
+    async getMembershipLogsByMembershipRecordID(userId) {
+      const apiUrl = `${TSY_API}/membershiprecord/${userId}`;
+
+      try {
+        const response = await axios.get(apiUrl, AUTH_CONFIG);
+
+        if (response.status === 200) {
+          return response;
+        }
+        return response;
+      } catch (error) {
+        console.error(
+          "An error occurred during get membership Record by ID API request:",
+          error
+        );
+      }
+    },
+
+    async getAllMembershipRecords() {
+      const apiUrl = `${TSY_API}/membershiprecord`;
+      try {
+        const response = await axios.get(apiUrl, AUTH_CONFIG);
+
+        if (response.status === 200) {
+          return response;
+        }
+        return response;
+      } catch (error) {
+        console.error("An error occurred during get membership Record:", error);
+      }
+    },
+
+    async getMembershipRecordsByFilter(status) {
+      const apiUrl = `${TSY_API}/membershiprecord/filter`;
+      const data = {
+        ActiveStatus: status,
+      };
+      try {
+        const response = await axios.post(apiUrl, data, AUTH_CONFIG);
+
+        if (response.status === 200) {
+          return response;
+        }
+        return response;
+      } catch (error) {
+        console.error(
+          "An error occurred during get membership Record by filter:",
+          error
+        );
+      }
+    },
+
+    async addMembershipRecord(payload) {
+      const apiUrl = `${TSY_API}/membershiprecord`;
+      const data = {
+        UserId: payload.userId,
+        MembershipTypeId: payload.membershipTypeId,
+        StartDate: payload.startDate,
+        EndDate: payload.endDate,
+        ActiveStatus: payload.status,
+        PayPalSubscriptionId: payload.subscriptionId,
+      };
+      try {
+        const response = await axios.post(apiUrl, data, AUTH_CONFIG);
+
+        if (response.status === 200) {
+          return response;
+        }
+        return response;
+      } catch (error) {
+        console.error("An error occurred during add membership Record:", error);
+      }
+    },
   },
-
-
 });

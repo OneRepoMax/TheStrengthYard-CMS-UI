@@ -34,6 +34,7 @@ export const useUserStore = defineStore("user", {
     AcknowledgementOpenGymRules: false,
     AcknowledgementTnC: false,
     selectedUser: null,
+    jwtToken: null,
   }),
   actions: {
     loadUserFromLocalStorage() {
@@ -60,36 +61,45 @@ export const useUserStore = defineStore("user", {
         userType: this.userType,
         verified: this.verified,
         displayPicture: this.displayPicture,
+        jwtToken: this.jwtToken,
       };
       localStorage.setItem("tsyUserInfo", JSON.stringify(userStore));
     },
 
     saveResponseToStore(response) {
       // format DateOfBirth
-      const dob = new Date(response.data.DateOfBirth);
+      const dob = new Date(response.data[0].DateOfBirth);
       const year = dob.getUTCFullYear();
       const month = String(dob.getUTCMonth() + 1).padStart(2, "0");
       const day = String(dob.getUTCDate()).padStart(2, "0");
       const formattedDob = `${year}-${month}-${day}`;
 
-      this.userId = response.data.UserId;
-      this.emailAddress = response.data.EmailAddress;
-      this.firstName = response.data.FirstName;
-      this.lastName = response.data.LastName;
-      this.contactNo = response.data.ContactNo;
-      this.gender = response.data.Gender;
+      this.userId = response.data[0].UserId;
+      this.emailAddress = response.data[0].EmailAddress;
+      this.firstName = response.data[0].FirstName;
+      this.lastName = response.data[0].LastName;
+      this.contactNo = response.data[0].ContactNo;
+      this.gender = response.data[0].Gender;
       this.dateOfBirth = formattedDob;
-      this.homeAddress = response.data.HomeAddress;
-      this.postalCode = response.data.PostalCode;
-      this.userType = response.data.UserType;
-      this.displayPicture = response.data.DisplayPicture;
-      this.verified = response.data.Verified;
+      this.homeAddress = response.data[0].HomeAddress;
+      this.postalCode = response.data[0].PostalCode;
+      this.userType = response.data[0].UserType;
+      this.displayPicture = response.data[0].DisplayPicture;
+      this.verified = response.data[0].Verified;
+
+      this.jwtToken = response.data[1].token;
       this.saveUserToLocalStorage();
     },
 
     async getUserInfo() {
+      const config = {
+        headers: { Authorization: `Bearer ${this.jwtToken}` },
+      };
       try {
-        let response = await axios.get(`${TSY_API}/user/${this.userId}`);
+        let response = await axios.get(
+          `${TSY_API}/user/${this.userId}`,
+          config
+        );
 
         console.log(response);
 
@@ -201,10 +211,17 @@ export const useUserStore = defineStore("user", {
     },
 
     async resendVerificationEmail(emailAddress) {
+      const config = {
+        headers: { Authorization: `Bearer ${this.jwtToken}` },
+      };
       try {
-        let response = await axios.post(`${TSY_API}/verify/resend`, {
-          EmailAddress: emailAddress,
-        });
+        let response = await axios.post(
+          `${TSY_API}/verify/resend`,
+          {
+            EmailAddress: emailAddress,
+          },
+          config
+        );
 
         if (response.status === 200) {
           return response;
@@ -216,20 +233,26 @@ export const useUserStore = defineStore("user", {
     },
 
     async updateProfile(profileData, userId) {
-
+      const config = {
+        headers: { Authorization: `Bearer ${this.jwtToken}` },
+      };
 
       try {
-        let response = await axios.put(`${TSY_API}/user/${userId}`, {
-          FirstName: profileData.firstName,
-          LastName: profileData.lastName,
-          EmailAddress: profileData.emailAddress,
-          ContactNo: profileData.contactNo,
-          HomeAddress: profileData.homeAddress,
-          PostalCode: profileData.postalCode,
-          Gender: profileData.gender,
-          DateOfBirth: profileData.dateOfBirth,
-          DisplayPicture: profileData.displayPicture,
-        });
+        let response = await axios.put(
+          `${TSY_API}/user/${userId}`,
+          {
+            FirstName: profileData.firstName,
+            LastName: profileData.lastName,
+            EmailAddress: profileData.emailAddress,
+            ContactNo: profileData.contactNo,
+            HomeAddress: profileData.homeAddress,
+            PostalCode: profileData.postalCode,
+            Gender: profileData.gender,
+            DateOfBirth: profileData.dateOfBirth,
+            DisplayPicture: profileData.displayPicture,
+          },
+          config
+        );
 
         // Handle the response data here
         if (response.status === 200) {
@@ -241,6 +264,9 @@ export const useUserStore = defineStore("user", {
       }
     },
     async changePassword(userId, newPassword) {
+      const config = {
+        headers: { Authorization: `Bearer ${this.jwtToken}` },
+      };
 
       const apiUrl = `${TSY_API}/user/${userId}`;
       const data = {
@@ -248,7 +274,7 @@ export const useUserStore = defineStore("user", {
       };
 
       try {
-        const response = await axios.put(apiUrl, data);
+        const response = await axios.put(apiUrl, data, config);
 
         if (response.status === 200) {
           this.password = response.data.Password;
@@ -283,10 +309,13 @@ export const useUserStore = defineStore("user", {
       }
     },
     async getAllUser() {
+      const config = {
+        headers: { Authorization: `Bearer ${this.jwtToken}` },
+      };
       const apiUrl = `${TSY_API}/user`;
 
       try {
-        const response = await axios.get(apiUrl);
+        const response = await axios.get(apiUrl, config);
 
         if (response.status === 200) {
           return response;
@@ -300,10 +329,13 @@ export const useUserStore = defineStore("user", {
       }
     },
     async getUserById(userId) {
+      const config = {
+        headers: { Authorization: `Bearer ${this.jwtToken}` },
+      };
       const apiUrl = `${TSY_API}/user/${userId}`;
 
       try {
-        const response = await axios.get(apiUrl);
+        const response = await axios.get(apiUrl, config);
 
         if (response.status === 200) {
           return response;
@@ -317,45 +349,68 @@ export const useUserStore = defineStore("user", {
       }
     },
     async getIndemnityForm(userId) {
+      const config = {
+        headers: { Authorization: `Bearer ${this.jwtToken}` },
+      };
 
-        const apiUrl = `${TSY_API}/indemnityform/${userId}`;
-    
-        try {
-            const response = await axios.get(apiUrl);
-    
-            if (response.status === 200) {
-            return response;
-            }
-            return response;
-        } catch (error) {
-            console.error(
-            "An error occurred during get indemnity form API request:",
-            error
-            );
+      const apiUrl = `${TSY_API}/indemnityform/${userId}`;
+
+      try {
+        const response = await axios.get(apiUrl, config);
+
+        if (response.status === 200) {
+          return response;
         }
-        
+        return response;
+      } catch (error) {
+        console.error(
+          "An error occurred during get indemnity form API request:",
+          error
+        );
+      }
     },
     async deleteUser(userId) {
+      const config = {
+        headers: { Authorization: `Bearer ${this.jwtToken}` },
+      };
 
-        const apiUrl = `${TSY_API}/user/${userId}`;
+      const apiUrl = `${TSY_API}/user/${userId}`;
 
-        try {
-            const response = await axios.delete(apiUrl);
+      try {
+        const response = await axios.delete(apiUrl, config);
 
-            if (response.status === 200) {
-            return response;
-            }
-            return response;
-        } catch (error) {
-            console.error(
-                "An error occurred during delete user API request:",
-            error
-            );
+        if (response.status === 200) {
+          return response;
         }
+        return response;
+      } catch (error) {
+        console.error(
+          "An error occurred during delete user API request:",
+          error
+        );
+      }
+    },
+    async jwtCheck() {
+      const apiUrl = `${TSY_API}/protected`;
 
+      try {
+        // Add token to bearer
+        const config = {
+          headers: { Authorization: `Bearer ${this.jwtToken}` },
+        };
+
+        const response = await axios.get(apiUrl, config);
+
+        if (response.status === 200) {
+          return true;
+        }
+      } catch (error) {
+        console.error("JWT has expired", error);
+        return false;
+      }
+    },
+    getJwtToken(){
+        return this.jwtToken
     }
-
-
-
   },
 });
