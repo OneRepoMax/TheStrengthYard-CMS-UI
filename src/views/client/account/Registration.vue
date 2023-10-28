@@ -115,7 +115,7 @@ const validateRegistrationForm = () => {
 
     state.error = 0;
 
-    if (userStore.displayPicture == null) { state.error++; }
+    // if (userStore.displayPicture == null) { state.error++; }
     if (userStore.firstName == null) {state.error++;}
     else if (/^[A-Za-z\s\-']+$/.test(userStore.firstName) == false) { state.error++; }
     

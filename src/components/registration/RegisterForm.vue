@@ -21,7 +21,7 @@
                 <input ref="fileInput" type="file" style="display: none" accept="image/*" @change="handleFileUpload" />
             </div>
             <p class="d-flex justify-center mb-5">Profile Picture</p>
-            <p class="d-flex justify-center mt-n5 mb-5 text-caption" v-if="picError" style="color: #B71C1C;">Profile picture is required.</p>
+            <!-- <p class="d-flex justify-center mt-n5 mb-5 text-caption" v-if="picError" style="color: #B71C1C;">Profile picture is required.</p> -->
             <v-row>
                 <!-- First Name -->
                 <v-col cols="12" md="6" class="py-0">
@@ -75,8 +75,29 @@
                     <!-- Password -->
                     <v-text-field v-model="userStore.password" label="Password"
                         :append-inner-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'" :rules="passwordRules"
-                        :type="show1 ? 'text' : 'password'" @click:append-inner="show1 = !show1" class="mt-3" required
+                        :type="show1 ? 'text' : 'password'" @click:append-inner="show1 = !show1" class="mt-3 mb-n4" required
                         counter></v-text-field>
+                    <b>Password Requirements:</b>
+                    <p class="align-center d-flex">
+                        <v-icon :color="userStore.password.length >= 8 ? 'green' : 'black'" icon="mdi-check-circle" class="mr-2" size="small" />
+                        Password must be at least 8 characters
+                    </p>
+                    <p class="align-center d-flex">
+                        <v-icon :color="!!/[a-z]/.test(userStore.password) ? 'green' : 'black'" icon="mdi-check-circle" class="mr-2" size="small"/>
+                        Password must contain at least one lowercase letter.
+                    </p>
+                    <p class="align-center d-flex">
+                        <v-icon :color="!!/[A-Z]/.test(userStore.password) ? 'green' : 'black'" icon="mdi-check-circle" class="mr-2" size="small"/>
+                        Password must contain at least one uppercase letter.
+                    </p>
+                    <p class="align-center d-flex">
+                        <v-icon :color="!!/\d/.test(userStore.password) ? 'green' : 'black'" icon="mdi-check-circle" class="mr-2" size="small"/>
+                        Password must contain at least one numeric character.
+                    </p>
+                    <p class="align-center d-flex">
+                        <v-icon :color="!!/[!@#$%^&*]/.test(userStore.password) ? 'green' : 'black'" icon="mdi-check-circle" class="mr-2" size="small"/>
+                        Password must contain at least one special character.
+                        </p>
                 </v-col>
                 <v-col cols="12" class="py-0">
                     <!-- Confirm Password -->
@@ -141,7 +162,7 @@ export default {
             fileObject: null,
             show1: false,
             show2: false,
-            picError: false,
+            // picError: false,
             firstNameRules: [
                 v => !!v || 'First Name is required',
                 v => (v && /^[A-Za-z\s\-']+$/.test(v)) || 'Please enter a valid first name',
@@ -171,13 +192,21 @@ export default {
                 v => !!v || 'Contact Number is required',
                 v => (v && v.toString().length == 8 && /^\d+$/.test(v)) ||'Contact Number must be 8 digits',
             ],
+            // passwordRules: [
+            //     v => !!v || 'Password is required',
+            //     v => (v && v.length >= 8) || 'Password must be at least 8 characters',
+            //     v => (v && !!/[a-z]/.test(v)) || 'Password must contain at least one lowercase letter.',
+            //     v => (v && !!/[A-Z]/.test(v)) || 'Password must contain at least one uppercase letter.',
+            //     v => (v && !!/\d/.test(v)) || 'Password must contain at least one numeric character.',
+            //     v => (v && !!/[!@#$%^&*]/.test(v)) || 'Password must contain at least one special character.',
+            // ],
             passwordRules: [
-                v => !!v || 'Password is required',
-                v => (v && v.length >= 8) || 'Password must be at least 8 characters',
-                v => (v && !!/[a-z]/.test(v)) || 'Password must contain at least one lowercase letter.',
-                v => (v && !!/[A-Z]/.test(v)) || 'Password must contain at least one uppercase letter.',
-                v => (v && !!/\d/.test(v)) || 'Password must contain at least one numeric character.',
-                v => (v && !!/[!@#$%^&*]/.test(v)) || 'Password must contain at least one special character.',
+                v => !!v,
+                v => (v && v.length >= 8),
+                v => (v && !!/[a-z]/.test(v)),
+                v => (v && !!/[A-Z]/.test(v)),
+                v => (v && !!/\d/.test(v)),
+                v => (v && !!/[!@#$%^&*]/.test(v)),
             ],
             confirmPasswordRules: [
                 v => !!v || 'Confirmation Password is required',
@@ -253,9 +282,9 @@ export default {
     methods: {
         register() {
             // console.log("run validate step");
-            if (!this.selectedFile){
-                this.picError = true;
-            }
+            // if (!this.selectedFile){
+            //     this.picError = true;
+            // }
             this.$emit('validate-step');
         },
 
@@ -281,7 +310,7 @@ export default {
                 };
 
                 this.userStore.displayPicture = file
-                this.picError = false;
+                // this.picError = false;
             }
         },
     },
