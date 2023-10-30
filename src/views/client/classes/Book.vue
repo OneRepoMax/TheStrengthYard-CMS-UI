@@ -16,7 +16,7 @@
                                 Training In A Group While Getting Functionally Stronger!
                             </v-card-text>
                             <v-divider />
-                            <ViewClassSlots />
+                            <ViewClassSlots :reload="this.viewslots"/>
                         </div>
                     </v-window-item>
                     <v-window-item value="confirm-class">
@@ -79,6 +79,7 @@ export default {
             pageLength: 1,
             bookPerPage: 10,
             tab: null,
+            viewslots: true,
         };
     },
 
@@ -87,7 +88,15 @@ export default {
             this.page = 1;
         },
         tab() {
-            this.getBookList();
+            if (this.tab == "confirm-class"){
+                this.viewslots = false
+                this.getBookList();
+                // console.log(this.$refs.classSlots.getClassSlotsByDate())
+                // this.$refs.classSlots.getClassSlotsByDate()
+                // this.getClassSlotsByDate();
+            } else {
+                this.viewslots = true
+            }
         },
     },
     computed: {
@@ -147,6 +156,7 @@ export default {
 
             return;
         },
+        
     },
 };
 </script>
