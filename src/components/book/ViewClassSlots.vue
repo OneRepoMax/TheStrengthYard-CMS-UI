@@ -122,6 +122,10 @@ export default {
         Modal
     },
 
+    props: {
+        reload: Boolean,
+    },
+
     setup () {
         const classStore = useClassStore();
         const userStore = useUserStore();
@@ -168,6 +172,11 @@ export default {
         date(){
             console.log(this.date)
             this.getClassSlotsByDate();
+        },
+        reload(){
+            if (this.reload == true){
+                this.getClassSlotsByDate();
+            }
         }
         
     },
