@@ -21,6 +21,7 @@
             <tr class="font-weight-bold">
                 <th class="text-left">Class Slot Id</th>
                 <th class="text-left">Class Name</th>
+                <th class="text-left">Day</th>
                 <th class="text-left">Date</th>
                 <th class="text-left">Class Time</th>
                 <th class="text-left">Capacity</th>
@@ -35,6 +36,9 @@
                 </td>
                 <td class="font-weight-medium">
                     {{ classSlot.Class.ClassName }}
+                </td>
+                <td>
+                    <v-chip variant="text" color="classSlot" prependIcon="mdi-calendar">{{ classSlot.Day }}</v-chip>
                 </td>
                 <td>
                     <v-chip variant="text" prependIcon="mdi-calendar">{{ this.formattedDate(classSlot.StartTime) }}</v-chip>

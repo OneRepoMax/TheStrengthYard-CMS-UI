@@ -409,8 +409,26 @@ export const useUserStore = defineStore("user", {
         return false;
       }
     },
-    getJwt(){
-        return this.jwt
-    }
+    getJwt() {
+      return this.jwt;
+    },
+    async refreshUserInfo() {
+      const apiUrl = `${TSY_API}/user/${this.userId}`;
+      const config = {
+        headers: { Authorization: `Bearer ${this.jwt}` },
+      };
+      try {
+        const response = await axios.get(apiUrl, config);
+        if (response.status === 200) {
+          this.saveResponseToStore(response);
+          this.saveUserToLocalStorage();
+        }
+      } catch (error) {
+        console.error(
+          "An error occurred during get all user by ID API request:",
+          error
+        );
+      }
+    },
   },
 });

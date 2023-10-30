@@ -24,6 +24,9 @@ export default {
             const jwtCheck = await this.userStore.jwtCheck()
             if (!jwtCheck) {
                 this.$router.push({path: '/account/login'})
+            } else {
+                // Refresh user info
+                await this.userStore.refreshUserInfo()
             }
         }
     }
