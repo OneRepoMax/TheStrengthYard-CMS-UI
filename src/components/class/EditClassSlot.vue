@@ -46,6 +46,11 @@
                                 variant="outlined"></v-text-field>
                         </v-col>
                         <v-col v-if="this.classSlotId == 'create'" cols="12" md="12">
+                            <v-text-field hide-details="auto" class="mb-1" label="Starting From" type="date"
+                                v-model="this.StartingFrom" required :rules="dobRules" variant="outlined"
+                                placeholder="YYYY-MM-DD"></v-text-field>
+                        </v-col>
+                        <v-col v-if="this.classSlotId == 'create'" cols="12" md="12">
                             <v-text-field hide-details="auto" class="mb-3" label="Recurring Until" type="date"
                                 v-model="this.RecurringUntil" required :rules="dobRules" variant="outlined"
                                 placeholder="YYYY-MM-DD"></v-text-field>
@@ -156,6 +161,7 @@ export default {
             selectedClassId: null,
             selectedClass: null,
             RecurringUntil: null,
+            StartingFrom: null,
             modal: {
                 show: false,
                 type: "success",
@@ -247,7 +253,7 @@ export default {
                 if (this.classSlotId == "create") {
                     console.log("creating: new class slot")
                     
-                    const response = await this.classStore.createClassSlot(this.classData,this.selectedClassId,this.RecurringUntil).then((response) => {
+                    const response = await this.classStore.createClassSlot(this.classData,this.selectedClassId,this.RecurringUntil,this.StartingFrom).then((response) => {
                         if (response.status == 201) {
                             console.log(response.data);
                             // Show success modal

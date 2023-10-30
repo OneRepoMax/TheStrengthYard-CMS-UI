@@ -161,7 +161,7 @@ export const useClassStore = defineStore("classDetails", {
       }
     },
 
-    async createClassSlot(classSlotData, classId, RecurringUntil) {
+    async createClassSlot(classSlotData, classId, RecurringUntil,StartingFrom) {
       try {
         let response = await axios.post(
           `${TSY_API}/class/${classId}/classSlot`,
@@ -169,6 +169,7 @@ export const useClassStore = defineStore("classDetails", {
             Day: classSlotData.day,
             StartTime: classSlotData.startTime,
             EndTime: classSlotData.endTime,
+            StartingFrom: StartingFrom,
             RecurringUntil: RecurringUntil,
           },
           AUTH_CONFIG
