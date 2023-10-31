@@ -2,7 +2,7 @@
     <v-expansion-panels class="pa-1">
         <v-expansion-panel v-for="classDetails in this.classList" :key="classDetails.ClassId"
             :value="classDetails.ClassId">
-            <v-expansion-panel-title>
+            <v-expansion-panel-title @click.prevent="updateMapping(classDetails.ClassId)">
                 <v-row align="center" dense>
                     <v-col cols="12" md="6">
                         <p class="lh-lg">{{ classDetails.ClassName }}</p>
@@ -26,10 +26,19 @@
                     </v-card-text>
                 </template>
                 <v-card-text>
-                    <v-row>
-                        <p>{{ classDetails.Description }} </p><br>
-                    </v-row>
-
+                    <p class="text-h6 mb-2"><v-icon class="me-3" size="small">mdi-note-text-outline</v-icon>Description
+                    </p>
+                    {{ classDetails.Description }}
+                </v-card-text>
+                <v-divider></v-divider>
+                <v-card-text>
+                    <!-- Skeleton loaders -->
+                    <template v-if="loading">
+                        <v-card-text class="px-8">
+                            <v-skeleton-loader type="list-item-three-line" :loading="loading"></v-skeleton-loader>
+                        </v-card-text>
+                    </template>
+                    <MembershipMapping v-if="!loading" :mappingList="this.mappingList" :classId="classDetails.ClassId" @reload-data="getMembershipClassMappingsByClassID"/>
                 </v-card-text>
             </v-expansion-panel-text>
         </v-expansion-panel>
@@ -45,22 +54,28 @@
 
 
 <script>
-
+import MembershipMapping from '@/components/membership/MembershipMapping.vue'
 import Modal from '@/components/common/ModalWarning.vue';
 import { useClassStore } from '@/store/class'
+import { useMembershipStore } from '@/store/membership'
 
 export default {
     props: {
         classList: Object,
     },
 
-    components: { Modal },
+    components: {
+        MembershipMapping,
+        Modal,
+    },
 
     setup() {
         const classStore = useClassStore()
+        const membershipStore = useMembershipStore();
 
         return {
             classStore,
+            membershipStore
         }
     },
 
@@ -76,9 +91,14 @@ export default {
                 message: "This action cannot be undone",
                 path: "/admin/class",
                 color: "red"
-            }
+            },
+            mappingList: []
         }
     },
+    mounted() {
+        this.getMembershipClassMappingsByClassID(this.classId);
+    },
+
     methods: {
         editClass(classId) {
             console.log(classId)
@@ -108,7 +128,26 @@ export default {
         },
         actionModal() {
             this.deleteClass(this.classId)
-        }
+        },
+
+        updateMapping(classId){
+            this.getMembershipClassMappingsByClassID(classId);
+        },
+
+        async getMembershipClassMappingsByClassID(classId) {
+            this.loading = true;
+            
+            this.mappingList = []
+            const response = await this.membershipStore.getMembershipClassMappingsByClassID(classId);
+            this.loading = false;
+
+            if (response.status != 200) {
+                console.log("No membership record found");
+            } else {
+                this.mappingList = response.data
+            }
+            console.log(this.mappingList)
+        },
     }
 }
 </script>
