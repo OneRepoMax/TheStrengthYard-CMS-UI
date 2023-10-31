@@ -388,5 +388,56 @@ export const useMembershipStore = defineStore("membership", {
         console.error("An error occurred during add membership Record:", error);
       }
     },
+
+    async getMembershipClassMappingsByClassID(classId) {
+      const apiUrl = `${TSY_API}/membershipclassmapping/class/${classId}`;
+      try {
+        const response = await axios.get(apiUrl, AUTH_CONFIG);
+
+        if (response.status === 200) {
+          return response;
+        }
+        return response;
+      } catch (error) {
+        console.error("An error occurred during get membership mapping:", error);
+        return error.response;
+      }
+    },
+
+    async createMembershipClassMapping(payload) {
+      const apiUrl = `${TSY_API}/membershipclassmapping`;
+      const data = {
+        MembershipTypeId: payload.MembershipTypeId,
+        ClassId: payload.ClassId,
+      };
+      try {
+        const response = await axios.post(apiUrl, data, AUTH_CONFIG);
+
+        if (response.status === 200) {
+          return response;
+        }
+        return response;
+      } catch (error) {
+        console.error("An error occurred during add membership Record:", error);
+        return error.response;
+      }
+    },
+
+    async deleteMembershipClassMapping(mappingId) {
+      const apiUrl = `${TSY_API}/membershipclassmapping/${mappingId}`;
+
+      try {
+        const response = await axios.delete(apiUrl, AUTH_CONFIG);
+
+        // Handle the response data here
+        if (response.status === 200) {
+          return response;
+        }
+      } catch (error) {
+        console.error("Deletion error:", error);
+        return error.response;
+      }
+    },
+
   },
 });
