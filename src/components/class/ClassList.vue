@@ -19,12 +19,6 @@
                 </v-row>
             </v-expansion-panel-title>
             <v-expansion-panel-text>
-                <!-- Skeleton loaders -->
-                <template v-if="loading">
-                    <v-card-text class="px-8">
-                        <v-skeleton-loader type="list-item-three-line" :loading="loading"></v-skeleton-loader>
-                    </v-card-text>
-                </template>
                 <v-card-text>
                     <p class="text-h6 mb-2"><v-icon class="me-3" size="small">mdi-note-text-outline</v-icon>Description
                     </p>
