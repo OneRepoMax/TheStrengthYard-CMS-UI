@@ -1,7 +1,17 @@
 <template>
+  <v-select
+    label="Filter by Class"
+    v-model="selectedClass"
+    :items="getClassNames"
+    outlined
+    dense
+    hide-details
+    @change="filterByClass"
+    class="mx-3 my-5"
+  ></v-select>
   <v-list>
     <v-card
-      v-for="book in this.bookList"
+      v-for="book in filteredBookList"
       :key="book.BookingId"
       :value="book.BookingId"
       variant="text"
@@ -71,7 +81,6 @@
     />
   </template>
   <!-- @onReloadData="reloadData" -->
-
 </template>
 
 <script>
@@ -80,169 +89,207 @@ import Modal from "@/components/book/CancelBookingModal.vue";
 // import { format } from 'date-fns';
 
 export default {
-    props: {
-        bookList: Object,
-        bookingType: String,
+  props: {
+    bookList: Object,
+    bookingType: String,
+  },
+  emits: ["onReloadData"],
+  components: {
+    Modal,
+  },
+  setup() {
+    const bookStore = useBookStore();
+
+    return {
+      bookStore,
+    };
+  },
+  computed: {
+    // Create a list of unique class names from the bookList
+    getClassNames() {
+      const classNames = [
+        ...new Set(this.bookList.map((book) => book.ClassSlot.Class.ClassName)),
+      ];
+      return ["All", ...classNames]; // Include "All" to show the full list
     },
-    emits: ['onReloadData'],
-    components: {
-        Modal,
+    filteredBookList() {
+      if (!this.selectedClass || this.selectedClass === "All") {
+        // No filter or "All" selected, show the full list
+        return this.bookList;
+      } else {
+        // Filter by selected class name
+        return this.bookList.filter(
+          (book) => book.ClassSlot.Class.ClassName === this.selectedClass
+        );
+      }
     },
-    setup() {
-        const bookStore = useBookStore();
-
-        return {
-            bookStore,
-        };
+  },
+  methods: {
+    filterByClass() {
+      // When the selected class changes, trigger a reload of data
+      this.$emit("onReloadData");
     },
-    methods: {
-        formattedDate(dateInput) {
-            const date = new Date(dateInput);
-            const year = String(date.getUTCFullYear()).slice(2);
-            const monthNames = [
-                "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-                "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-            ];
-            const month = monthNames[date.getUTCMonth()];
-            const day = String(date.getUTCDate());
-            return `${day} ${month} ${year}`;
-        },
-        formattedDateShort(date) {
-            const dateObj = new Date(date);
+    formattedDate(dateInput) {
+      const date = new Date(dateInput);
+      const year = String(date.getUTCFullYear()).slice(2);
+      const monthNames = [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+      ];
+      const month = monthNames[date.getUTCMonth()];
+      const day = String(date.getUTCDate());
+      return `${day} ${month} ${year}`;
+    },
+    formattedDateShort(date) {
+      const dateObj = new Date(date);
 
-            const hours = dateObj.getUTCHours();
-            const minutes = dateObj.getUTCMinutes();
-            const ampm = hours >= 12 ? 'PM' : 'AM';
+      const hours = dateObj.getUTCHours();
+      const minutes = dateObj.getUTCMinutes();
+      const ampm = hours >= 12 ? "PM" : "AM";
 
-            const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')} ${ampm}`;
+      const formattedTime = `${hours.toString().padStart(2, "0")}:${minutes
+        .toString()
+        .padStart(2, "0")} ${ampm}`;
 
-            return formattedTime;
-        },
-        formattedTime(dateInput) {
-            const date = new Date(dateInput);
-            const hours = String(date.getUTCHours()).padStart(2, '0');
-            const minutes = String(date.getUTCMinutes()).padStart(2, '0');
-            return `${hours}:${minutes}`;
-        },
-
-        getColor(status) {
-            if (status == "Confirmed") {
-                return "primary";
-            } else if (status == "Cancelled") {
-                return "error";
-            } else if (status == "Pending") {
-                return "warning";
-            } else {
-                return "secondary";
-            }
-        },
-        getIcon(status) {
-            if (status == "Confirmed") {
-                return "mdi-check";
-            } else if (status == "Cancelled") {
-                return "mdi-close";
-            } else if (status == "Pending") {
-                return "mdi-clock";
-            } else {
-                return "mdi-alert";
-            }
-        },
-        showModal(book) {
-            this.bookingInfo.show = true;
-            this.bookingInfo.className = `${book.ClassSlot.Class.ClassName}`;
-            this.bookingInfo.classId = `${book.ClassSlotId}`;
-            this.bookingInfo.bookingId = `${book.BookingId}`;
-            this.bookingInfo.date = `${this.formattedDate(book.ClassSlot.StartTime)}`;
-            this.bookingInfo.time = `${this.formattedTime(
-                book.ClassSlot.StartTime
-            )} - ${this.formattedTime(book.ClassSlot.EndTime)} (${book.ClassSlot.Duration
-                } Minutes)`;
-            this.bookingInfo.message = this.getMessage(book);
-        },
-        closeModal() {
-            this.bookingInfo.show = false;
-            this.$emit("reload-data");
-        },
-
-        actionModal() {
-            // console.log();
-            this.deleteBooking();
-        },
-        reloadData() {
-            this.getBookList();
+      return formattedTime;
+    },
+    formattedTime(dateInput) {
+      const date = new Date(dateInput);
+      const hours = String(date.getUTCHours()).padStart(2, "0");
+      const minutes = String(date.getUTCMinutes()).padStart(2, "0");
+      return `${hours}:${minutes}`;
     },
 
-        async deleteBooking() {
-            try {
-                this.bookingInfo.loading = true;
-
-
-                //const response = await this.classStore.getClassSlotByDate(this.date);
-
-                const response = await this.bookStore.cancelBooking(
-                    this.bookingInfo.bookingId
-                );
-
-                if (response.status == 200) {
-                    this.bookingInfo.title = "Booking Cancelled";
-                    this.bookingInfo.message =
-                        response.data +
-                        " A confirmation email will be send to you shortly.";
-                    this.bookingInfo.color = "green";
-                    this.bookingInfo.icon = "mdi-calendar-remove";
-                }
-                this.bookingInfo.loading = false;
-
-                // return;
-
-            } catch (error) {
-                console.error(
-                    "An error occurred during get class slots API request:",
-                    error
-                );
-            }
-
-            // return;
-        },
-        getMessage(book) {
-            // Calculate 12 hours from book.ClassSlot.StartTime
-            console.log('this is the class slot start time', book.ClassSlot.StartTime)
-
-            let twelveHours = 12 * 60 * 60 * 1000; // 12 hours in milliseconds
-            twelveHours = twelveHours + 28800000 // adjusted for 8 hrs difference
-
-            const startTime = new Date(book.ClassSlot.StartTime).getTime();
-            const currentTime = new Date().getTime();
-
-            if ((startTime - currentTime) < twelveHours) {
-                return "Scheduled class is less than 12 hours away. No points will be refunded. Are you sure to cancel this booking?";
-            } else {
-                return "Are you sure you want to cancel this booking?";
-            }
-
-        },
+    getColor(status) {
+      if (status == "Confirmed") {
+        return "primary";
+      } else if (status == "Cancelled") {
+        return "error";
+      } else if (status == "Pending") {
+        return "warning";
+      } else {
+        return "secondary";
+      }
     },
-    data() {
-        return {
-            loading: false,
-            page: 1,
-            pageLength: 1,
-            BookPerPage: 10,
-            bookingInfo: {
-                show: false,
-                title: "Cancel booking",
-                message: "",
-                color: "red",
-                className: "",
-                classId: "",
-                bookingId: "",
-                date: "",
-                time: "",
-                icon: "mdi-alert-circle",
-                timestamp: "",
-                loading: false,
-            },
-        };
+    getIcon(status) {
+      if (status == "Confirmed") {
+        return "mdi-check";
+      } else if (status == "Cancelled") {
+        return "mdi-close";
+      } else if (status == "Pending") {
+        return "mdi-clock";
+      } else {
+        return "mdi-alert";
+      }
     },
+    showModal(book) {
+      this.bookingInfo.show = true;
+      this.bookingInfo.className = `${book.ClassSlot.Class.ClassName}`;
+      this.bookingInfo.classId = `${book.ClassSlotId}`;
+      this.bookingInfo.bookingId = `${book.BookingId}`;
+      this.bookingInfo.date = `${this.formattedDate(book.ClassSlot.StartTime)}`;
+      this.bookingInfo.time = `${this.formattedTime(
+        book.ClassSlot.StartTime
+      )} - ${this.formattedTime(book.ClassSlot.EndTime)} (${
+        book.ClassSlot.Duration
+      } Minutes)`;
+      this.bookingInfo.message = this.getMessage(book);
+    },
+    closeModal() {
+      this.bookingInfo.show = false;
+      this.$emit("reload-data");
+    },
+
+    actionModal() {
+      // console.log();
+      this.deleteBooking();
+    },
+    reloadData() {
+      this.getBookList();
+    },
+
+    async deleteBooking() {
+      try {
+        this.bookingInfo.loading = true;
+
+        //const response = await this.classStore.getClassSlotByDate(this.date);
+
+        const response = await this.bookStore.cancelBooking(
+          this.bookingInfo.bookingId
+        );
+
+        if (response.status == 200) {
+          this.bookingInfo.title = "Booking Cancelled";
+          this.bookingInfo.message =
+            response.data +
+            " A confirmation email will be send to you shortly.";
+          this.bookingInfo.color = "green";
+          this.bookingInfo.icon = "mdi-calendar-remove";
+        }
+        this.bookingInfo.loading = false;
+
+        // return;
+      } catch (error) {
+        console.error(
+          "An error occurred during get class slots API request:",
+          error
+        );
+      }
+
+      // return;
+    },
+    getMessage(book) {
+      // Calculate 12 hours from book.ClassSlot.StartTime
+      console.log(
+        "this is the class slot start time",
+        book.ClassSlot.StartTime
+      );
+
+      let twelveHours = 12 * 60 * 60 * 1000; // 12 hours in milliseconds
+      twelveHours = twelveHours + 28800000; // adjusted for 8 hrs difference
+
+      const startTime = new Date(book.ClassSlot.StartTime).getTime();
+      const currentTime = new Date().getTime();
+
+      if (startTime - currentTime < twelveHours) {
+        return "Scheduled class is less than 12 hours away. No points will be refunded. Are you sure to cancel this booking?";
+      } else {
+        return "Are you sure you want to cancel this booking?";
+      }
+    },
+  },
+  data() {
+    return {
+      loading: false,
+      page: 1,
+      pageLength: 1,
+      BookPerPage: 10,
+      bookingInfo: {
+        show: false,
+        title: "Cancel booking",
+        message: "",
+        color: "red",
+        className: "",
+        classId: "",
+        bookingId: "",
+        date: "",
+        time: "",
+        icon: "mdi-alert-circle",
+        timestamp: "",
+        loading: false,
+      },
+      selectedClass: null,
+    };
+  },
 };
 </script>

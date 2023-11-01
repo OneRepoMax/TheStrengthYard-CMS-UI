@@ -212,22 +212,6 @@ export default {
           // You can display an alert or handle the error in your UI
         }
         this.loading = false;
-        // if (response == null || response.status != 200) {
-        //   return;
-        // } else {
-        //   if (response && response.status == 200) {
-        //     this.BookList = response.data;
-        //     console.log(this.BookList);
-        //     for (const book of this.BookList) {
-        //       const date = `${book.BookingDateTime}`;
-        //       if (this.dates.indexOf(date) === -1) {
-        //         this.dates.push(date);
-        //       }
-        //     }
-        //   }
-        // }
-
-        // return;
       } catch (error) {
         console.error(
           "An error occurred during get all class API request:",
