@@ -25,7 +25,7 @@
             class="mx-1"
             prepend-icon="mdi-cancel"
             @click.prevent="showModal(book)"
-            v-if="book.Status !== 'Cancelled'"
+            v-if="bookingType !== 'past' && book.Status !== 'Cancelled'"
           >
             Cancel Booking
           </v-chip>
@@ -70,6 +70,8 @@
       :loading="bookingInfo.loading"
     />
   </template>
+  <!-- @onReloadData="reloadData" -->
+
 </template>
 
 <script>
@@ -80,7 +82,9 @@ import Modal from "@/components/book/CancelBookingModal.vue";
 export default {
     props: {
         bookList: Object,
+        bookingType: String,
     },
+    emits: ['onReloadData'],
     components: {
         Modal,
     },
@@ -164,6 +168,9 @@ export default {
             // console.log();
             this.deleteBooking();
         },
+        reloadData() {
+            this.getBookList();
+    },
 
         async deleteBooking() {
             try {
