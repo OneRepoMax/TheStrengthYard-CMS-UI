@@ -1,52 +1,75 @@
 <template>
-    <v-list>
-        <v-card v-for="book in this.bookList" :key="book.BookingId" :value="book.BookingId" variant="text">
-            <v-card-title class="d-flex flex-wrap text-wrap">
-                {{ book.ClassSlot.Class.ClassName }}
-                <v-spacer class="d-none d-sm-flex"></v-spacer>
-                <div>
-                    <v-chip prependIcon="mdi-account-multiple" variant="text">
-                        {{ book.ClassSlot.CurrentCapacity }}/{{
-                            book.ClassSlot.Class.MaximumCapacity
-                        }}
-                    </v-chip>
-                    <v-chip :color="getColor(book.Status)" :prepend-icon="getIcon(book.Status)">
-                        {{ book.Status }}
-                    </v-chip>
-                    <v-chip class="mx-1" prepend-icon="mdi-cancel" @click.prevent="showModal(book)"
-                        v-if="book.Status !== 'Cancelled'">
-                        Cancel Booking
-                    </v-chip>
-                </div>
-            </v-card-title>
-            <v-card-subtitle class="mt-0 pb-2 text-wrap">
-                Booking Id: {{ book.BookingId }} | Class Slot Id:
-                {{ book.ClassSlot.ClassSlotId }}
-            </v-card-subtitle>
+  <v-list>
+    <v-card
+      v-for="book in this.bookList"
+      :key="book.BookingId"
+      :value="book.BookingId"
+      variant="text"
+    >
+      <v-card-title class="d-flex flex-wrap text-wrap">
+        {{ book.ClassSlot.Class.ClassName }}
+        <v-spacer class="d-none d-sm-flex"></v-spacer>
+        <div>
+          <v-chip prependIcon="mdi-account-multiple" variant="text">
+            {{ book.ClassSlot.CurrentCapacity }}/{{
+              book.ClassSlot.Class.MaximumCapacity
+            }}
+          </v-chip>
+          <v-chip
+            :color="getColor(book.Status)"
+            :prepend-icon="getIcon(book.Status)"
+          >
+            {{ book.Status }}
+          </v-chip>
+          <v-chip
+            class="mx-1"
+            prepend-icon="mdi-cancel"
+            @click.prevent="showModal(book)"
+            v-if="book.Status !== 'Cancelled'"
+          >
+            Cancel Booking
+          </v-chip>
+        </div>
+      </v-card-title>
+      <v-card-subtitle class="mt-0 pb-2 text-wrap">
+        Booking Id: {{ book.BookingId }} | Class Slot Id:
+        {{ book.ClassSlot.ClassSlotId }}
+      </v-card-subtitle>
 
-            <v-card-item class="pt-0">
-                <v-icon size="15" class="me-1">mdi-calendar</v-icon><b>Class Date: </b> {{
-                    formattedDate(book.ClassSlot.StartTime) }}
-            </v-card-item>
-            <v-card-item class="pt-0">
-                <v-icon size="15" class="me-1">mdi-clock-outline</v-icon>
-                <b>Class Time: </b> {{ formattedTime(book.ClassSlot.StartTime) }} -
-                {{ formattedTime(book.ClassSlot.EndTime) }}
-            </v-card-item>
-            <v-card-item class="pt-0">
-                <v-icon size="15" class="me-1">mdi-refresh</v-icon><b>Duration: </b>
-                {{ book.ClassSlot.Duration }} minutes
-            </v-card-item>
-        </v-card>
-    </v-list>
+      <v-card-item class="pt-0">
+        <v-icon size="15" class="me-1">mdi-calendar</v-icon><b>Class Date: </b>
+        {{ formattedDate(book.ClassSlot.StartTime) }}
+      </v-card-item>
+      <v-card-item class="pt-0">
+        <v-icon size="15" class="me-1">mdi-clock-outline</v-icon>
+        <b>Class Time: </b> {{ formattedTime(book.ClassSlot.StartTime) }} -
+        {{ formattedTime(book.ClassSlot.EndTime) }}
+      </v-card-item>
+      <v-card-item class="pt-0">
+        <v-icon size="15" class="me-1">mdi-refresh</v-icon><b>Duration: </b>
+        {{ book.ClassSlot.Duration }} minutes
+      </v-card-item>
+    </v-card>
+  </v-list>
 
-    <template>
-        <Modal v-model="bookingInfo.show" :title="bookingInfo.title" :message="bookingInfo.message"
-            :timestamp="bookingInfo.timestamp" :color="bookingInfo.color" :className="bookingInfo.className"
-            :classId="bookingInfo.classId" :bookingId="bookingInfo.bookingId" :date="bookingInfo.date"
-            :time="bookingInfo.time" :icon="bookingInfo.icon" @closeModal="closeModal" @actionModal="actionModal"
-            :loading="bookingInfo.loading" />
-    </template>
+  <template>
+    <Modal
+      v-model="bookingInfo.show"
+      :title="bookingInfo.title"
+      :message="bookingInfo.message"
+      :timestamp="bookingInfo.timestamp"
+      :color="bookingInfo.color"
+      :className="bookingInfo.className"
+      :classId="bookingInfo.classId"
+      :bookingId="bookingInfo.bookingId"
+      :date="bookingInfo.date"
+      :time="bookingInfo.time"
+      :icon="bookingInfo.icon"
+      @closeModal="closeModal"
+      @actionModal="actionModal"
+      :loading="bookingInfo.loading"
+    />
+  </template>
 </template>
 
 <script>
