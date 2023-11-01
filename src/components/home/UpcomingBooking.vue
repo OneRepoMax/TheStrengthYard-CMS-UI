@@ -1,25 +1,21 @@
 <template>
-    <v-card elevation="3" class="pa-5 text-start mb-md-3 mb-1 rounded-0-sm">
-        <v-card-text class="mb-3">
-
-            <v-card-title>Upcoming Bookings</v-card-title>
-                <v-card-subtitle
-                  >This is all your upcoming bookings</v-card-subtitle
-                >
-            <BookList
-                  :bookList="displayedBooking"
-                  :bookingType="bookingType"
-                  @reload-data="this.getBookList()"
-                />
-        </v-card-text>       
-    </v-card>
+  <v-card elevation="3" class="text-start mb-md-3 mb-1 rounded-0-sm">
+    <v-card-text class="mb-3">
+      <v-card-title>Upcoming Bookings</v-card-title>
+      <v-card-subtitle>This is all your upcoming bookings</v-card-subtitle>
+      <BookList
+        :bookList="displayedBooking"
+        :bookingType="bookingType"
+        @reload-data="this.getBookList()"
+      />
+    </v-card-text>
+  </v-card>
 </template>
 
 <script>
 import BookList from "../book/BookList.vue";
 import { useBookStore } from "@/store/book";
 import { useUserStore } from "@/store/user";
-
 
 export default {
   components: {
@@ -42,8 +38,6 @@ export default {
       page: 1,
       pageLength: 1,
       bookPerPage: 10,
-      tab: null,
-      viewslots: true,
     };
   },
 
@@ -74,7 +68,6 @@ export default {
           : this.BookList.length) / this.bookPerPage
       );
     },
-
   },
   mounted() {
     this.getBookList();
@@ -85,9 +78,9 @@ export default {
         this.loading = true;
         this.clearData();
         const response = await this.bookStore.getAllBookingByUserId(
-            this.userStore.userId
-          );
-        
+          this.userStore.userId
+        );
+
         if (response && response.status === 200) {
           this.BookList = response.data;
           for (const book of this.BookList) {
@@ -108,17 +101,11 @@ export default {
           error
         );
       }
-
-    //   return;
     },
     clearData() {
       this.BookList = [];
       this.dates = [];
     },
-    setBookingType(type) {
-        this.bookingType = type;
   },
-  },
-}
+};
 </script>
-
