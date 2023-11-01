@@ -78,11 +78,15 @@ export const useClassStore = defineStore("classDetails", {
 
     async updateClassById(classData, classId) {
       try {
-        let response = await axios.put(`${TSY_API}/class/${classId}`, {
-          ClassName: classData.name,
-          Description: classData.description,
-          MaximumCapacity: classData.capacity,
-        }, AUTH_CONFIG);
+        let response = await axios.put(
+          `${TSY_API}/class/${classId}`,
+          {
+            ClassName: classData.name,
+            Description: classData.description,
+            MaximumCapacity: classData.capacity,
+          },
+          AUTH_CONFIG
+        );
 
         // Handle the response data here
         if (response.status === 200) {
@@ -96,11 +100,15 @@ export const useClassStore = defineStore("classDetails", {
 
     async updateClassSlotById(classSlotData, classSlotId) {
       try {
-        let response = await axios.put(`${TSY_API}/classSlot/${classSlotId}`, {
-          Day: classSlotData.day,
-          StartTime: classSlotData.startTime,
-          EndTime: classSlotData.endTime,
-        }, AUTH_CONFIG);
+        let response = await axios.put(
+          `${TSY_API}/classSlot/${classSlotId}`,
+          {
+            Day: classSlotData.day,
+            StartTime: classSlotData.startTime,
+            EndTime: classSlotData.endTime,
+          },
+          AUTH_CONFIG
+        );
 
         // Handle the response data here
         if (response.status === 200) {
@@ -146,11 +154,15 @@ export const useClassStore = defineStore("classDetails", {
 
     async createClass(classData) {
       try {
-        let response = await axios.post(`${TSY_API}/class`, {
-          ClassName: classData.name,
-          Description: classData.description,
-          MaximumCapacity: classData.capacity,
-        }, AUTH_CONFIG);
+        let response = await axios.post(
+          `${TSY_API}/class`,
+          {
+            ClassName: classData.name,
+            Description: classData.description,
+            MaximumCapacity: classData.capacity,
+          },
+          AUTH_CONFIG
+        );
         // Handle the response data here
         if (response.status === 201) {
           return response;
@@ -161,7 +173,12 @@ export const useClassStore = defineStore("classDetails", {
       }
     },
 
-    async createClassSlot(classSlotData, classId, RecurringUntil,StartingFrom) {
+    async createClassSlot(
+      classSlotData,
+      classId,
+      RecurringUntil,
+      StartingFrom
+    ) {
       try {
         let response = await axios.post(
           `${TSY_API}/class/${classId}/classSlot`,
@@ -244,9 +261,13 @@ export const useClassStore = defineStore("classDetails", {
       const apiUrl = `${TSY_API}/classSlot/delete`;
 
       try {
-        const response = await axios.post(apiUrl, {
-          ClassSlotIdList: classIds,
-        }, AUTH_CONFIG);
+        const response = await axios.post(
+          apiUrl,
+          {
+            ClassSlotIdList: classIds,
+          },
+          AUTH_CONFIG
+        );
 
         // Handle the response data here
         if (response.status === 200) {
@@ -275,6 +296,21 @@ export const useClassStore = defineStore("classDetails", {
         );
 
         return error.response;
+      }
+    },
+    async cancelClassSlotById(classSlotId) {
+      const apiUrl = `${TSY_API}/classSlot/${classSlotId}`;
+
+      try {
+        const response = await axios.delete(apiUrl, AUTH_CONFIG);
+
+        // Handle the response data here
+        if (response.status === 200) {
+          return response;
+        }
+      } catch (error) {
+        console.error("Deletion error:", error);
+        return;
       }
     },
   },

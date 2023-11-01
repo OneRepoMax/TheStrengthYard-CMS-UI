@@ -1,5 +1,6 @@
 <template>
     <v-container fluid class="mx-auto">
+        <v-progress-linear v-if="loading" indeterminate></v-progress-linear>
         <v-card max-width="1200px" class="mx-auto">
             <v-tabs v-model="tab" bg-color="black">
                 <v-tab value="class">Class</v-tab>
@@ -152,6 +153,13 @@ export default {
         classSlotPerPage() {
             this.classSlotPage = 1
         },
+        async tab(){
+            if(this.tab == 'class'){
+                await this.getClassList()
+            } else if (this.tab == 'class-slot'){
+                await this.getClassSlotList()
+            }
+        }
     },
     computed: {
         displayedClass() {
@@ -202,9 +210,9 @@ export default {
 
     },
 
-    mounted() {
-        this.getClassList();
-        this.getClassSlotList();
+    async mounted() {
+        await this.getClassList();
+        await this.getClassSlotList();
     },
     methods: {
         async getClassList() {

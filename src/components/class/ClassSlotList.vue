@@ -25,7 +25,7 @@
                 <th class="text-left">Date</th>
                 <th class="text-left">Class Time</th>
                 <th class="text-left">Capacity</th>
-                <th class="text-left" v-if="!selected.length">Actions</th>
+                <th class="text-left" v-if="!selected.length">Cancel</th>
             </tr>
         </thead>
         <tbody>
@@ -54,8 +54,8 @@
                             classSlot.Class.MaximumCapacity }}</v-chip>
                 </td>
                 <td v-if="!selected.length">
-                    <v-btn variant="text" icon="mdi-delete" color="red" size="small"
-                        @click.prevent="showModal(classSlot.ClassSlotId)"></v-btn>
+                    <v-chip prepend-icon="mdi-cancel" color="red" size="small"
+                        @click.prevent="showCancelModal(classSlot.ClassSlotId)">Cancel</v-chip>
                 </td>
             </tr>
         </tbody>
@@ -106,16 +106,17 @@ export default {
             classId: null,
             loading: false,
             selected: [],
+            selectedCancel: null,
             selectedClassSlotId: null,
             searchValue: '',
             modalWarning: {
                 show: false,
-                type: "success",
-                icon: "mdi-alert",
-                title: "Confirm deletion?",
-                message: "This action cannot be undone",
-                path: "/admin/class",
-                color: "red"
+                type: "",
+                icon: "",
+                title: "",
+                message: "",
+                path: "",
+                color: ""
             },
             modal: {
                 show: false,
@@ -165,11 +166,39 @@ export default {
             }
 
         },
+        async cancelClassSlotById(){
+            const response = await this.classStore.cancelClassSlotById(this.selectedCancel)
+            this.modalWarning.show = false
+            if (response.status == 200) {
+                this.modal.show = true
+            }
+            this.selectedCancel = null
+        },
         showModal(classIds) {
             if (classIds) {
                 this.selected = [classIds]
             }
-            this.modalWarning.show = true
+            this.modalWarning = {
+                show: true,
+                type: "success",
+                icon: "mdi-alert",
+                title: "Confirm deletion?",
+                message: "This action cannot be undone and no points will be refunded to the users.",
+                path: "/admin/class",
+                color: "red"
+            }
+        },
+        showCancelModal(classSlotId){
+            this.selectedCancel = classSlotId
+            this.modalWarning = {
+                show: true,
+                type: "success",
+                icon: "mdi-alert",
+                title: "Confirm cancellation?",
+                message: "Selected class will be cancelled and points will be refunded to the users.",
+                path: "/admin/class",
+                color: "red"
+            }
         },
         closeModal() {
             this.modal.show = false
@@ -180,7 +209,11 @@ export default {
             this.modalWarning.show = false
         },
         async actionModal() {
-            await this.deleteClassSlots()
+            if(this.selectedCancel){
+                await this.cancelClassSlotById()
+            } else {
+               await this.deleteClassSlots()
+            }
         },
         showBookingListModal(classSlotId) {
             this.bookingListModal.show = true
