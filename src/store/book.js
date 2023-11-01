@@ -35,9 +35,49 @@ export const useBookStore = defineStore("book", {
         return error;
       }
     },
-
+    //To get upcoming bookings only
     async getAllBookingByUserId(userId) {
       const apiUrl = `${TSY_API}/booking/user/${userId}`;
+
+      try {
+        const response = await axios.get(apiUrl, AUTH_CONFIG);
+
+        if (response.status === 200) {
+          return response;
+        }
+        return response;
+      } catch (error) {
+        console.error(
+          "An error occurred during get all booking API request:",
+          error
+        );
+
+        return error.response;
+      }
+    },
+    // Get all Past bookings
+    async getAllPastBooking(userId) {
+      const apiUrl = `${TSY_API}/booking/user/past/${userId}`;
+
+      try {
+        const response = await axios.get(apiUrl, AUTH_CONFIG);
+
+        if (response.status === 200) {
+          return response;
+        }
+        return response;
+      } catch (error) {
+        console.error(
+          "An error occurred during get all booking API request:",
+          error
+        );
+
+        return error.response;
+      }
+    },
+    // Get all Cancelled bookings
+    async getAllCancelledBooking(userId) {
+      const apiUrl = `${TSY_API}/booking/user/cancelled/${userId}`;
 
       try {
         const response = await axios.get(apiUrl, AUTH_CONFIG);
