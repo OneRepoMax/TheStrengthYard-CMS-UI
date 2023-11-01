@@ -74,6 +74,7 @@
       <template v-if="!loading">
         <div class="d-flex flex-column">
           <org-profile-card class="order-1 order-md-0" />
+          <upcoming-booking/>
           <div class="order-0 order-md-1" >
             <template v-for="(data, index) in ads" :key="index">
               <AdsCard :adsList="data.adsList" :title="data.title"/>
@@ -107,6 +108,7 @@ import Modal from "@/components/common/Modal.vue";
 import PurchaseMembershipSlider from "@/components/membership/PurchaseMembershipSlider.vue";
 import AdsCard from "@/components/home/AdsCard.vue";
 import PurchaseMembershipSlideGroup from "@/components/membership/PurchaseMembershipSlideGroup.vue";
+import UpcomingBooking from "@/components/home/UpcomingBooking.vue";
 
 export default {
   setup() {
@@ -211,6 +213,7 @@ export default {
     PurchaseMembershipSlider,
     AdsCard,
     PurchaseMembershipSlideGroup,
+    UpcomingBooking
   },
 };
 </script>
