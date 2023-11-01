@@ -68,7 +68,7 @@ export const useBookStore = defineStore("book", {
         return response;
       } catch (error) {
         console.error(
-          "An error occurred during get all booking API request:",
+          "An error occurred during get all past booking API request:",
           error
         );
 
@@ -88,7 +88,7 @@ export const useBookStore = defineStore("book", {
         return response;
       } catch (error) {
         console.error(
-          "An error occurred during get all booking API request:",
+          "An error occurred during get all cancelled booking API request:",
           error
         );
 

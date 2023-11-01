@@ -4,16 +4,10 @@
       <v-img src="@/assets/BookingBanner.jpg" max-height="250px" cover></v-img>
       <v-tabs v-model="tab" bg-color="black">
         <v-tab value="book-class">Book Class</v-tab>
-        <v-tab value="confirm-class" @click="bookingType = 'upcoming'"
-          >Upcoming Bookings</v-tab
-        >
-        <v-tab value="past-class" @click="bookingType = 'past'"
-          >Past Bookings</v-tab
-        >
-        <v-tab value="cancelled-class" @click="bookingType = 'cancelled'"
-          >Cancelled Bookings</v-tab
-        >
-      </v-tabs>
+        <v-tab value="upcoming" @click="setBookingType('upcoming')">Upcoming Bookings</v-tab>
+        <v-tab value="past" @click="setBookingType('past')">Past Bookings</v-tab>
+        <v-tab value="cancelled" @click="setBookingType('cancelled')">Cancelled Bookings</v-tab>      
+    </v-tabs>
       <v-card-text>
         <v-window v-model="tab">
           <v-window-item value="book-class">
@@ -27,13 +21,13 @@
               <ViewClassSlots :reload="this.viewslots" />
             </div>
           </v-window-item>
-          <v-window-item value="confirm-class">
+          <v-window-item v-bind:value="bookingType">
             <div class="pa-md-5">
               <template v-if="BookList.length == 0">
                 <v-alert
                   type="info"
-                  title="No Bookings"
-                  text="There's no upcoming bookings."
+                  :title="`No ${bookingType} bookings`"
+                  :text="`There's no ${bookingType} bookings.`"
                 ></v-alert>
               </template>
               <template v-else>
@@ -115,7 +109,7 @@ export default {
       bookPerPage: 10,
       tab: null,
       viewslots: true,
-      bookingType: "upcoming", // Default to 'upcoming' bookings
+      bookingType: "", // Default to 'upcoming' bookings
     };
   },
 
@@ -124,12 +118,9 @@ export default {
       this.page = 1;
     },
     tab() {
-      if (this.tab == "confirm-class") {
+      if (this.tab == "upcoming" || this.tab == "past" || this.tab == "cancelled") {
         this.viewslots = false;
         this.getBookList();
-        // console.log(this.$refs.classSlots.getClassSlotsByDate())
-        // this.$refs.classSlots.getClassSlotsByDate()
-        // this.getClassSlotsByDate();
       } else {
         this.viewslots = true;
       }
@@ -188,12 +179,9 @@ export default {
     async getBookList() {
       try {
         this.loading = true;
-        // const response = await this.bookStore.getAllBookingByUserId(
-        //   this.userStore.userId
-        // );
-
+        this.clearData();
         let response;
-
+        console.log('this is the booking type', this.bookingType)
         if (this.bookingType === "upcoming") {
           response = await this.bookStore.getAllBookingByUserId(
             this.userStore.userId
@@ -201,29 +189,45 @@ export default {
         } else if (this.bookingType === "past") {
           response = await this.bookStore.getAllPastBooking(
             this.userStore.userId
+            
           );
+          console.log(response)
+          
         } else if (this.bookingType === "cancelled") {
           response = await this.bookStore.getAllCancelledBooking(
             this.userStore.userId
           );
         }
-        this.loading = false;
-        if (response == null || response.status != 200) {
-          return;
-        } else {
-          if (response.status == 200) {
-            this.BookList = response.data;
-            console.log(this.BookList);
-            for (const book of this.BookList) {
-              const date = `${book.BookingDateTime}`;
-              if (this.dates.indexOf(date) === -1) {
-                this.dates.push(date);
-              }
+        if (response && response.status === 200) {
+          this.BookList = response.data;
+          for (const book of this.BookList) {
+            const date = `${book.BookingDateTime}`;
+            if (this.dates.indexOf(date) === -1) {
+              this.dates.push(date);
             }
           }
+        } else {
+          // Handle error or display a message
+          console.error("Failed to fetch bookings.");
+          // You can display an alert or handle the error in your UI
         }
+        this.loading = false;
+        // if (response == null || response.status != 200) {
+        //   return;
+        // } else {
+        //   if (response && response.status == 200) {
+        //     this.BookList = response.data;
+        //     console.log(this.BookList);
+        //     for (const book of this.BookList) {
+        //       const date = `${book.BookingDateTime}`;
+        //       if (this.dates.indexOf(date) === -1) {
+        //         this.dates.push(date);
+        //       }
+        //     }
+        //   }
+        // }
 
-        return;
+        // return;
       } catch (error) {
         console.error(
           "An error occurred during get all class API request:",
@@ -231,8 +235,15 @@ export default {
         );
       }
 
-      return;
+    //   return;
     },
+    clearData() {
+      this.BookList = [];
+      this.dates = [];
+    },
+    setBookingType(type) {
+        this.bookingType = type;
+  },
   },
 };
 </script>
