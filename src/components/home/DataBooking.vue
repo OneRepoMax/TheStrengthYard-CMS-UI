@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="height: 330px;">
     <apexchart
       type="bar"
       :options="chartOptions"

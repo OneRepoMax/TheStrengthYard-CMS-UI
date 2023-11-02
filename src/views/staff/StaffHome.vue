@@ -10,33 +10,24 @@
 
         <div class="mb-5">
             <v-row>
-                <v-col cols="12" md="6">
-                    <ClassBooking class="bg-white px-3 pt-3 rounded"/>
-                </v-col>
-                <v-col cols="12" md="6">
+                <v-col cols="12" md="4">
                     <v-card>
-                        <v-tabs
-                            v-model="tab"
-                            bg-color="#fff"
-                        >
-                            <v-tab value="one">Age</v-tab>
-                            <v-tab value="two">Gender</v-tab>
-                        </v-tabs>
-
-                        <v-card-text>
-                            <v-window v-model="tab">
-                            <v-window-item value="one">
-                                <AgeDemographic class="bg-white pa-3 rounded"/>
-                            </v-window-item>
-
-                            <v-window-item value="two">
-                                <GenderDemographic class="bg-white pa-3 rounded"/>
-                            </v-window-item>
-                            </v-window>
-                        </v-card-text>
+                        <Demographics class="bg-white px-3 pt-3 rounded"/>
                     </v-card>
-                    
                 </v-col>
+
+                <v-col cols="12" md="4">
+                    <v-card>
+                        <ClassBooking class="bg-white px-3 pt-3 rounded"/>
+                    </v-card>
+                </v-col>
+                
+                <v-col cols="12" md="4">
+                    <v-card>
+                        <TimeSlots class="bg-white px-3 pt-3 rounded"/>
+                    </v-card>
+                </v-col>
+
             </v-row>
         </div>
 
@@ -50,8 +41,8 @@
 <script>
 import card from '@/components/common/Card.vue'
 import ClassBooking from '@/components/home/DataBooking.vue'
-import AgeDemographic from '@/components/home/DataAge.vue'
-import GenderDemographic from '@/components/home/DataGender.vue'
+import Demographics from '@/components/home/DataDemographic.vue'
+import TimeSlots from '@/components/home/DataTimeSlots.vue'
 import MembershipRecord from '@/components/home/DataTable.vue'
 import { useAnalyticsStore } from '@/store/analytics'
 
@@ -59,8 +50,8 @@ export default {
     components: {
         card,
         ClassBooking,
-        AgeDemographic,
-        GenderDemographic,
+        Demographics,
+        TimeSlots,
         MembershipRecord,
     },
     setup () {
@@ -109,6 +100,36 @@ export default {
                 this.numbers.push(info)
             } else {
                 console.log("Error getting new clients")
+            }
+
+            // Get Unique Booking This Month
+            const uniqueBooking = await this.analyticsStore.getUniqueBooking();
+        
+            if (totalNew.status == 200){
+                // console.log(uniqueBooking.data["Unique Bookings this month"])
+                const info = {
+                    title: "Unique Bookings This Month",
+                    icon: "mdi-calendar-account",
+                    value: uniqueBooking.data["Unique Bookings this month"],
+                }
+                this.numbers.push(info)
+            } else {
+                console.log("Error getting unique bookings")
+            }
+
+            // Get Membership Breakdown This Month
+            const breakdown = await this.analyticsStore.getMembershipBreakdown();
+        
+            if (totalNew.status == 200){
+                // console.log(breakdown.data)
+                const info = {
+                    title: "Active Membership",
+                    icon: "mdi-card-account-details",
+                    value: breakdown.data["Total Users with an 'Active' Membership Record"],
+                }
+                this.numbers.push(info)
+            } else {
+                console.log("Error getting unique bookings")
             }
 
         },
