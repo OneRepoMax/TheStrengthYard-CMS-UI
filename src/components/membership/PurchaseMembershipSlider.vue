@@ -38,6 +38,11 @@
                                         <v-icon color="error" icon="mdi-currency-usd" size="small"></v-icon>
                                         <span class="mx-1">{{ membership.BaseFee }}</span>
                                     </v-card-subtitle>
+                                    <v-card-subtitle class="mb-3">
+                                        <v-icon icon="mdi-calendar" size="18" class="me-1 pb-1"></v-icon>
+                                        {{ formattedDate(membership.StartDate) }} to
+                                        {{ formattedDate(membership.EndDate) }}
+                                    </v-card-subtitle>
                                 </v-card>
                             </v-hover>
                         </v-col>

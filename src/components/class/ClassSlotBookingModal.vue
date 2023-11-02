@@ -5,7 +5,8 @@
                 <v-btn icon="$close" variant="text" @click="this.$emit('closeModal')"></v-btn>
             </template>
             <v-divider></v-divider>
-            <v-card-item v-if="this.bookingList.length==0">
+            <v-skeleton-loader v-if="loading" loading type="avatar, list-item-three-line" class="mb-2"></v-skeleton-loader>
+            <v-card-item v-if="!loading && bookingList.length == 0">
                 <v-alert type="info">There's no booking made for this class</v-alert>
             </v-card-item>
             <v-card-item v-if="getConfirmedBookingCount > 0">
@@ -23,7 +24,7 @@
                                 <div class="text-subtitle-1 font-weight-bold">{{ booking.User.FirstName }} {{
                                     booking.User.LastName }}</div>
                                 <div class="text-subtitle-2 mb-2">{{ booking.User.EmailAddress }}</div>
-                                <div>
+                                <div class="mb-3">
                                     <v-chip v-if="booking.User.Gender == 'M'" prepend-icon="mdi-gender-male" size="small"
                                         class="me-2">{{ formattedGender(booking.User.Gender) }}</v-chip>
                                     <v-chip v-if="booking.User.Gender == 'F'" prepend-icon="mdi-gender-female" size="small"
@@ -31,16 +32,50 @@
                                     <v-chip v-if="booking.User.Gender == 'O'" prepend-icon="mdi-gender-non-binary"
                                         size="small" class="me-2">{{ formattedGender(booking.User.Gender) }}</v-chip>
                                     <v-chip prepend-icon="mdi-phone" @click.prevent="phoneCall(booking.User.ContactNo)"
-                                        size="small">{{
+                                        size="small" class="me-2">{{
                                             booking.User.ContactNo
                                         }}</v-chip>
+                                    <v-chip prepend-icon="mdi-account-check" size="small" color="green"
+                                        v-if="booking.FirstClass">
+                                        First Class
+                                    </v-chip>
                                 </div>
 
                             </div>
                             <v-spacer></v-spacer>
-                            <v-chip color="primary"><v-icon start icon="mdi-check"></v-icon>Booking Id: {{ booking.BookingId
+                            <v-chip color="primary"><v-icon start icon="mdi-check"></v-icon>Booking #{{ booking.BookingId
                             }}</v-chip>
                         </div>
+                        <v-expansion-panels theme="dark">
+                            <v-expansion-panel>
+                                <v-expansion-panel-title>View Active Membership</v-expansion-panel-title>
+                                <v-expansion-panel-text>
+                                    <v-card-title class="text-subtitle-1 mb-2 d-flex">
+                                        <p class="text-wrap">{{ booking.MembershipRecord.Membership.Title }}</p>
+                                        <v-spacer></v-spacer>
+                                        <StatusChip :status="booking.MembershipRecord.ActiveStatus" />
+                                    </v-card-title>
+                                    <v-card-subtitle class="mb-2">
+                                        <v-icon color="error" icon="mdi-refresh" size="small"></v-icon>
+                                        <span class="mx-1">Membership Type: {{ booking.MembershipRecord.Membership.Type }}</span>
+                                    </v-card-subtitle>
+                                    <v-card-subtitle class="mb-2">
+                                        <v-icon color="error" icon="mdi-currency-usd" size="small"></v-icon>
+                                        <span class="mx-1">Base Fee: ${{ booking.MembershipRecord.Membership.BaseFee }}</span>
+                                    </v-card-subtitle>
+                                    <v-card-subtitle class="mb-2">
+                                        <v-icon icon="mdi-calendar" size="18"></v-icon>
+                                        Effective Date: {{ formattedDate(booking.MembershipRecord.StartDate) }} to
+                                        {{ formattedDate(booking.MembershipRecord.EndDate) }}
+                                    </v-card-subtitle>
+                                    <v-card-subtitle>
+                                        <v-icon icon="mdi-card-account-details" size="18" class="me-1 pb-1"></v-icon>
+                                        PayPal ID: {{ booking.MembershipRecord.PayPalSubscriptionId }}
+                                    </v-card-subtitle>
+                                </v-expansion-panel-text>
+                            </v-expansion-panel>
+
+                        </v-expansion-panels>
                         <v-divider class="mt-4"></v-divider>
                     </v-list>
                 </template>
@@ -94,10 +129,14 @@
     
 <script>
 import { useClassStore } from '@/store/class'
+import StatusChip from '@/components/common/StatusChip.vue'
 
 export default {
     props: {
         classSlotId: Number
+    },
+    components: {
+        StatusChip
     },
     setup() {
         const classStore = useClassStore()
@@ -106,7 +145,8 @@ export default {
     },
     data() {
         return {
-            bookingList: []
+            bookingList: [],
+            loading: false,
         }
     },
     async mounted() {
@@ -114,7 +154,9 @@ export default {
     },
     methods: {
         async getAllBookingByClassSlotId() {
+            this.loading = true
             const response = await this.classStore.getAllBookingByClassSlotId(this.classSlotId);
+            this.loading = false
             if (response.status == 200) {
                 this.bookingList = response.data
             }
@@ -133,6 +175,27 @@ export default {
             } else {
                 return 'Other'
             }
+        },
+        formattedDate(dateInput) {
+            const date = new Date(dateInput);
+            const year = String(date.getUTCFullYear()).slice(2);
+            const monthNames = [
+                "Jan",
+                "Feb",
+                "Mar",
+                "Apr",
+                "May",
+                "Jun",
+                "Jul",
+                "Aug",
+                "Sep",
+                "Oct",
+                "Nov",
+                "Dec",
+            ];
+            const month = monthNames[date.getUTCMonth()];
+            const day = String(date.getUTCDate());
+            return `${day} ${month} ${year}`;
         },
     },
     computed: {
