@@ -93,6 +93,69 @@ export const useAnalyticsStore = defineStore("analytics", {
         return error.response;
       }
     },
+
+    async getUniqueBooking() {
+      const apiUrl = `${TSY_API}/analytics/uniquemonthlybookings`;
+
+      try {
+        const response = await axios.get(apiUrl, AUTH_CONFIG);
+
+        if (response.status === 200) {
+          return response;
+        }
+        return response;
+      } catch (error) {
+        console.error(
+          "An error occurred during get unique booking API request:",
+          error
+        );
+
+        return error.response;
+      }
+    },
+
+    async peakTimings(classId) {
+      const apiUrl = `${TSY_API}/analytics/peakTimings/${classId}`;
+
+      try {
+        const response = await axios.get(apiUrl, AUTH_CONFIG);
+
+        if (response.status === 200) {
+          console.log(response);
+          return response;
+        }
+        return response;
+      } catch (error) {
+        console.error(
+          "An error occurred during get peak timing API request:",
+          error
+        );
+
+        return error.response;
+      }
+    },
+
+    async getMembershipBreakdown() {
+      const apiUrl = `${TSY_API}/analytics/userbreakdown`;
+
+      try {
+        const response = await axios.get(apiUrl, AUTH_CONFIG);
+
+        if (response.status === 200) {
+          return response;
+        }
+        return response;
+      } catch (error) {
+        console.error(
+          "An error occurred during get user breakdown API request:",
+          error
+        );
+
+        return error.response;
+      }
+    },
+
+
     
   },
 });
