@@ -1,16 +1,28 @@
 <template>
-  <v-card elevation="3" class="text-start mb-md-3 mb-1 rounded-0-sm">
-    <v-card-text class="mb-3">
-      <v-card-title>Upcoming Bookings</v-card-title>
-      <v-card-subtitle>This is all your upcoming bookings</v-card-subtitle>
-      <BookList
-        :bookList="displayedBooking"
-        :bookingType="bookingType"
-        @reload-data="this.getBookList()"
-      />
-    </v-card-text>
-  </v-card>
+    <v-card elevation="3" class="text-start mb-md-3 mb-1 rounded-0-sm">
+      <v-card-text class="mb-3">
+        <v-card-title>Upcoming Bookings</v-card-title>
+        <v-card-subtitle>This is all your upcoming bookings</v-card-subtitle>
+        <template v-if="this.BookList.length == 0">
+          <v-alert
+            type="info"
+            :title="`No upcoming bookings`"
+            :text="`There's no upcoming bookings.`"
+            class="mt-2"
+          ></v-alert>
+        </template>
+    <template v-else>
+        <BookList
+          :bookList="displayedBooking"
+          :bookingType="bookingType"
+          @reload-data="this.getBookList()"
+        />
+      </template>
+      </v-card-text>
+    </v-card>
+
 </template>
+
 
 <script>
 import BookList from "../book/BookList.vue";
