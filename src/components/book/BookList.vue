@@ -25,7 +25,13 @@
               book.ClassSlot.Class.MaximumCapacity
             }}
           </v-chip>
-          <v-chip
+          <v-chip v-if="bookingType == 'past'" 
+            :color="getColor(book.Status)"
+            :prepend-icon="getIcon(book.Status)"
+          >
+            Completed
+          </v-chip>
+          <v-chip v-else
             :color="getColor(book.Status)"
             :prepend-icon="getIcon(book.Status)"
           >
