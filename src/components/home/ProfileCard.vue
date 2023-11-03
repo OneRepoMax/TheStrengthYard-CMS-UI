@@ -1,5 +1,5 @@
 <template>
-    <v-card elevation="3" class="mb-md-3 rounded-0">
+    <v-card elevation="3" class="mb-md-3 rounded-0 w-100">
 
         <v-img class="align-end text-white d-none d-md-flex" height="200" src="../../assets/home-cover-photo.jpg" cover></v-img>
         <v-card-title class="mb-10 d-none d-md-flex">
@@ -24,7 +24,7 @@
         </v-card-subtitle>
 
 
-        <div class="mx-md-3 d-md-none">
+        <div class="mx-md-3 d-md-none" >
             <v-row class="ms-1 mt-2 d-flex">
                 <v-col class="v-col-auto pe-0">
                     <v-avatar color="info" size="80" :image="displayPicture" v-if="displayPicture">
@@ -50,7 +50,7 @@
             </v-row>
         </div>
 
-        <v-card-text class="d-md-flex pb-0 pb-md-5 ms-md-3">
+        <v-card-text class="d-md-flex pb-0 pb-md-5 ms-md-3" >
             <!-- Purchase Membership Button -->
             <v-btn class="me-3 mb-3 text-capitalize d-flex" x-large rounded color="grey-darken-4"
                 to="membership/purchase-membership">
@@ -62,7 +62,7 @@
                 Payment History
             </v-btn>
         </v-card-text>
-        <div v-if="membershipRecord.length > 0">
+        <div v-if="membershipRecord.length > 0 && !minimalInfo" >
 
             <template class="d-none d-md-block px-5">
 
@@ -142,6 +142,10 @@ export default {
         emailAddress: String,
         homeAddress: String,
         membershipRecord: Array,
+        minimalInfo: {
+            type: Boolean,
+            default: true,
+        },
     },
     components: {
         MembershipRecordCard,

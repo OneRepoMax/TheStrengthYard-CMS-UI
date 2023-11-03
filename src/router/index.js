@@ -40,6 +40,17 @@ const routes = [
     ],
   },
   {
+    path:"/powerlifting/",
+    component: () => import("@/layouts/default/LoginDefault.vue"),
+    children: [
+        {
+            path: "training",
+            name: "Powerlifting Training",
+            component: () => import("@/views/client/powerlifting/Training.vue")
+        }
+    ]
+  },
+  {
     path: "/profile/",
     component: () => import("@/layouts/default/LoginDefault.vue"),
     children: [

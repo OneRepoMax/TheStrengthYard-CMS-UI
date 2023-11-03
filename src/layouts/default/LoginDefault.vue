@@ -32,16 +32,19 @@ export default {
                 { title: 'Home', path: '/', icon: "mdi-home", color: 'transparent' },
                 { title: 'Updates', icon: "mdi-calendar-badge", path: '/schedule', color: 'transparent' },
                 { title: 'Book', icon: "mdi-login-variant", path: '/book', color: 'transparent' },
-                { title: 'Buy Membership', path: '/membership/purchase-membership', icon: "mdi-weight-lifter", color: 'amber-darken-3' },
+                { title: 'Powerlifting', path: '/powerlifting/training', icon: "mdi-weight-lifter",  color: 'transparent' },
+                { title: 'Buy Membership', path: '/membership/purchase-membership', icon: "mdi-cart-arrow-down", color: 'amber-darken-3' },
             ]
         } else if (this.userStore.userType == "A"){
             this.menuItems = [
                 { title: 'Home', path: '/', icon: "mdi-home", color: 'transparent' },
                 { title: 'Updates', icon: "mdi-calendar-badge", path: '/schedule', color: 'transparent' },
+                { title: 'Book', icon: "mdi-login-variant", path: '/book', color: 'transparent' },
                 { title: 'Dashboard', path: '/admin/home', icon: "mdi-home", color: 'transparent' },
                 { title: 'Account', icon: "mdi-account", path: '/admin/account', color: 'transparent' },
                 { title: 'Membership', icon: "mdi-list-box", path: '/admin/membership', color: 'transparent' },
                 { title: 'Class', icon: "mdi-google-classroom", path: '/admin/class', color: 'transparent' },
+                
 
             ]
         }
