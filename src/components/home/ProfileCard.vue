@@ -62,7 +62,7 @@
                 Payment History
             </v-btn>
         </v-card-text>
-        <div v-if="membershipRecord.length > 0 && !minimalInfo" >
+        <div v-if="membershipRecord.length > 0 " >
 
             <template class="d-none d-md-block px-5">
 
@@ -142,10 +142,6 @@ export default {
         emailAddress: String,
         homeAddress: String,
         membershipRecord: Array,
-        minimalInfo: {
-            type: Boolean,
-            default: true,
-        },
     },
     components: {
         MembershipRecordCard,
