@@ -228,13 +228,37 @@ async function submitForm() {
     state.loading = true;
 
     try {
-        const uploadResponse = await userStore.uploadAvatar(userStore.displayPicture)
-        if (uploadResponse.status == 200) {
-            console.log("AWS upload success");
+        var registerPayload = {}
 
-            // trigger registration form through this API and put in variables
-            // Edit the function below accordingly, e.g. update the parameters, etc
-            const registerPayload = {
+        if (userStore.displayPicture != null){
+            const uploadResponse = await userStore.uploadAvatar(userStore.displayPicture)
+            if (uploadResponse.status == 200) {
+                console.log("AWS upload success");
+
+                // trigger registration form through this API and put in variables
+                // Edit the function below accordingly, e.g. update the parameters, etc
+                registerPayload = {
+                    "emailAddress": userStore.emailAddress,
+                    "firstName": userStore.firstName,
+                    "lastName": userStore.lastName,
+                    "gender": userStore.gender,
+                    "dateOfBirth": userStore.dateOfBirth,
+                    "homeAddress": userStore.homeAddress,
+                    "postalCode": userStore.postalCode,
+                    "contactNo": userStore.contactNo,
+                    "password": userStore.password,
+                    "displayPicture": uploadResponse.s3Uri,
+                    "feedbackDiscover": transformFeedbackForm(),
+                    "medicalHistory": transformIndemnityForm(),
+                    "medicalRemarks": userStore.MedicalRemarks,
+                    "ackTnC": userStore.AcknowledgementTnC,
+                    "ackGymRules": userStore.AcknowledgementOpenGymRules,
+                }
+            } else {
+                throw new Error("AWS upload failed with status code: ", uploadResponse.status);
+            }
+        } else {
+            registerPayload = {
                 "emailAddress": userStore.emailAddress,
                 "firstName": userStore.firstName,
                 "lastName": userStore.lastName,
@@ -244,45 +268,44 @@ async function submitForm() {
                 "postalCode": userStore.postalCode,
                 "contactNo": userStore.contactNo,
                 "password": userStore.password,
-                "displayPicture": uploadResponse.s3Uri,
+                "displayPicture": `https://tsy-fyp-user-display-picture.s3.ap-southeast-1.amazonaws.com/default-dp.png`,
                 "feedbackDiscover": transformFeedbackForm(),
                 "medicalHistory": transformIndemnityForm(),
                 "medicalRemarks": userStore.MedicalRemarks,
                 "ackTnC": userStore.AcknowledgementTnC,
                 "ackGymRules": userStore.AcknowledgementOpenGymRules,
-
             }
-            const registerResponse = await userStore.register(registerPayload)
-            console.log(registerResponse);
-
-            if (!registerResponse){
-                console.log("Potential Existing User")
-                state.error = true;
-                state.errorText = "This email address is already in use."
-            }
-
-            if (registerResponse.status == 200) {
-
-                // reset error
-                state.error = false;
-                state.errorText = "Please verify your registration details."
-
-                // Show success modal
-                state.modal.show = true;
-                state.modal.title = "Registration successful";
-                state.modal.icon = "mdi-email";
-                state.modal.message = `Thank you ${userStore.firstName} ${userStore.lastName} for registering with The Strength Yard! Please check your email to verify your account.`;
-                state.modal.type = "success";
-
-                // redirect to email verification (I put login as temporary measure)
-                console.log("registration success");
-
-            } else {
-                throw new Error("Registration failed with status code: ", registerResponse.status)
-            }
-        } else {
-            throw new Error("AWS upload failed with status code: ", uploadResponse.status);
         }
+        
+        const registerResponse = await userStore.register(registerPayload)
+        console.log(registerResponse);
+
+        if (!registerResponse){
+            console.log("Potential Existing User")
+            state.error = true;
+            state.errorText = "This email address is already in use."
+        }
+
+        if (registerResponse.status == 200) {
+
+            // reset error
+            state.error = false;
+            state.errorText = "Please verify your registration details."
+
+            // Show success modal
+            state.modal.show = true;
+            state.modal.title = "Registration successful";
+            state.modal.icon = "mdi-email";
+            state.modal.message = `Thank you ${userStore.firstName} ${userStore.lastName} for registering with The Strength Yard! Please check your email to verify your account.`;
+            state.modal.type = "success";
+
+            // redirect to email verification (I put login as temporary measure)
+            console.log("registration success");
+
+        } else {
+            throw new Error("Registration failed with status code: ", registerResponse.status)
+        }
+        console.log(registerPayload)
 
         state.loading = false;
 

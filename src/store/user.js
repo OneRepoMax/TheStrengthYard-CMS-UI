@@ -200,9 +200,9 @@ export const useUserStore = defineStore("user", {
 
         // Handle the response data here
         if (response.status === 200) {
-          this.userId = response.UserId;
-          this.saveResponseToStore(response);
-          this.saveUserToLocalStorage();
+          // this.userId = response.UserId;
+          // this.saveResponseToStore(response);
+          // this.saveUserToLocalStorage();
           return response;
         }
       } catch (error) {
