@@ -260,6 +260,7 @@ export default {
                             this.modal.show = true
                             this.modal.message = "Your class slot has been created successfully!"
                             this.modal.path = "/admin/class"
+                            this.modal.title = "Created Successfully"
                             this.classStore.$state = {
                                 classId: null,
                                 classSlotId: null,
