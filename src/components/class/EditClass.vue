@@ -119,7 +119,7 @@ export default {
                 show: false,
                 type: "success",
                 icon: "mdi-check-circle",
-                title: "Create successful",
+                title: "Update successful",
                 message: "Your class has been successfully updated!",
                 path: "/"
             },
