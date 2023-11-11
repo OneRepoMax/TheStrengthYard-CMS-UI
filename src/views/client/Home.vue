@@ -94,6 +94,7 @@
       :message="modal.message"
       :icon="modal.icon"
       @closeModal="closeModal"
+      :closeOnClick="true"
     />
   </template>
 </template>
@@ -176,12 +177,14 @@ export default {
       );
       if (response.status === 200) {
         this.modal.show = true;
-        this.modal.message =
+        this.modal.title = "Success"
+        this.modal.message = 
           "Success! Please check your email for verification";
         this.modal.type = "success";
         this.modal.icon = "mdi-email";
       } else {
         this.modal.show = true;
+        this.modal.title = "Error"
         this.modal.message = "Error! Please contact administrator";
         this.modal.type = "error";
         this.modal.icon = "mdi-error";

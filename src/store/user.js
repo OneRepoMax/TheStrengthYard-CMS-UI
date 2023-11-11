@@ -66,28 +66,37 @@ export const useUserStore = defineStore("user", {
       localStorage.setItem("tsyUserInfo", JSON.stringify(userStore));
     },
 
-    saveResponseToStore(response) {
+    formattedDob(date){
+        const dob = new Date(date);
+        const year = dob.getUTCFullYear();
+        const month = String(dob.getUTCMonth() + 1).padStart(2, "0");
+        const day = String(dob.getUTCDate()).padStart(2, "0");
+        const formattedDob = `${year}-${month}-${day}`;
+        return formattedDob;
+    },
+
+    saveResponseToStore(userData, token) {
+
       // format DateOfBirth
-      const dob = new Date(response.data[0].DateOfBirth);
-      const year = dob.getUTCFullYear();
-      const month = String(dob.getUTCMonth() + 1).padStart(2, "0");
-      const day = String(dob.getUTCDate()).padStart(2, "0");
-      const formattedDob = `${year}-${month}-${day}`;
+      const formattedDob = this.formattedDob(userData.DateOfBirth)
 
-      this.userId = response.data[0].UserId;
-      this.emailAddress = response.data[0].EmailAddress;
-      this.firstName = response.data[0].FirstName;
-      this.lastName = response.data[0].LastName;
-      this.contactNo = response.data[0].ContactNo;
-      this.gender = response.data[0].Gender;
+      this.userId = userData.UserId;
+      this.emailAddress = userData.EmailAddress;
+      this.firstName = userData.FirstName;
+      this.lastName = userData.LastName;
+      this.contactNo = userData.ContactNo;
+      this.gender = userData.Gender;
       this.dateOfBirth = formattedDob;
-      this.homeAddress = response.data[0].HomeAddress;
-      this.postalCode = response.data[0].PostalCode;
-      this.userType = response.data[0].UserType;
-      this.displayPicture = response.data[0].DisplayPicture;
-      this.verified = response.data[0].Verified;
+      this.homeAddress = userData.HomeAddress;
+      this.postalCode = userData.PostalCode;
+      this.userType = userData.UserType;
+      this.displayPicture = userData.DisplayPicture;
+      this.verified = userData.Verified;
 
-      this.jwt = response.data[1].token;
+      if(token){
+        this.jwt = token;
+      }
+      
       this.saveUserToLocalStorage();
     },
 
@@ -105,9 +114,7 @@ export const useUserStore = defineStore("user", {
 
         // Handle the response data here
         if (response.status === 200) {
-          this.saveResponseToStore(response);
-          this.saveUserToLocalStorage();
-          return;
+          return response;
         }
       } catch (error) {
         console.error("Get User Info error:", error);
@@ -124,7 +131,7 @@ export const useUserStore = defineStore("user", {
 
         // Handle the response data here
         if (response.status === 200) {
-          this.saveResponseToStore(response);
+          this.saveResponseToStore(response.data[0], response.data[1].token);
           this.saveUserToLocalStorage();
         }
 
@@ -200,9 +207,6 @@ export const useUserStore = defineStore("user", {
 
         // Handle the response data here
         if (response.status === 200) {
-          // this.userId = response.UserId;
-          // this.saveResponseToStore(response);
-          // this.saveUserToLocalStorage();
           return response;
         }
       } catch (error) {
@@ -237,6 +241,8 @@ export const useUserStore = defineStore("user", {
         headers: { Authorization: `Bearer ${this.jwt}` },
       };
 
+      let dob = this.formattedDob(profileData.dateOfBirth)
+
       try {
         let response = await axios.put(
           `${TSY_API}/user/${userId}`,
@@ -248,7 +254,7 @@ export const useUserStore = defineStore("user", {
             HomeAddress: profileData.homeAddress,
             PostalCode: profileData.postalCode,
             Gender: profileData.gender,
-            DateOfBirth: profileData.dateOfBirth,
+            DateOfBirth: dob,
             DisplayPicture: profileData.displayPicture,
           },
           config
@@ -279,7 +285,6 @@ export const useUserStore = defineStore("user", {
         if (response.status === 200) {
           this.password = response.data.Password;
           console.log("Password changed successfully");
-          // this.saveUserToLocalStorage();
         } else {
           console.log("Password reset failed:", response.data);
         }
@@ -420,7 +425,7 @@ export const useUserStore = defineStore("user", {
       try {
         const response = await axios.get(apiUrl, config);
         if (response.status === 200) {
-          this.saveResponseToStore(response);
+          this.saveResponseToStore(response.data[0],response.data[1].token);
           this.saveUserToLocalStorage();
         }
       } catch (error) {

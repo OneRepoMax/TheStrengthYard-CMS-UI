@@ -129,6 +129,7 @@ export default {
                 dateOfBirth: null,
                 displayPicture: null,
             },
+            tempDisplayPicture: null,
             firstNameRules: [
                 v => !!v || 'First Name is required',
                 v => (v && /^[A-Za-z\s\-']+$/.test(v)) || 'Please enter a valid first name',
@@ -156,7 +157,7 @@ export default {
             ],
             contactRules: [
                 v => !!v || 'Contact Number is required',
-                v => (v && v.toString().length == 8 && /^\d+$/.test(v)) ||'Contact Number must be 8 digits',
+                v => (v && v.toString().length == 8 && /^\d+$/.test(v)) || 'Contact Number must be 8 digits',
             ],
             modal: {
                 show: false,
@@ -229,7 +230,7 @@ export default {
             } else {
                 // Form is valid, submit the data
                 this.updateProfile();
-            } 
+            }
         },
 
         openFileInput() {
@@ -263,15 +264,15 @@ export default {
             try {
                 const response = await this.userStore.getUserById(this.userId)
                 if (response.status == 200) {
-                    this.userProfileData.firstName = response.data[0].FirstName,
-                        this.userProfileData.lastName = response.data[0].LastName,
-                        this.userProfileData.emailAddress = response.data[0].EmailAddress,
-                        this.userProfileData.contactNo = response.data[0].ContactNo,
-                        this.userProfileData.homeAddress = response.data[0].HomeAddress,
-                        this.userProfileData.postalCode = response.data[0].PostalCode,
-                        this.userProfileData.gender = response.data[0].Gender,
-                        this.userProfileData.dateOfBirth = response.data[0].DateOfBirth,
-                        this.userProfileData.displayPicture = response.data[0].DisplayPicture
+                    this.userProfileData.firstName = response.data[0].FirstName
+                    this.userProfileData.lastName = response.data[0].LastName
+                    this.userProfileData.emailAddress = response.data[0].EmailAddress
+                    this.userProfileData.contactNo = response.data[0].ContactNo
+                    this.userProfileData.homeAddress = response.data[0].HomeAddress
+                    this.userProfileData.postalCode = response.data[0].PostalCode
+                    this.userProfileData.gender = response.data[0].Gender
+                    this.userProfileData.dateOfBirth = response.data[0].DateOfBirth
+                    this.userProfileData.displayPicture = response.data[0].DisplayPicture
                 }
             } catch (error) {
                 console.error("Error retrieving user info", error);
@@ -279,33 +280,23 @@ export default {
         },
         async updateProfile() {
 
-            console.log(JSON.stringify({
-                firstName: this.userProfileData.firstName,
-                lastName: this.userProfileData.lastName,
-                emailAddress: this.userProfileData.emailAddress,
-                contactNo: this.userProfileData.contactNo,
-                homeAddress: this.userProfileData.homeAddress,
-                postalCode: this.userProfileData.postalCode,
-                gender: this.userProfileData.gender,
-                dateOfBirth: this.userProfileData.dateOfBirth,
-                displayPicture: this.userProfileData.displayPicture,
-            }))
+            console.log(this.userProfileData)
+                
             try {
-
-                if (this.userProfileData.displayPicture != this.displayPicture) {
+                
+                // check if existing profile picture is different from the one uploaded for self-update
+                if (this.profilePicture) {
                     const uploadResponse = await this.userStore.uploadAvatar(this.profilePicture)
                     this.userProfileData.displayPicture = uploadResponse.s3Uri
                     console.log(this.userProfileData.displayPicture);
                 }
 
-                // uri to uploaded avatar
                 let tempUserId = this.userId
-                if (this.userId == null) {
-                    tempUserId = this.userStore.userId
+                if(tempUserId == null){
+                    tempUserId = this.userStore.$state.userId
                 }
 
                 // trigger update profile form through this API and put in variables
-                // Edit the function below accordingly, e.g. update the parameters, etc
                 await this.userStore.updateProfile({
                     firstName: this.userProfileData.firstName,
                     lastName: this.userProfileData.lastName,
@@ -319,18 +310,18 @@ export default {
                 }, tempUserId).then((response) => {
                     if (response.status == 200) {
 
-                        console.log(response.data);
+                        // Show success modal
+                        this.modal.show = true
 
                         if (this.userId == null) {
-                            this.userStore.saveResponseToStore(response);
+                            this.userStore.saveResponseToStore(response.data);
                             this.userStore.saveUserToLocalStorage();
                             this.modal.path = "/"
                         } else {
                             this.modal.path = "/admin/account"
                         }
 
-                        // Show success modal
-                        this.modal.show = true
+
                     }
                 })
 
