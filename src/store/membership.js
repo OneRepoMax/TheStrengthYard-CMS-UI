@@ -193,6 +193,7 @@ export const useMembershipStore = defineStore("membership", {
           StartDate: payload.startDate,
           EndDate: payload.endDate,
           ActiveStatus: payload.status,
+          PayPalSubscriptionId: payload.subscriptionId ? payload.subscriptionId : null,
         }, AUTH_CONFIG);
 
         if (response.status === 200) {

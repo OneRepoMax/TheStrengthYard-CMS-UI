@@ -87,6 +87,8 @@ export default {
 
             this.membership = this.membershipStore.selectedMembership;
 
+            console.log(this.membership)
+
             // Check for one time or subscription type
             if (this.membership.Type.toUpperCase() == "ONE-TIME") {
                 await this.mountPaypalOrderButton();
@@ -137,9 +139,6 @@ export default {
 
                         // Save payment subscription id
                         let subscriptionId = data.subscriptionID;
-
-                        console.log(data);
-                        console.log(actions);
 
                         // Post the subscription id and payment details to the backend
 

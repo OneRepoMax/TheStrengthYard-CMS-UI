@@ -78,7 +78,6 @@ export default {
 
             if (response.status == 200) {
                 this.membershipLog.data = response.data;
-                console.log(this.membershipLog.data);
                 this.membershipLog.show = true;
             }
         },
