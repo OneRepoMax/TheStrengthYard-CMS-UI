@@ -48,9 +48,6 @@
 import { useMembershipStore } from '@/store/membership'
 
   export default {
-    components: {
-        VDataTableServer
-    },
     setup () {
         const membershipStore = useMembershipStore();
         return { membershipStore }
