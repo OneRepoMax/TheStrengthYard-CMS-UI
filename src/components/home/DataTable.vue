@@ -46,7 +46,6 @@
 
 <script>
 import { useMembershipStore } from '@/store/membership'
-import { VDataTableServer } from 'vuetify/labs/VDataTable'
 
   export default {
     components: {
