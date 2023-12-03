@@ -180,7 +180,7 @@ export const useMembershipStore = defineStore("membership", {
         return response;
       } catch (error) {
         console.error("An error occurred during POST membership log:", error);
-        return error.response;
+        return error.response; // Return error response
       }
     },
     async updateMembershipRecord(payload) {
