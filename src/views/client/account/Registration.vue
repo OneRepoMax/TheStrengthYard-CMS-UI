@@ -57,7 +57,6 @@ import FeedbackForm from '@/components/registration/FeedbackForm.vue';
 import IndemnityForm from '@/components/registration/IndemnityForm.vue';
 import AcknowledgementForm from '@/components/registration/AcknowledgementForm.vue'
 import Modal from "@/components/common/Modal.vue"
-import { VStepper } from 'vuetify/labs/VStepper';
 import { useUserStore } from '@/store/user'
 import { reactive } from 'vue'
 
