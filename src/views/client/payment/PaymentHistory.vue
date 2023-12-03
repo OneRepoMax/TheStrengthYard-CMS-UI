@@ -46,7 +46,6 @@
 import { useUserStore } from '@/store/user'
 import { useMembershipStore } from '@/store/membership'
 import { usePaymentStore } from '@/store/payment'
-import { VDataTableServer } from 'vuetify/labs/VDataTable'
 
   export default {
     components: {
