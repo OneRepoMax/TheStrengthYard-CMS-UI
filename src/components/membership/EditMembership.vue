@@ -260,11 +260,11 @@ export default {
             try {
 
                 // uri to uploaded picture
-                if (this.picture != this.membershipStore.Picture) {
-                    const uploadResponse = await this.membershipStore.uploadPicture(this.picture)
-                    this.membershipData.picture = uploadResponse.s3Uri
-                    console.log(this.membershipData.picture);
-                }
+                // if (this.picture != this.membershipStore.Picture) {
+                //     const uploadResponse = await this.membershipStore.uploadPicture(this.picture)
+                //     this.membershipData.picture = uploadResponse.s3Uri
+                //     console.log(this.membershipData.picture);
+                // }
 
                 let tempmembershipId = this.membershipId
                 if (this.membershipId == "create") {

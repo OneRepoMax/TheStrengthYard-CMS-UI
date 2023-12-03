@@ -261,7 +261,8 @@ export const useMembershipStore = defineStore("membership", {
             BaseFee: membershipData.basefee,
             SetupFee: membershipData.setupfee,
             PayPalPlanId: membershipData.paypalPlanId,
-            Picture: membershipData.picture,
+            Picture: "https://tsy-admin-bucket-1.s3.ap-southeast-1.amazonaws.com/AEC1ADBF-6A40-4150-BC9E-169496C3E737-1022-0000175AF0BEA8F0.JPG"
+            // Picture: membershipData.picture,
           },
           AUTH_CONFIG
         );
@@ -302,7 +303,8 @@ export const useMembershipStore = defineStore("membership", {
           Type: membershipData.type,
           BaseFee: membershipData.basefee,
           SetupFee: membershipData.setupfee,
-          Picture: membershipData.picture,
+          Picture: "https://tsy-admin-bucket-1.s3.ap-southeast-1.amazonaws.com/AEC1ADBF-6A40-4150-BC9E-169496C3E737-1022-0000175AF0BEA8F0.JPG",
+        //   Picture: "membershipData.picture,"
           Visibility: membershipData.visibility,
           hasClasses: membershipData.hasClasses,
         }, AUTH_CONFIG);
